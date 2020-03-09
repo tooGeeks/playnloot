@@ -15,7 +15,7 @@ const fbConfig = {
 try {
   firebase.initializeApp(fbConfig);
   firebase.firestore();
-  console.log("Firebase init", new Date())
+  console.log("Firebase Initialized: ", new Date())
 } catch (err) {
   console.error("An error occured", err);
 }
