@@ -9,8 +9,7 @@ class UpdateMatchList extends Component{
     render(){
         const {matches} = this.props;
         return(
-        <div className="container">
-            <p>LOL</p>
+        <div>
             {matches && matches.map(match =>{
                     return(
                         <React.Fragment>

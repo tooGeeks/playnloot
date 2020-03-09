@@ -28,7 +28,7 @@ const AdminNav = (props)=>{
         </Helmet>
         <nav className="nav-extended">
             <div className="nav-wrapper black">
-                <Link to="/admin" className="brand-logo">PNLooT(Home)</Link>
+                <Link to="/admin" className="brand-logo">Admim Panel</Link>
             </div>
             <div className="nav-content black">
                 {adminlinks}

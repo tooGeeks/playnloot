@@ -3,10 +3,13 @@ import { useSelector } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 
 //UI
-import { makeStyles, withStyles, Grid, Container, Paper, Divider, Badge, Typography } from "@material-ui/core";
+import { makeStyles, withStyles, Grid, Container, Paper, Divider, Badge, Typography, CssBaseline } from "@material-ui/core";
+import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core'
 import { ReactComponent as Solid } from '../../imgs/soldier2.svg'
 import { AccountBox, TrackChanges } from '@material-ui/icons';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -48,7 +51,11 @@ const useStyles = makeStyles(theme => ({
     borderBottomLeftRadius: 5,
     borderBottomRightRadius: 5,
     padding: theme.spacing(1, 2, 1)
-  }
+  },
+  panelHeading: {
+    fontSize: theme.typography.pxToRem(16),
+    fontWeight: theme.typography.fontWeightRegular,
+  },
 }));
 
 const StyledBadge = withStyles(theme => ({
@@ -66,6 +73,10 @@ export default function Dashboard() {
   const { profile, auth } = useSelector(
     state => state.firebase
   )
+  const [expanded, setExpanded] = React.useState(null);
+  const handleChange = panel => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
   if (!auth.uid) return <Redirect to='/signin' />
   return (
@@ -89,7 +100,7 @@ export default function Dashboard() {
         */}
         <Grid container item xs={12}
           direction="row"
-          alignItems="flex-end"
+          alignItems="flex-start"
           border={1}>
             <Grid container alignItems="flex-end">
               <Grid item>
@@ -99,17 +110,17 @@ export default function Dashboard() {
                 <Typography gutterBottom variant="h5" style={{paddingBottom: 20}}>Hola, <br /><b>{profile.pubgid}!</b></Typography>
               </Grid>
             </Grid>
-            <Grid item xs={12} container justify="center">
-            <Grid item xs={4} xl={3}>
+            <Grid item xs={12} container justify="space-around" alignItems="center">
+            <Grid item xs={3} xl={1}>
               <Paper className={classes.killWallet}>
                 <Typography>
-                <TrackChanges/> {profile.kills}
+                <CssBaseline><TrackChanges/> {profile.kills}</CssBaseline>
                 <br/>
                 Kills
                 </Typography>
               </Paper>
             </Grid>
-            <Grid item xs={4} xl={3} style={{paddingLeft: 4}}>
+            <Grid item xs={3} xl={1} style={{paddingLeft: 1}}>
               <Paper className={classes.killWallet}>
                 <Typography>
                 <AccountBalanceWalletIcon/> {profile.wallet}
@@ -118,7 +129,16 @@ export default function Dashboard() {
                 </Typography>
               </Paper>
             </Grid>
-            <Grid item xs={4} xl={3} style={{paddingLeft: 4}}>
+            <Grid item xs={3} xl={1} style={{paddingLeft: 1}}>
+              <Paper className={classes.killWallet}>
+                <Typography>
+                <AccountBalanceWalletIcon/> {profile.wallet}
+                <br/>
+                Coins
+                </Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={3} xl={1} style={{paddingLeft: 1}}>
               <Paper className={classes.killWallet}>
                 <Typography>
                 <AccountBalanceWalletIcon/> {profile.wallet}
@@ -129,22 +149,38 @@ export default function Dashboard() {
             </Grid>
             </Grid>
         </Grid>
-        <Grid container item xs={12}
-          direction="column"
-          justify="center"
-          alignItems="stretch"
-          spacing={2}
-          >
-            <Grid item>
-              <Paper className={classes.paper}>
-                Kand4
-              </Paper>
-            </Grid>
-            <Grid item>
-              <Paper className={classes.paper}>
-                Kand4
-              </Paper>
-            </Grid>
+        <Grid item xs={12} sm={12}>
+          <ExpansionPanel expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+              <Typography className={classes.panelHeading}><b>LEADER BOARD</b></Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Typography>
+                DASHBOARD CONTAENTS
+              </Typography>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel expanded={expanded==null ? true : expanded === 'panel2' ? true : false} onChange={handleChange('panel2')}>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+              <Typography className={classes.panelHeading}><b>ENROLLED MATCHES</b></Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Typography>
+                You haven`t enrolled in any new matches ;(
+                <br/> <span onClick={() => setExpanded('panel3')}>Enroll now!</span>
+              </Typography>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+              <Typography className={classes.panelHeading}><b>NEW MATCHES</b></Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Typography>
+                DASHBOARD CONTAENTS
+              </Typography>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
         </Grid>
         <Grid item xs={12} sm={6}>
           <Paper className={classes.paper}>
