@@ -1,0 +1,23 @@
+{
+	"palette":
+	{
+		"primary":
+		{
+			"main": "#16d678"
+		},
+		"secondary":
+		{
+			"main":"#fed32c"
+		},
+		"error":
+		{
+			"main":"#f44336"
+		},
+		"background":
+		{
+			"paper": "#2b3138",
+			"default": "#202329"
+		},
+		"type": "dark"
+	}
+}
