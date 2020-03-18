@@ -3,7 +3,7 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
+<!-- [![MIT License][license-shield]][license-url] -->
 [![LinkedIn][linkedin-shield]][linkedin-url]
 <br/>
 ![Under Development Badge][underDevelopment-shield]
@@ -21,10 +21,11 @@
   <p align="center">
     Host and manage ESports Matches of PUBG, Call of Duty, Free Fire etc, make Players enroll in the matches, give them money prizes and earn Money!
     <br />
-    <a href="https://github.com/limbu-timbu/playnloot/"><strong>Explore the docs »</strong></a>
+    <!-- <a href="https://github.com/limbu-timbu/playnloot/"><strong>Explore the docs »</strong></a> -->
+    <a href="https://playandloot.web.app/"><strong>Live Now »</strong></a>
     <br />
-    <a href="https://playandloot.web.app/">View Demo</a>
-    ·
+    <!-- <a href="https://playandloot.web.app/">View Demo</a>
+    · -->
     <a href="https://github.com/limbu-timbu/playnloot/issues">Report Bug</a>
     ·
     <a href="https://github.com/limbu-timbu/playnloot/issues">Request Feature</a>
