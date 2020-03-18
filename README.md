@@ -23,7 +23,6 @@
     <br />
     <a href="https://github.com/limbu-timbu/playnloot/"><strong>Explore the docs »</strong></a>
     <br />
-    <br />
     <a href="https://playandloot.web.app/">View Demo</a>
     ·
     <a href="https://github.com/limbu-timbu/playnloot/issues">Report Bug</a>
@@ -38,24 +37,21 @@
 
 * [About the Project](#about-the-project)
   * [Built With](#built-with)
-* [Getting Started](#getting-started)
+<!-- * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
-* [Usage](#usage)
+* [Usage](#usage) -->
 * [Roadmap](#roadmap)
 * [Contributing](#contributing)
 * [License](#license)
 * [Contact](#contact)
-* [Acknowledgements](#acknowledgements)
+<!-- * [Acknowledgements](#acknowledgements) -->
 
 
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
 playnloot is a react.js based Web App developed by us to host E-Sports Tournaments, where players can sign-up, buy coins to participate in tournaments hosted on on our Web App and win coins, converted them into real money!
-
 
 
 ### Built With
@@ -66,7 +62,7 @@ playnloot is a react.js based Web App developed by us to host E-Sports Tournamen
 * [ReduxJS](https://redux.js.org/)
 
 
-
+<!-- 
 ## Getting Started
 
 Get our Project on your local machine!
@@ -104,7 +100,7 @@ const API_KEY = 'ENTER YOUR API';
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
 _For more examples, please refer to the [Documentation](https://example.com)_
-
+ -->
 
 
 ## Roadmap
