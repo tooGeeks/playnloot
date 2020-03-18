@@ -1,72 +1,142 @@
-# playnloot 
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
 
-> Host ESports Matches of PUBG, Call of Duty, Free Fire etc, make Players enroll in the matches, give them money prizes and earn Money!
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+<br />
+<p align="center">
+  <a href="https://github.com/limbu-timbu/playnloot/">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  </a>
 
-In the project directory, you can run:
+  <h3 align="center">playnloot</h3>
 
-### `npm start`
+  <p align="center">
+    > Host and manage ESports Matches of PUBG, Call of Duty, Free Fire etc, make Players enroll in the matches, give them money prizes and earn Money!
+    <br />
+    <a href="https://github.com/limbu-timbu/playnloot/"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://playandloot.web.app/">View Demo</a>
+    ·
+    <a href="https://github.com/limbu-timbu/playnloot/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/limbu-timbu/playnloot/issues">Request Feature</a>
+  </p>
+</p>
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## Table of Contents
 
-### `npm test`
+* [About the Project](#about-the-project)
+  * [Built With](#built-with)
+* [Getting Started](#getting-started)
+  * [Prerequisites](#prerequisites)
+  * [Installation](#installation)
+* [Usage](#usage)
+* [Roadmap](#roadmap)
+* [Contributing](#contributing)
+* [License](#license)
+* [Contact](#contact)
+* [Acknowledgements](#acknowledgements)
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## About The Project
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+[![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+There are many great README templates available on GitHub, however, I didn't find one that really suit my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need.
 
-### `npm run eject`
+Here's why:
+* Your time should be focused on creating something amazing. A project that solves a problem and helps others
+* You shouldn't be doing the same tasks over and over like creating a README from scratch
+* You should element DRY principles to the rest of your life :smile:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Built With
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+* [ReactJS](https://reactjs.org/)
+* [Material-UI](https://material-ui.com/)
+* [Firebase](https://firebase.google.com/)
+* [ReduxJS](https://redux.js.org/)
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Getting Started
 
-### Code Splitting
+Get our Project on your local machine!
+Below are the instructions for setting up our project on your machine locally.
+To get a local copy up and running follow these simple steps.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+### Prerequisites
 
-### Analyzing the Bundle Size
+This is an example of how to list things you need to use the software and how to install them.
+* npm
+```sh
+npm install npm@latest -g
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+### Installation
 
-### Making a Progressive Web App
+1. Get a free API Key at [https://example.com](https://example.com)
+2. Clone the repo
+```sh
+git clone https://github.com/limbu-timbu/playnloot.git
+```
+3. Install NPM packages
+```sh
+npm install
+```
+4. Enter your API in `config.js`
+```JS
+const API_KEY = 'ENTER YOUR API';
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
 
-### Advanced Configuration
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+## Usage
 
-### Deployment
+Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+_For more examples, please refer to the [Documentation](https://example.com)_
 
-### `npm run build` fails to minify
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+## Roadmap
+
+See the [open issues](https://github.com/limbu-timbu/playnloot/issues) for a list of proposed features (and known issues).
+
+
+
+## Contributing
+
+Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+
+
+## Contact
+
+###### Developers
+- Shubham Lingayat - [IG:@suebham](https://instagram.com/suebham) - shubhamisdev@gmail.com
+- Swanand Buva - [IG:@swnn_d](https://www.instagram.com/swnn_d/) - swanand1108@gmail.com
+
+Project Link: [https://github.com/limbu-timbu/playnloot](https://github.com/limbu-timbu/playnloot)
