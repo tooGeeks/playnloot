@@ -16,7 +16,7 @@ export const createMatch = (match)=>{
             db.collection("Matches").doc(mname).set({
                 ...match,
                 players:[],
-                plno:0,
+                plno:1,
                 createdAt : new Date()
             }).then(()=>{
                 dispatch({type:"CR_MATCH",match});
@@ -45,6 +45,8 @@ export const enterMatch = (mid,uid)=>{
         let wallet = profile.wallet;
         if(wallet<2){
             dispatch({type:"EN_MATCH_ERR"})
+            //dispatch({ type: 'SNACKBAR', variant: 'error', message: "An Error Occured\nTry Again!\n or Contact Admin"});
+            dispatch({ type: 'SNACKBAR', variant: 'error', message: "Insufficient Coins! Please, buy required Coins and try again!"});
             return;
         }
         const cp = st.firebase.profile.pubgid;
@@ -69,9 +71,15 @@ export const enterMatch = (mid,uid)=>{
                 plno:plno
             },{merge:true}).then(()=>{
                 db.collection('Users').doc(uid).set({matches:cpmatches,wallet},{merge:true})
+                dispatch({ type: 'DIALOG_CLEAR' });
+                dispatch({ type: 'SNACKBAR', variant: 'success', message: "Success! You`ve enrolled in the match. Happy Looting!"});
                 dispatch({type:"EN_MATCH",mid,uid})
             })
-        }else dispatch({type:"EN_MATCH_ALR"})
+        }else {
+            dispatch({type:"EN_MATCH_ALR"})
+            dispatch({ type: 'DIALOG_CLEAR' });
+            dispatch({ type: 'SNACKBAR', variant: 'success', message: "Woaah! You`ve already Enrolled in this Match!"});
+        }
         
     }
 }

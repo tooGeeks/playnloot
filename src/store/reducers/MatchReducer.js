@@ -17,15 +17,15 @@ const MatchReducer = (state=initState,action)=>{
             return state;
         case 'EN_MATCH':
             console.log("Enrolled Successfully! Happy Looting");
-            alert("Enrolled Successfully! Happy Looting");
+            //alert("Enrolled Successfully! Happy Looting");
             return state;
         case 'EN_MATCH_ERR':
             console.log("EM An Error Occured");
-            alert("An Error Occured");
+            //alert("An Error Occured");
             return state;
         case 'EN_MATCH_ALR':
             console.log("Already Enrolled");
-            alert("Already Enrolled");
+            //alert("Already Enrolled");
             return state;
         default:
             return state;

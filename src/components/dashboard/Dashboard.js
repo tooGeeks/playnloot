@@ -1,16 +1,20 @@
-import React from "react";
-import { useSelector } from 'react-redux'
+import React, { useEffect } from "react";
+import { useSelector, connect, useDispatch, } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 
 //UI
-import { makeStyles, withStyles, Grid, Container, Paper, Divider, Badge, Typography, CssBaseline } from "@material-ui/core";
+import { makeStyles, Grid, Container, Paper, List, Button, Typography, CssBaseline } from "@material-ui/core";
 import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core'
-import { ReactComponent as Solid } from '../../imgs/soldier2.svg'
+//import { ReactComponent as Solid } from '../../imgs/soldier2.svg'
 import { AccountBox, TrackChanges } from '@material-ui/icons';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-
+import {firestoreConnect} from 'react-redux-firebase';
+import {isinDocs,getCurrentdate} from '../../Functions'
+import {compose} from 'redux';
+import MatchSummary from '../matches/MatchSummary';
+import { backDrop, clearBackDrop } from '../../store/actions/uiActions'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -58,27 +62,83 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const StyledBadge = withStyles(theme => ({
-  badge: {
-    border: `2px solid #000000`,
-    padding: theme.spacing(1.5, 1, 1.5),
-    borderRadius: 5,
-    fontSize: 16,
-    boxShadow: `1px 1px 5px 0px rgba(0,0,0,0.75)`,
-  },
-}))(Badge)
-
-export default function Dashboard() {
+function Dashboard(props) {
   const classes = useStyles();
+
   const { profile, auth } = useSelector(
     state => state.firebase
   )
+  
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if(profile.isLoaded){
+      dispatch(clearBackDrop())
+    }else dispatch(backDrop());
+  }, [profile, props, dispatch]);
+
+  const {matches} = props;
+  
+  console.table(matches);
+  console.table(profile.matches);
+
   const [expanded, setExpanded] = React.useState(null);
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+  
 
   if (!auth.uid) return <Redirect to='/signin' />
+  
+  const matchdiv = profile.isLoaded
+    ? matches 
+      ? matches && matches.map(match =>{//Used to Generate MatchList using ternary operator
+        
+        if(match.lrdate<getCurrentdate()){//Hides a Match if its Last Enrollment Date has Passed
+          return null;
+        }
+        let isEnr =  isinDocs(profile.matches, match.id);//Checks if User has already ENrolled in the match
+        
+        console.log((match));
+        console.log(matches.indexOf(match));
+        return(
+          
+            isEnr ? null : <MatchSummary match={match} indexPos={matches.indexOf(match)} loc={"/entermatch/"} isEnr={isEnr}  bttnname={"Enroll"} key={match.id}/>
+          
+        )
+      }) 
+    : <React.Fragment>{/*Loading*/}</React.Fragment> 
+    : <React.Fragment>{/*Loading*/}</React.Fragment>
+
+    console.log(profile.matches);
+    console.log(profile);
+    const enMatchDiv = profile.isLoaded ? (profile.matches.length !== 0) ? profile.matches && profile.matches.map(match =>{
+      if(match.lrdate<getCurrentdate()){
+        return(
+          <Paper>
+            <Typography>You haven`t enrolled in any new matches</Typography>
+            <br/> <span onClick={() => setExpanded('panel3')}>Enroll now!</span>
+          </Paper>
+        )
+      }
+      return(
+          <Paper key={match}>
+            <Typography>Match Name: </Typography>
+          </Paper>
+          //<li className="" key={match}><div><span>Match Name : {match}</span><Link className="secondary-item" to={"/entermatch/"+match}><button className="waves-effect waves-light hoverable btn-small">Details</button></Link></div></li>
+      )
+   }) 
+   : <div>
+        <Typography>You haven`t enrolled in any new matches</Typography>
+        <br/> <Button size="small" align="right" variant="outlined" color="primary" onClick={() => setExpanded('panel3')}>Enroll now!</Button>
+      </div>
+   : null
+
+    // <React.Fragment>
+    //   <Typography>You haven`t enrolled in any new matches</Typography>
+    //   <br/> <span onClick={() => setExpanded('panel3')}>Enroll now!</span>
+    // </React.Fragment>
+    
   return (
     <Container className={classes.root}>
       <Grid
@@ -86,18 +146,6 @@ export default function Dashboard() {
         justify="center"
         spacing={1}
       >
-        {/*
-        <Grid item>
-          <StyledBadge invisible={!profile.isLoaded} badgeContent={"Kills: " + profile.kills} color="secondary" overlap={"circle"} anchorOrigin={{vertical: 'top', horizontal: 'right',}}>
-            <StyledBadge invisible={!profile.isLoaded} badgeContent={"Wallet: " + profile.wallet} color="secondary" overlap={"circle"} anchorOrigin={{vertical: 'bottom', horizontal: 'left',}}>
-              <Avatar className={classes.solid} variant="rounded">
-                <Solid className={classes.solid}/>
-              </Avatar>
-            </StyledBadge>
-          </StyledBadge>
-            <Typography align="center" className={classes.playerName} gutterBottom>{profile.pubgid}</Typography>
-        </Grid>
-        */}
         <Grid container item xs={12}
           direction="row"
           alignItems="flex-start"
@@ -165,10 +213,9 @@ export default function Dashboard() {
               <Typography className={classes.panelHeading}><b>ENROLLED MATCHES</b></Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <Typography>
-                You haven`t enrolled in any new matches ;(
-                <br/> <span onClick={() => setExpanded('panel3')}>Enroll now!</span>
-              </Typography>
+              <>
+                {enMatchDiv}
+              </>
             </ExpansionPanelDetails>
           </ExpansionPanel>
           <ExpansionPanel expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
@@ -176,13 +223,13 @@ export default function Dashboard() {
               <Typography className={classes.panelHeading}><b>NEW MATCHES</b></Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <Typography>
-                DASHBOARD CONTAENTS
-              </Typography>
+              <List style={{minWidth: '100%'}}>
+                {matchdiv}
+              </List>
             </ExpansionPanelDetails>
           </ExpansionPanel>
         </Grid>
-        <Grid item xs={12} sm={6}>
+        {/* <Grid item xs={12} sm={6}>
           <Paper className={classes.paper}>
             Kand5
           </Paper>
@@ -191,8 +238,20 @@ export default function Dashboard() {
           <Paper className={classes.paper}>
             Kand6
           </Paper>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Container>
   );
 }
+
+const mapStatetoProps = (state)=>{
+  return{
+      matches:state.firestore.ordered.Matches
+  }
+}
+
+export default compose(
+  connect(mapStatetoProps),
+  firestoreConnect([
+      {collection:'Matches'}
+  ]))(Dashboard)

@@ -40,6 +40,7 @@ export default function Wallet() {
     const { profile, auth } = useSelector(
         state => state.firebase
     )
+    console.log(profile);
     const [coins,setCoins] = useState({coins:0});
 
     if (!auth.uid) return <Redirect to='/signin' />

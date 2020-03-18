@@ -27,6 +27,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Landing from './components/layout/Landing';
 import Nav from "./components/layout/Nav";
 import SnackSnackbar from './components/SnackSnackbar'
+import AlertDialog from './components/AlertDialog'
 import BackDrop from './components/BackDrop';
 import { ReactComponent as Loading } from './imgs/loading.svg';
 
@@ -72,9 +73,10 @@ const App = () => {
     return (
       <BrowserRouter>
         <AuthIsLoaded>
-        <SnackSnackbar />
-        <BackDrop/>
           <MuiThemeProvider theme={themeConfig}>
+          <BackDrop/>
+          <SnackSnackbar />
+          <AlertDialog/>
             <div className="App">
             <CssBaseline />
               <Switch>

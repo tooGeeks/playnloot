@@ -1,4 +1,4 @@
-const uiReducer = (state = {backDropOpen: false, SnackbarVariant: 'info'}, action) => {
+const uiReducer = (state = {backDropOpen: false, SnackbarVariant: 'info', DialogOpen: false}, action) => {
     switch (action.type) {
       case "SNACKBAR":
         return {
@@ -7,16 +7,29 @@ const uiReducer = (state = {backDropOpen: false, SnackbarVariant: 'info'}, actio
           SnackbarVariant: action.variant,
           SnackbarMessage: action.message
         };
-      case "SNACKBAR_CLEAR":
-        return {
-          ...state,
-          SnackbarOpen: false,
-          /*
-          successSnackbarOpen: false,
-          errorSnackbarOpen: false,
-          infoSnackbarOpen: false
-          */
-        };
+        case "SNACKBAR_CLEAR":
+          return {
+            ...state,
+            SnackbarOpen: false,
+            /*
+            successSnackbarOpen: false,
+            errorSnackbarOpen: false,
+            infoSnackbarOpen: false
+            */
+          };
+        case "DIALOG":
+          return {
+            ...state,
+            DialogOpen: true,
+            DialogTitleParam: action.title,
+            DialogContentParam: action.content,
+            DialogActionsParam: action.actions
+          };
+        case "DIALOG_CLEAR":
+          return {
+            ...state,
+            DialogOpen: false
+          };
         case "BACKDROP":
           return {
             ...state,

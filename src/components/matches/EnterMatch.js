@@ -1,91 +1,82 @@
-import React, { Component } from 'react';
-import {connect} from 'react-redux';
-import {compose} from 'redux';
-import {firestoreConnect} from 'react-redux-firebase';
-import {convt,dateString,isinDocs} from '../../Functions';
-import {enterMatch} from '../../store/actions/MatchActions';
-import {findinMatches} from '../../Functions'
+// import React from 'react';
+// import { Link } from 'react-router-dom';
+// import {convt} from '../../Functions';
 
-/*
-  This Component is used to display the details of match user clicked and allows it to enroll in the match 
-  if not enrolled already
-*/
+// //Updates
+// import { makeStyles, Typography } from '@material-ui/core';
+// import ListItem from '@material-ui/core/ListItem';
+// import ListItemText from '@material-ui/core/ListItemText';
+// import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+// import Avatar from '@material-ui/core/Avatar';
+// import ImageIcon from '@material-ui/icons/Image';
 
-class EnterMatch extends Component{
-    mid = this.props.match.params.mid;
-    handleSubmit = (e) =>{
-        e.preventDefault();
-        this.props.enterMatch(this.mid,this.props.auth.uid);
-    }
-    render(){
-        const {matches,profile} = this.props;
-        const match = matches ? findinMatches(matches,this.mid) : null;//Checks if selected match exists in list of matches
-        const isCreditSuf = profile.wallet<2 ? false : true ; //Checks if user has sufficient credit to enroll in a match
-        const enrcst = "Enrollment will require 2 Coins."
-        let players = match && match.players; //fetches list of players enrolled in the selected match
-        const isAlRegU = profile.isLoaded && match && isinDocs(profile.matches,match.id); //Returns true if match exists in user's data
-        const isAlRegM = match && profile.isLoaded && isinDocs(players,profile.pubgid); //Returns true if user exists in match's data
-        const icmsg = !isCreditSuf ?<div hidden={isAlRegU && isAlRegM}><p>{enrcst} You have {profile.wallet} coin in your Wallet</p>
-        <p className="red-text pulse">Insufficient Credit. Recharge Your Wallet </p></div> : //if credit is not suuficient shows a warning 
-        <p hidden={isAlRegU && isAlRegM}>{enrcst} You have {profile.wallet} coins in your Wallet</p> ;//shows no. of coins user has
-        const matchmsg = null;
-        const almsg = isAlRegU && isAlRegM ? //Shows a green text message if user is already enrolled
-        <h4 className="green-text pulse">Already Enrolled</h4> : null;
-        const smsg = matches ? <div>{matchmsg}{almsg}{icmsg}
-        <span className="card-title">Match : {match && match.id}</span><br/>
-        <span>Last Enrollment Date : {match && dateString(match.lrdate)}</span><br/>
-        <span>Match Date : {match && dateString(match.mdate)}</span><br/>
-        <span>Match Time : {match && convt(1,match.mtime)}</span><br/></div> : <div className="center"><p>Loading...</p>
-    <div className="preloader-wrapper big active">
-  <div className="spinner-layer spinner-blue-only">
-    <div className="circle-clipper left">
-      <div className="circle"></div>
-    </div><div className="gap-patch">
-      <div className="circle"></div>
-    </div><div className="circle-clipper right">
-      <div className="circle"></div>
-    </div>
-  </div>
-</div>
-    </div> ;
-        return(
-            <div className="center-page">
-            <div className="row">
-                    <div className="col s12 m6">
-                        <div className="card black hoverable white-text">
-                        <form onSubmit={this.handleSubmit}>
-                            <div className="card-content white-text">
-                                {smsg}
-                            </div>
-                            <div className="card-action">
-                                <button className="waves-effect waves-light btn" disabled={!isCreditSuf || isAlRegU || isAlRegM}>Confirm Enrollment</button>
-                            </div>
-                        </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-}
 
-const mapStatetoProps = (state)=>{
-    return{
-        auth:state.firebase.auth,
-        profile:state.firebase.profile,
-        matches:state.firestore.ordered.Matches
-    }
-}
+// /*
+//   This Component is used to Display the Details of a Match.
+//   It is like a template which can be used for any list of matches with details
+// */
+// const useStyles = makeStyles(theme => ({
+//     inline: {
+//         display: 'inline',
+//       },
+//     Item: {
+        
+//     },
+// }))
 
-const mapDispatchtoProps = (dispatch)=>{
-    return{
-        enterMatch:(mid,uid)=>{dispatch(enterMatch(mid,uid))}
-    }
-}
+// const MatchSummary = (props) => {
+//     const classes = useStyles();
+//     const count = 0;
+//     const {match,loc,bttnname,isEnr} = props;//Passed By Calling Component
+//     const canEnroll = match.plno<99 ? true : false;//Checks if match is full?
+//     const link = canEnroll && !isEnr ? loc+match.id : window.location.pathname ;// Sets the button link to be the match if cannot enroll sets to current path
+//     const canEnrollmsg = canEnroll ? null : <React.Fragment><Typography><b>Match is Full</b></Typography><br/></React.Fragment> ; //Displays a message if Match is Full
+//     const isEnrolledmsg = isEnr ? <React.Fragment><Typography><b>Already Enrolled</b></Typography><br/></React.Fragment> : null ;  // Displays a Message if Already Enrolled
+//     const fmsg = isEnr ? isEnrolledmsg : canEnrollmsg; //Final message depending upon enrollment status
+//     return(
+//     <>
+//         <ListItem className={classes.Item} button>
+//             <ListItemAvatar>
+//             <Avatar className={classes.orange}>
+//                 {count + 1}
+//             </Avatar>
+//             </ListItemAvatar>
+//             <ListItemText primary={match.id} secondary={
+//                 <><Typography variant="caption">Match Date: {match.mdate}</Typography></>} />
+//             <Typography edge="end">Enroll</Typography>
+//         </ListItem>
+//     </>
+//     )
+// }
 
-export default compose(
-    connect(mapStatetoProps,mapDispatchtoProps),
-    firestoreConnect([
-        {collection:'Matches'}
-    ])
-)(EnterMatch);
+
+
+// // const MatchSummary = (props)=>{
+// //     const {match,loc,bttnname,isEnr} = props;//Passed By Calling Component
+// //     const canEnroll = match.plno<99 ? true : false;//Checks if match is full?
+// //     const link = canEnroll && !isEnr ? loc+match.id : window.location.pathname ;// Sets the button link to be the match if cannot enroll sets to current path
+// //     const canEnrollmsg = canEnroll ? null : <div><span className='red-text'><b>Match is Full</b></span><br/></div> ; //Displays a message if Match is Full
+// //     const isEnrolledmsg = isEnr ? <div><span className='green-text'><b>Already Enrolled</b></span><br/></div> : null ;  // Displays a Message if Already Enrolled
+// //     const fmsg = isEnr ? isEnrolledmsg : canEnrollmsg; //Final message depending upon enrollment status
+// //     return(
+// //         <div className="row">
+// //             <div className="col s12 m6">
+// //             <div className="card black">
+// //                 <div className="card-content white-text">
+// //                 <span className='card-title'>Match Name : {match.id}&emsp;</span><br/>
+// //                 <span className='white-text'>Match Date : {match.mdate}&emsp;</span><br/>
+// //                 <span className='white-text'>L.Reg Date : {match.lrdate}&emsp;</span><br/>
+// //                 <span className='white-text'>Match Time : {convt(1,match.mtime)}&emsp;</span><br/>{/* Converts Time */}
+// //                 <span className='white-text'>Players Enrolled : {match.plno}&emsp;</span><br/>
+// //                 {fmsg}
+// //                 </div>
+// //                 <div className="card-action">
+// //                     <Link className="white-text" to={link}><button className="waves-effect waves-light btn-small" id={match.id} disabled={!canEnroll || isEnr}>{bttnname}</button></Link>
+// //                 </div>
+// //             </div>
+// //             </div>
+// //         </div>
+// //     )
+// // }
+
+// export default MatchSummary;
