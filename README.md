@@ -1,3 +1,7 @@
+#playnloot 
+
+> Host PUBG, CALL OF Duty, etc ESports Matches, make Players enroll in the matches, give them money prizes and earn Money!
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
