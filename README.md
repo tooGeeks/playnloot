@@ -17,7 +17,7 @@
   <h3 align="center">playnloot</h3>
 
   <p align="center">
-    > Host and manage ESports Matches of PUBG, Call of Duty, Free Fire etc, make Players enroll in the matches, give them money prizes and earn Money!
+    Host and manage ESports Matches of PUBG, Call of Duty, Free Fire etc, make Players enroll in the matches, give them money prizes and earn Money!
     <br />
     <a href="https://github.com/limbu-timbu/playnloot/"><strong>Explore the docs »</strong></a>
     <br />
