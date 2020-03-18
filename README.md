@@ -6,7 +6,7 @@
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 <br/>
-[![Under Development Badge][underDevelopment-shield]][underDevelopment-badge]
+[Under Development Badge][underDevelopment-shield]
 
 
 
@@ -16,7 +16,7 @@
     <img src="logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">playnloot</h3>
+  <h2 align="center">playnloot</h2>
 
   <p align="center">
     Host and manage ESports Matches of PUBG, Call of Duty, Free Fire etc, make Players enroll in the matches, give them money prizes and earn Money!
@@ -31,7 +31,7 @@
     <a href="https://github.com/limbu-timbu/playnloot/issues">Request Feature</a>
   </p>
   <br/>
-  <h5>Made with :heart: by [Shubham](https://github.com/suebham/) & [Swanand](https://github.com/destro1108)</h5>
+  <h3 align="center">Made with :heart: by <a href="https://github.com/suebham/">Shubham</a> & <a href="https://github.com/destro1108">Swanand</a></h3>
 </p>
 
 
