@@ -5,6 +5,8 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
+<br/>
+[![Under Development Badge][underDevelopment-shield]][underDevelopment-badge]
 
 
 
@@ -28,6 +30,8 @@
     ·
     <a href="https://github.com/limbu-timbu/playnloot/issues">Request Feature</a>
   </p>
+  <br/>
+  <h5>Made with :heart: by [Shubham](https://github.com/suebham/) & [Swanand](https://github.com/destro1108)</h5>
 </p>
 
 
@@ -51,14 +55,8 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-There are many great README templates available on GitHub, however, I didn't find one that really suit my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need.
+playnloot is a react.js based Web App developed by us to host E-Sports Tournaments, where players can sign-up, buy coins to participate in tournaments hosted on on our Web App and win coins, converted them into real money!
 
-Here's why:
-* Your time should be focused on creating something amazing. A project that solves a problem and helps others
-* You shouldn't be doing the same tasks over and over like creating a README from scratch
-* You should element DRY principles to the rest of your life :smile:
-
-Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue.
 
 
 ### Built With
@@ -154,4 +152,5 @@ Project Link: [https://github.com/limbu-timbu/playnloot](https://github.com/limb
 [license-url]: https://github.com/limbu-timbu/playnloot/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/seebham/
+[underDevelopment-shield]: https://img.shields.io/badge/underDevelopment-This%20Project%20is%20still%20in%20Development%20Stage!-blueviolet
 [product-screenshot]: images/screenshot.png
