@@ -6,7 +6,7 @@
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 <br/>
-[![Under Development Badge][underDevelopment-shield]]
+![Under Development Badge][underDevelopment-shield]
 
 
 
