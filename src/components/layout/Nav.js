@@ -86,7 +86,7 @@ const Nav = (props) => {
 
     const Coincount = () => {
       return (
-        <IconButton color="inherit" component={Link} to={'/wallet'}>
+        <IconButton color="inherit" component={Link} to={'/wallet/view/coins'}>
           <Avatar>
             <AccountBalanceWalletIcon /><Typography>: {profile.wallet}</Typography>
           </Avatar>

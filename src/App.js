@@ -86,12 +86,12 @@ const App = () => {
                 <Route path='/signup' component={SignUp} />
                 <Route path='/create' component={CreateProject} />
                 <Route exact path='/' component={Landing}/>
-                <Route path='/wallet' component={Wallet}/>
+                <Route exact path='/wallet/:use/:mny' component={Wallet}/>
                 <Route path="/entermatch/:mid" component={EnterMatch}/>
                 <Route path="/enrolledmatches/" component={EnrolledMatches}/>
 
-                <Route path="/p_callback/:mny" component={HandleCallbackPaytm}/>
-                <Route path="/p_callbackerr/" component={HandleCallbackPaytmErr}/>
+                {/* <Route path="/p_callback/:mny" component={HandleCallbackPaytm}/>
+                <Route path="/p_callbackerr/" component={HandleCallbackPaytmErr}/> */}
 
                 {/* Admin  Paths */}
                 <Route path="/admin/creatematch" component={CreateMatch}/>
