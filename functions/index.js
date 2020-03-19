@@ -33,7 +33,7 @@ exports.paytmpay = functions.https.onRequest((req,res) => {
   var email = req.body.email;
   var mobile = req.body.mno;
   var orderid= "ORDER"+"-"+name+"-"+ran;
-  if (amount == undefined) {
+  if (amount === undefined) {
       res.send('Amount is Mandatory.');
   } else {
       if (amount < paytm_config.MinAmount) {
@@ -56,9 +56,9 @@ exports.paytmpay = functions.https.onRequest((req,res) => {
           var field = '';
           var url = '';
           paramarray['CHECKSUMHASH'] = checksum;
-          if (paytm_config.PAYTM_ENVIRONMENT == 'PROD') {
+          if (paytm_config.PAYTM_ENVIRONMENT === 'PROD') {
               url = 'https://securegw.paytm.in/order/process';
-          } else if (paytm_config.PAYTM_ENVIRONMENT == 'TEST') {
+          } else if (paytm_config.PAYTM_ENVIRONMENT === 'TEST') {
               url = 'https://securegw-stage.paytm.in/order/process';
           }
           for (var param in paramarray) {
@@ -129,12 +129,12 @@ exports.paytmcallback = functions.https.onRequest((req,res) => {
   var paytmChecksum = "";
   var paytmParams = {};
   for(var key in received_data){
-      if(key=="CHECKSUMHASH") paytmChecksum = received_data[key];
+      if(key==="CHECKSUMHASH") paytmChecksum = received_data[key];
       else paytmParams[key] = received_data[key];
   }
   var isValidChecksum = checksum_lib.verifychecksum(paytmParams,paytm_config.MERCHANT_KEY,paytmChecksum);
   if(isValidChecksum){
-      if(received_data["STATUS"]=="TXN_SUCCESS"){
+      if(received_data["STATUS"]==="TXN_SUCCESS"){
           incrwalletamt(received_data['ORDERID'],parseInt(received_data['TXNAMOUNT'])).then(function(result){
               res.write('<html>');
               res.write('<head>');
@@ -155,7 +155,7 @@ exports.paytmcallback = functions.https.onRequest((req,res) => {
           res.write('</head>');
           res.write('<body>');
           res.write("<script>window.onload = function(){");
-          res.write("document.location.href = 'http://localhost:3000/p_callbackerr/'");
+          res.write("document.location.href = 'http://pnloot.web.app/p_callbackerr/'");
           res.write(";}</script>");
           res.write('</body>');
           res.write('</html>');
