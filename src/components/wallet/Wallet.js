@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { creditWallet } from '../../store/actions/PaymentActions';
-import { Redirect } from 'react-router-dom';
 import useForm from "react-hook-form";
 import { makeStyles, Container, Grid, Paper, IconButton, TextField, CardHeader, Typography, Card, CardContent, CardActions, Button } from '@material-ui/core';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
@@ -40,7 +39,7 @@ export default function Wallet(props) {
     const { use, mny } = props.match.params;
     console.log(props.match.params);
     const { register, handleSubmit, errors } = useForm();
-    const { profile, auth } = useSelector(
+    const { profile } = useSelector(
         state => state.firebase
     )
     console.log(profile);
@@ -64,8 +63,6 @@ export default function Wallet(props) {
         }
     }, [profile, use, mny, dispatch])
     const [coins,setCoins] = useState({coins:0});
-
-    if (!auth.uid) return <Redirect to='/signin' />
     
     const handleChange = (e) => {
         setCoins({coins: e.target.value})

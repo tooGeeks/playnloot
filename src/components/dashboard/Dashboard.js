@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useSelector, connect, useDispatch, } from 'react-redux'
-import { Redirect } from 'react-router-dom'
 
 //UI
 import { makeStyles, Grid, Container, Paper, List, Button, Typography, CssBaseline } from "@material-ui/core";
@@ -65,7 +64,7 @@ const useStyles = makeStyles(theme => ({
 function Dashboard(props) {
   const classes = useStyles();
 
-  const { profile, auth } = useSelector(
+  const { profile } = useSelector(
     state => state.firebase
   )
   
@@ -74,6 +73,7 @@ function Dashboard(props) {
   useEffect(() => {
     if(profile.isLoaded){
       dispatch(clearBackDrop())
+      
     }else dispatch(backDrop());
   }, [profile, props, dispatch]);
 
@@ -87,8 +87,6 @@ function Dashboard(props) {
     setExpanded(isExpanded ? panel : false);
   };
   
-
-  if (!auth.uid) return <Redirect to='/signin' />
   
   const matchdiv = profile.isLoaded
     ? matches 
@@ -112,18 +110,21 @@ function Dashboard(props) {
 
     console.log(profile.matches);
     console.log(profile);
-    const enMatchDiv = profile.isLoaded ? (profile.matches.length !== 0) ? profile.matches && profile.matches.map(match =>{
+    const enMatchDiv = profile.isLoaded ? matches !== undefined ? (profile.matches.length !== 0) ? profile.matches && profile.matches.map(match =>{
+      for (const i of matches)  if(match === i.id) match = i;
       if(match.lrdate<getCurrentdate()){
         return(
-          <Paper>
+          <Paper> 
             <Typography>You haven`t enrolled in any new matches</Typography>
             <br/> <span onClick={() => setExpanded('panel3')}>Enroll now!</span>
           </Paper>
         )
       }
       return(
-          <Paper key={match}>
-            <Typography>Match Name: </Typography>
+          <Paper key={match.id}>
+            <Typography>Match Name: {match.id}</Typography>
+            <Typography>Match Date: {match.mdate}</Typography>
+            <Typography>Match Time: {match.mtime}</Typography>
           </Paper>
           //<li className="" key={match}><div><span>Match Name : {match}</span><Link className="secondary-item" to={"/entermatch/"+match}><button className="waves-effect waves-light hoverable btn-small">Details</button></Link></div></li>
       )
@@ -132,6 +133,7 @@ function Dashboard(props) {
         <Typography>You haven`t enrolled in any new matches</Typography>
         <br/> <Button size="small" align="right" variant="outlined" color="primary" onClick={() => setExpanded('panel3')}>Enroll now!</Button>
       </div>
+  : null
    : null
 
     // <React.Fragment>

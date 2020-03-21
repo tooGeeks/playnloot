@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 import {signOut} from '../../store/actions/authActions';
-import {Redirect} from 'react-router-dom';
 import { Helmet } from 'react-helmet'
 
 /*
@@ -10,7 +9,6 @@ import { Helmet } from 'react-helmet'
 */
 
 const AdminNav = (props)=>{
-    const {auth} = props;
     const adminlinks = (//admin links
     <ul className="tabs tabs-transparent">
         <li className="tab"><Link to="" onClick={props.signOut}>LogOut</Link></li>
@@ -19,7 +17,6 @@ const AdminNav = (props)=>{
         <li className="tab"><Link to="/admin/manualpayment">Manual Payment</Link></li>
         <li className="tab"><Link to="/admin/sendnotifications">Send Notifications</Link></li>
     </ul>)
-    if(!auth.uid) return <Redirect to="/signin"></Redirect>
     return(
     <React.Fragment>
         <Helmet>
@@ -37,15 +34,11 @@ const AdminNav = (props)=>{
     </React.Fragment>
     )
 }
-const mapStatetoProps = (state) =>{
-    return{
-        auth:state.firebase.auth
-    }
-}
+
 
 const mapDispatchtoProps = (dispatch)=>{
     return{
         signOut:()=>dispatch(signOut())
     }
 }
-export default connect(mapStatetoProps,mapDispatchtoProps)(AdminNav);
+export default connect(null,mapDispatchtoProps)(AdminNav);
