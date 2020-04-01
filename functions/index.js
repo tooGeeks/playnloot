@@ -233,7 +233,7 @@ exports.paytmcallback = functions.https.onRequest((req,res) => {
               res.write('</head>');
               res.write('<body>');
               res.write("<script>window.onload = function(){");
-              res.write("document.location.href = 'http://pnloot.web.app/p_callback/"+received_data['TXNAMOUNT']+"'");
+              res.write("document.location.href = 'http://playandloot.web.app/wallet/sux/"+received_data['TXNAMOUNT']+"'");
               res.write(";}</script>");
               res.write('</body>');
               res.write('</html>');
@@ -247,7 +247,7 @@ exports.paytmcallback = functions.https.onRequest((req,res) => {
               res.write('</head>');
               res.write('<body>');
               res.write("<script>window.onload = function(){");
-              res.write("document.location.href = 'http://localhost:3000/p_callbackerr/'");
+              res.write("document.location.href = 'http://playandloot.web.app/wallet/fail/0'");
               res.write(";}</script>");
               res.write('</body>');
               res.write('</html>');
