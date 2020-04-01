@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, connect, useDispatch, } from 'react-redux'
 
 //UI
-import { makeStyles, Grid, Container, Paper, List, Button, Typography, CssBaseline, Box } from "@material-ui/core";
+import { makeStyles, Grid, Container, Paper, List, Button, Typography, CssBaseline, Box, ListItem, ListItemAvatar, ListItemText, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from "@material-ui/core";
 import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core'
 //import { ReactComponent as Solid } from '../../imgs/soldier2.svg'
 import { AccountBox, TrackChanges, Event, AccessAlarm } from '@material-ui/icons';
@@ -96,7 +96,7 @@ function Dashboard(props) {
     }else dispatch(backDrop());
   }, [profile, props, dispatch]);
 
-  const {matches} = props;
+  const { matches, users } = props;
   
   console.table(matches);
   console.table(profile.matches);
@@ -105,7 +105,33 @@ function Dashboard(props) {
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  
+
+  console.log(users)
+
+  const leaderDiv = users ? 
+    <TableContainer component={Paper} style={{maxHeight: 350,}}>
+      <Table stickyHeader aria-label="sticky table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Rank</TableCell>
+            <TableCell align="center">Pro Player`s ID</TableCell>
+            <TableCell align="right">Kills</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {users && users.map((player, index) => {
+            return(
+              <TableRow key={player.id}>
+                <TableCell align="center" component="th" scope="row">#{index + 1}</TableCell>
+                <TableCell align="center">{player.pubgid}</TableCell>
+                <TableCell align="center">{player.kills}</TableCell>
+              </TableRow>
+            )
+          })}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  : null
   
   const matchdiv = profile.isLoaded
     ? matches 
@@ -129,18 +155,18 @@ function Dashboard(props) {
 
     console.log(profile.matches);
     console.log(profile);
-    const enMatchDiv = profile.isLoaded && (profile.matches) ? matches !== undefined ? (profile.matches.length !== 0) ? profile.matches && profile.matches.map(match =>{
+    const enMatchDiv = profile.isLoaded && (profile.matches) ? matches !== undefined ? (profile.matches.length !== 0) ? profile.matches && profile.matches.map((match, index) =>{
       for (const i of matches)  if(match === i.id) match = i;
       if(match.lrdate<getCurrentDate()){
         return(
-          <Paper> 
+          <Paper key={index}> 
             <Typography>You haven`t enrolled in any new matches</Typography>
             <br/> <span onClick={() => setExpanded('panel3')}>Enroll now!</span>
           </Paper>
         )
       }
       return(
-        <Grid  className={classes.enPaper}>
+        <Grid className={classes.enPaper} key={index}>
           <Grid item>
             <Box padding={1.5}>
               <Typography variant="body2"><Event className={classes.icons}/>&nbsp;{match.mdate}&nbsp;</Typography>
@@ -158,11 +184,6 @@ function Dashboard(props) {
       </div>
   : null
    : null
-
-    // <React.Fragment>
-    //   <Typography>You haven`t enrolled in any new matches</Typography>
-    //   <br/> <span onClick={() => setExpanded('panel3')}>Enroll now!</span>
-    // </React.Fragment>
     
   return (
     <Container className={classes.root}>
@@ -225,12 +246,10 @@ function Dashboard(props) {
         <Grid item xs={12} sm={12}>
           <ExpansionPanel expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-              <Typography className={expanded === 'panel1' ? classes.expanelHeading : classes.panelHeading}><b>LEADER BOARD</b></Typography>
+              <Typography className={expanded === 'panel1' ? classes.expanelHeading : classes.panelHeading}><b>TOP PLAYERS</b></Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <Typography>
-                DASHBOARD CONTENTS
-              </Typography>
+                {leaderDiv ? leaderDiv : <Typography>Coming Soon!</Typography>}
             </ExpansionPanelDetails>
           </ExpansionPanel>
           <ExpansionPanel expanded={expanded==null ? true : expanded === 'panel2' ? true : false} onChange={handleChange('panel2')}>
@@ -275,12 +294,14 @@ function Dashboard(props) {
 
 const mapStatetoProps = (state)=>{
   return{
-      matches:state.firestore.ordered.Matches
+      matches:state.firestore.ordered.Matches,
+      users:state.firestore.ordered.Users
   }
 }
 
 export default compose(
   connect(mapStatetoProps),
   firestoreConnect([
-      {collection:'Matches'}
+      {collection:'Matches'},
+      {collection:'Users',orderBy:['kills','desc'],limit:5,where:['kills','>',0]}
   ]))(Dashboard)
