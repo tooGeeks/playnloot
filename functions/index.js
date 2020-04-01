@@ -172,6 +172,7 @@ const createNotification = ((notification) => {
 });
 
 
+/*
 exports.projectCreated = functions.firestore
   .document('projects/{projectId}')
   .onCreate(doc => {
@@ -204,3 +205,4 @@ exports.userJoined = functions.auth.user()
 
       });
 });
+*/
