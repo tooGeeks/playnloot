@@ -1,15 +1,17 @@
 import React, {useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { creditWallet } from '../../store/actions/PaymentActions';
+import { creditWallet, requestWithdrawal } from '../../store/actions/PaymentActions';
 import useForm from "react-hook-form";
 import { makeStyles, Container, Grid, Paper, IconButton, TextField, CardHeader, Typography, Card, CardContent, CardActions, Button } from '@material-ui/core';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import { showSnackbar } from '../../store/actions/uiActions'
 
 
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
+        paddingBottom: 60,
     },
     paper: {
         padding: theme.spacing(2),
@@ -38,7 +40,15 @@ export default function Wallet(props) {
     const dispatch = useDispatch();
     const { use, mny } = props.match.params;
     console.log(props.match.params);
-    const { register, handleSubmit, errors } = useForm();
+
+    const { register, handleSubmit, errors, reset } = useForm();
+    const {
+        register: register2,
+        errors: errors2,
+        reset: reset2,
+        handleSubmit: handleSubmit2
+      } = useForm();
+
     const { profile } = useSelector(
         state => state.firebase
     )
@@ -62,26 +72,36 @@ export default function Wallet(props) {
             
         }
     }, [profile, use, mny, dispatch])
-    const [coins,setCoins] = useState({coins:0});
+    const [ coins, setCoins ] = useState({coins:0});
+    const [ data, setData ] = useState({coins: 0, mno: 0, pmode: ''});
     
     const handleChange = (e) => {
         setCoins({coins: e.target.value})
     }
-    const onSubmit = (data, e) => {
+    const handleChange2 = (e) => {
+        console.log((e.target.id));
+        setData({...data,[e.target.id]:e.target.value})
+    }
+    const onSubmitAddCoin = (data, e) => {
         e.preventDefault();
-        console.log(coins.coins);
         dispatch(creditWallet({noofcns:coins.coins,mode:"PayTM"}));
         //props.backDrop();
     };
+    const onSubmitRequest = (data, e) => {
+        e.preventDefault();
+        dispatch(requestWithdrawal({coins: data.coins, pmode: data.pmode}));
+        reset2();
+        setData({coins: 0, mno: 0, pmode: ''});
+    }; 
 
     return (
         <React.Fragment>
             <Container className={classes.root}>
-                <Grid container 
+                <Grid container
                     direction="column" justify="center" alignItems="stretch" spacing={2} className={classes.grid}>
                     
                     <Grid item xs={12}>
-                    <form noValidate onSubmit={handleSubmit(onSubmit)}>
+                    <form key={1} noValidate onSubmit={handleSubmit(onSubmitAddCoin)}>
                         <Card variant="outlined">
                             <CardHeader title="Buy Coins"
                             subheader="Refill your Wallet"
@@ -109,7 +129,6 @@ export default function Wallet(props) {
                                         style = {{width: 95}}
                                         size="small"
                                         margin="dense"
-                                        autoFocus
                                         required
                                         name="coins"
                                         id="coins"
@@ -144,7 +163,128 @@ export default function Wallet(props) {
                         </form>
                     </Grid>
                     <Grid item xs={12}>
-
+                        <form key={2} noValidate onSubmit={handleSubmit2(onSubmitRequest)}>
+                            <Card varient="outlined">
+                                <CardHeader title="Request Withdrawal"
+                                    subheader="Withdraw your Money"
+                                    action={
+                                    <IconButton aria-label="money">
+                                        <AttachMoneyIcon color="inherit"/>
+                                    </IconButton>
+                                }/>
+                                <CardContent>
+                                    <Grid container spacing={1} justify="center" alignItems="center">
+                                        <Grid item>
+                                            <Typography variant="body2">
+                                                You have <span color="primary">{profile.wallet}</span> coins in your wallet <br/>
+                                                Remaining Coins After Withdrawal : <span color="primary">₹{data.coins*5}</span>
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                variant="filled"
+                                                size="small"
+                                                required
+                                                name="coins"
+                                                id="coins"
+                                                label="No of Coins"
+                                                type="number"
+                                                onChange={handleChange2}
+                                                helperText="eg. 2 coins ie. ₹10"
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                                inputRef={
+                                                    register2({
+                                                        required: true,
+                                                    })
+                                                }
+                                                error={!!errors2.coins}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                variant="filled"
+                                                size="small"
+                                                required
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                                name="rupees"
+                                                id="rupees"
+                                                value={parseInt(data.coins)*5}
+                                                label="In Rupees"
+                                                disabled
+                                                helperText="Total Amount"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                              style={{textAlign: 'center'}}
+                                              id="pmode"
+                                              name="pmode"
+                                              select
+                                              label="Payment Mode"
+                                              onChange={handleChange2}
+                                              value={data.pmode}
+                                              SelectProps={{
+                                                native: true,
+                                              }}
+                                              inputRef={
+                                                register2({
+                                                    required: true,
+                                                })
+                                              }
+                                              helperText="Please select a Payment Mode"
+                                              variant="filled"
+                                              size="small"
+                                            >
+                                                {['UPI', 'Bank Transfer', 'Cash'].map((option) => (
+                                              <option key={option} value={option}>
+                                                {option}
+                                              </option>
+                                            ))}
+                                            </TextField>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                variant="filled"
+                                                size="small"
+                                                required
+                                                name="mno"
+                                                id="mno"
+                                                label="Confirm Mobile No."
+                                                type="number"
+                                                onChange={handleChange2}
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                                inputRef={
+                                                    register2({
+                                                        required: true,
+                                                        minLength: {
+                                                            value: 10
+                                                        },
+                                                        validate: {
+                                                            matchNos: value => parseInt(value) === profile.mno || ""
+                                                        },
+                                                    })
+                                                }
+                                                error={!!errors2.mno}
+                                                helperText={(errors2.mno ? (errors2.mno.type === 'required' ? "Mobile No is must!" : errors2.mno.type === 'minLength' ? "No. is of 10 digits" : errors2.mno.type === 'matchNos' ? "No. didn`t match!" : null) : "eg. 9850000000")}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                </CardContent>
+                                <CardActions>
+                                    <Button type="submit" className={classes.buy} style={{minWidth: 160}} 
+                                        variant="contained" 
+                                        color="primary" disabled={((data.coins)<=0)}>
+                                            Request ₹{data.coins*5}
+                                    </Button>
+                                </CardActions>
+                            </Card>
+                        </form>
                     </Grid>
                 </Grid>
             </Container>
