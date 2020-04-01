@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, connect, useDispatch, } from 'react-redux'
 
 //UI
-import { makeStyles, Grid, Container, Paper, List, Button, Typography, CssBaseline, Avatar, Box } from "@material-ui/core";
+import { makeStyles, Grid, Container, Paper, List, Button, Typography, CssBaseline, Box } from "@material-ui/core";
 import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core'
 //import { ReactComponent as Solid } from '../../imgs/soldier2.svg'
 import { AccountBox, TrackChanges, Event, AccessAlarm } from '@material-ui/icons';
@@ -62,15 +62,22 @@ const useStyles = makeStyles(theme => ({
     fontSize: theme.typography.pxToRem(16),
     fontWeight: theme.typography.fontWeightRegular,
   },
-  enPaper: {
-    minWidth: '50%',
-    minHeight: '50%',
-    width: '50%',
-    height: '50%',
-    border: '1px solid',
-    borderColor: theme.palette.primary.main,
-    padding: theme.spacing(1.5),
+  expanelHeading: {
+    fontSize: theme.typography.pxToRem(16),
+    fontWeight: theme.typography.fontWeightRegular,
+    color: theme.custom.colors.darkhead1,
   },
+  enPaper: {
+    minWidth: '60%',
+    width: '60%',
+
+    border: '2px solid',
+    backgroundColor: theme.palette.background.paper,
+    borderColor: theme.palette.primary.main,
+    borderBottomRightRadius: 10,
+    marginBottom: 12,
+  },
+  primryColor: { color: theme.palette.primary.main },
 }));
 
 function Dashboard(props) {
@@ -94,7 +101,7 @@ function Dashboard(props) {
   console.table(matches);
   console.table(profile.matches);
 
-  const [expanded, setExpanded] = React.useState(null);
+  const [expanded, setExpanded] = React.useState('panel2');
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -133,15 +140,15 @@ function Dashboard(props) {
         )
       }
       return(
-          <Box className={classes.enPaper} display="flex" flexDirection="column" alignContent="flex-end" key={match.id}>
-            {/* <Box alignSelf="center" flexGrow={1}><Typography variant="body1" >{match.id}</Typography></Box> */}
-            {/* <Box flexDirection="row"> */}
-              <Box><Typography variant="body2"><Event className={classes.icons}/>&nbsp;{match.mdate}&nbsp;</Typography></Box>
-              <Box><Typography variant="body2"><AccessAlarm className={classes.icons}/>&nbsp;{match.mtime}</Typography></Box>
-              <Box flexDirection="row" alignSelf="flex-end"><Typography variant="body1" style={{color: '#16d678'}}>{match.id}</Typography></Box>
-            {/* </Box> */}
-            
-          </Box>
+        <Grid  className={classes.enPaper}>
+          <Grid item>
+            <Box padding={1.5}>
+              <Typography variant="body2"><Event className={classes.icons}/>&nbsp;{match.mdate}&nbsp;</Typography>
+              <Typography variant="body2"><AccessAlarm className={classes.icons}/>&nbsp;{match.mtime}</Typography>
+            </Box>
+              <Typography align="right" className={classes.primryColor} style={{fontWeight: 500, paddingRight: 7, paddingBottom: 2}}>{match.id}</Typography>
+          </Grid>
+        </Grid>
           //<li className="" key={match}><div><span>Match Name : {match}</span><Link className="secondary-item" to={"/entermatch/"+match}><button className="waves-effect waves-light hoverable btn-small">Details</button></Link></div></li>
       )
    }) 
@@ -218,27 +225,31 @@ function Dashboard(props) {
         <Grid item xs={12} sm={12}>
           <ExpansionPanel expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-              <Typography className={classes.panelHeading}><b>LEADER BOARD</b></Typography>
+              <Typography className={expanded === 'panel1' ? classes.expanelHeading : classes.panelHeading}><b>LEADER BOARD</b></Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <Typography>
-                DASHBOARD CONTAENTS
+                DASHBOARD CONTENTS
               </Typography>
             </ExpansionPanelDetails>
           </ExpansionPanel>
           <ExpansionPanel expanded={expanded==null ? true : expanded === 'panel2' ? true : false} onChange={handleChange('panel2')}>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-              <Typography className={classes.panelHeading}><b>ENROLLED MATCHES</b></Typography>
+              <Typography className={expanded === 'panel2' ? classes.expanelHeading : classes.panelHeading}><b>ENROLLED MATCHES</b></Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <>
+              <Grid 
+                container
+                direction="row"
+                justify="center"
+                spacing={1}>
                 {enMatchDiv}
-              </>
+              </Grid>
             </ExpansionPanelDetails>
           </ExpansionPanel>
           <ExpansionPanel expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-              <Typography className={classes.panelHeading}><b>NEW MATCHES</b></Typography>
+              <Typography className={expanded === 'panel3' ? classes.expanelHeading : classes.panelHeading}><b>NEW MATCHES</b></Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <List style={{minWidth: '100%'}}>

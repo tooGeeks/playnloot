@@ -2,7 +2,7 @@ import React,{Component} from "react";
 import {connect} from 'react-redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import {compose} from 'redux';
-import MatchSummary from "../matches/MatchSummary";
+import MatchSummary from "../matches/adminMatchSummary";
 import Nav from './AdminNav'
 
 class UpdateMatchList extends Component{
@@ -10,10 +10,10 @@ class UpdateMatchList extends Component{
         const {matches} = this.props;
         return(
         <div>
+            <Nav />
             {matches && matches.map(match =>{
                     return(
                         <React.Fragment>
-                            <Nav />
                             <MatchSummary match={match} loc={"/admin/updatematch/"} bttnname={"Select"} key={match.id}/>
                         </React.Fragment>
                     )

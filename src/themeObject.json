@@ -3,11 +3,11 @@
 	{
 		"primary":
 		{
-			"main": "#16d678"
+			"main": "#694dcc"
 		},
 		"secondary":
 		{
-			"main":"#fed32c"
+			"main":"#4dcb99"
 		},
 		"error":
 		{
@@ -15,9 +15,22 @@
 		},
 		"background":
 		{
-			"paper": "#2b3138",
-			"default": "#202329"
+			"paper": "#312c40",
+			"default": "#2d2839"
 		},
 		"type": "dark"
+	},
+	"typography":
+	{
+		"overline":
+		{
+			"color": "#6f6a7a"
+		}
+	},
+	"custom": {
+		"colors": {
+			"darkhead1": "#aca8b1",
+			"darkhead2": "#6f6a7a"
+		}
 	}
 }
