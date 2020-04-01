@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { creditWallet } from '../../store/actions/PaymentActions';
-import { Redirect } from 'react-router-dom';
 import useForm from "react-hook-form";
 import { makeStyles, Container, Grid, Paper, IconButton, TextField, CardHeader, Typography, Card, CardContent, CardActions, Button } from '@material-ui/core';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import { showSnackbar } from '../../store/actions/uiActions'
 
 
 const useStyles = makeStyles(theme => ({
@@ -33,17 +33,36 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function Wallet() {
+export default function Wallet(props) {
     const classes = useStyles();
     const dispatch = useDispatch();
+    const { use, mny } = props.match.params;
+    console.log(props.match.params);
     const { register, handleSubmit, errors } = useForm();
-    const { profile, auth } = useSelector(
+    const { profile } = useSelector(
         state => state.firebase
     )
     console.log(profile);
+    useEffect(() => {
+        if(profile.isLoaded && profile.isLoaded !== undefined){
+            switch (use) {
+                case "sux":
+                    let wallet = profile.wallet;
+                    console.log((wallet));
+                    dispatch(showSnackbar({variant: 'success', message: `You credited Rs. ${mny}. You now have ${wallet} coins in your wallet`}));
+                    break;
+                case "fail":
+                    dispatch(showSnackbar({variant: 'error', message: `An Error Occured.\n Couldn\'t process your payment.\n Try Again in some time!`}))
+                    break;
+                default:
+                    break;
+            }
+        }
+        return () => {
+            
+        }
+    }, [profile, use, mny, dispatch])
     const [coins,setCoins] = useState({coins:0});
-
-    if (!auth.uid) return <Redirect to='/signin' />
     
     const handleChange = (e) => {
         setCoins({coins: e.target.value})

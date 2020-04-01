@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import SignedIn, { SignedInMenu } from './SignedIn'
 import SignedOut, { SignedOutMenu } from './SignedOut'
 //UI
@@ -10,9 +10,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Avatar from '@material-ui/core/Badge';
-import MoreIcon from '@material-ui/icons/MoreVert';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 
 const useStyles = makeStyles(theme => ({
@@ -39,6 +39,7 @@ const useStyles = makeStyles(theme => ({
 const Nav = (props) => {
     const { auth, profile, modeControl } = props;
     const classes = useStyles();
+    const history = useHistory();
 
     const [selectedIndex, setSelectedIndex] = React.useState(0);
     const handleListItemClick = (event, index) => {
@@ -58,6 +59,10 @@ const Nav = (props) => {
     const mhandleClose = () => {
       setAnchorEl(null);
     };
+
+    const mhandleBack = () => {
+      history.goBack();
+    }
 
     const menuLinks = auth.uid ? <SignedInMenu modeControl={modeControl} anch={anchorEl} func1={mhandleClick} func2={mhandleClose} /> : <SignedOutMenu modeControl={modeControl} anch={anchorEl} func1={mhandleClick} func2={mhandleClose}/>
 
@@ -86,20 +91,20 @@ const Nav = (props) => {
 
     const Coincount = () => {
       return (
-        <IconButton color="inherit" component={Link} to={'/wallet'}>
+        <IconButton color="inherit" component={Link} to={'/wallet/view/coins'}>
           <Avatar>
             <AccountBalanceWalletIcon /><Typography>: {profile.wallet}</Typography>
           </Avatar>
         </IconButton>
       )
     }
-    
     return(
         <div>
+          {console.info(history)}
             <AppBar position="fixed" color="primary" className={classes.appBar}>
                 <Toolbar>
-                    <IconButton edge="start" color="inherit" aria-label="open drawer" onClick={toggleDrawer('bottom', true)}>
-                        <MenuIcon />
+                    <IconButton edge="start" color="inherit" aria-label="back" onClick={mhandleBack}>
+                      <ArrowBackIcon />   
                     </IconButton>
 
                     {/*
@@ -109,8 +114,11 @@ const Nav = (props) => {
                     */}
                     <div className={classes.grow} />
                     {auth.uid ? <Coincount/> : null}
-                    <IconButton edge="end" color="inherit" onClick={mhandleClick}>
+                    {/* <IconButton edge="end" color="inherit" onClick={mhandleClick}>
                         <MoreIcon/>
+                    </IconButton> */}
+                    <IconButton edge="end" color="inherit" aria-label="open drawer" onClick={toggleDrawer('bottom', true)}>
+                        <MenuIcon />
                     </IconButton>
                 </Toolbar>
                 <SwipeableDrawer
@@ -123,7 +131,7 @@ const Nav = (props) => {
                     {fullList('bottom')}
                 </SwipeableDrawer>
             </AppBar>
-            {menuLinks}
+            {/* {menuLinks} */}
         </div>
     )
 }

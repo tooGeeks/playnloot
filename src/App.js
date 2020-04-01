@@ -8,11 +8,13 @@ import CreateProject from './components/projects/CreateProject'
 import Wallet from './components/wallet/Wallet'
 import { isLoaded } from 'react-redux-firebase'
 import {useSelector} from "react-redux"
+import { ProtectedRoutes } from './components/auth/ProtectedRoutes'
 // Other
 import EnterMatch from './components/matches/EnterMatch'
 import EnrolledMatches from './components/matches/EnrolledMatches'
-import HandleCallbackPaytm from './components/wallet/HandleCallbackPaytm'
-import HandleCallbackPaytmErr from './components/wallet/HandleCallbackPaytmErr'
+//import HandleCallbackPaytm from './components/wallet/HandleCallbackPaytm'
+//import HandleCallbackPaytmErr from './components/wallet/HandleCallbackPaytmErr'
+
 //Admin
 import CreateMatch from './components/adminPanel/CreateMatch'
 import UpdateMatch from './components/adminPanel/UpdateMatch'
@@ -69,7 +71,7 @@ const App = () => {
     const themeConfig = createMuiTheme(theme)
     console.log(themeConfig);
     
-    let Navbottom = matchStr(window.location.pathname, "/kand") ? null : <Nav modeControl={toggleDarkMode} />;
+    let Navbottom = matchStr(window.location.pathname, "/") ? null : <Nav modeControl={toggleDarkMode} />;
     return (
       <BrowserRouter>
         <AuthIsLoaded>
@@ -80,26 +82,27 @@ const App = () => {
             <div className="App">
             <CssBaseline />
               <Switch>
-                <Route exact path='/dashboard'component={Dashboard} />
-                <Route path='/project/:id' component={ProjectDetails} />
+                <ProtectedRoutes exact path='/dashboard'component={Dashboard} />
+                <ProtectedRoutes path='/project/:id' component={ProjectDetails} />
                 <Route path='/signin' component={SignIn} />
                 <Route path='/signup' component={SignUp} />
-                <Route path='/create' component={CreateProject} />
+                <ProtectedRoutes path='/create' component={CreateProject} />
                 <Route exact path='/' component={Landing}/>
-                <Route path='/wallet' component={Wallet}/>
-                <Route path="/entermatch/:mid" component={EnterMatch}/>
-                <Route path="/enrolledmatches/" component={EnrolledMatches}/>
+                <ProtectedRoutes exact path='/wallet/:use/:mny' component={Wallet}/>
+                <ProtectedRoutes path="/entermatch/:mid" component={EnterMatch}/>
+                <ProtectedRoutes path="/enrolledmatches/" component={EnrolledMatches}/>
 
-                <Route path="/p_callback/:mny" component={HandleCallbackPaytm}/>
-                <Route path="/p_callbackerr/" component={HandleCallbackPaytmErr}/>
+                {/* <Route path="/p_callback/:mny" component={HandleCallbackPaytm}/>
+                <Route path="/p_callbackerr/" component={HandleCallbackPaytmErr}/> */}
 
                 {/* Admin  Paths */}
-                <Route path="/admin/creatematch" component={CreateMatch}/>
-                <Route path="/admin/updatematch/:mid" component={UpdateMatch}/>
-                <Route path="/admin/updatematch" component={UpdateMatchList}/>
-                <Route exact path="/admin" component={AdminHome}/>
-                <Route path="/admin/manualpayment" component={ManualPayment}/>
+                <ProtectedRoutes path="/admin/creatematch" component={CreateMatch}/>
+                <ProtectedRoutes path="/admin/updatematch/:mid" component={UpdateMatch}/>
+                <ProtectedRoutes path="/admin/updatematch" component={UpdateMatchList}/>
+                <ProtectedRoutes exact path="/admin" component={AdminHome}/>
+                <ProtectedRoutes path="/admin/manualpayment" component={ManualPayment}/>
 
+                <Route path="*" component={() => "404: Not Found! Wrong URL"}/>
               </Switch>
               {Navbottom}
             </div>

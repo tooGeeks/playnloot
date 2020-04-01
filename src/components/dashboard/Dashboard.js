@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
 import { useSelector, connect, useDispatch, } from 'react-redux'
-import { Redirect } from 'react-router-dom'
 
 //UI
-import { makeStyles, Grid, Container, Paper, List, Button, Typography, CssBaseline } from "@material-ui/core";
+import { makeStyles, Grid, Container, Paper, List, Button, Typography, CssBaseline, Avatar, Box } from "@material-ui/core";
 import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core'
 //import { ReactComponent as Solid } from '../../imgs/soldier2.svg'
-import { AccountBox, TrackChanges } from '@material-ui/icons';
+import { AccountBox, TrackChanges, Event, AccessAlarm } from '@material-ui/icons';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
@@ -31,6 +30,9 @@ const useStyles = makeStyles(theme => ({
     minWidth: '90vw',
     */
     color: theme.palette.text.secondary,
+  },
+  icons: {
+    verticalAlign: 'middle',
   },
   killWallet: {
     height: theme.spacing(10),
@@ -60,20 +62,30 @@ const useStyles = makeStyles(theme => ({
     fontSize: theme.typography.pxToRem(16),
     fontWeight: theme.typography.fontWeightRegular,
   },
+  enPaper: {
+    minWidth: '50%',
+    minHeight: '50%',
+    width: '50%',
+    height: '50%',
+    border: '1px solid',
+    borderColor: theme.palette.primary.main,
+    padding: theme.spacing(1.5),
+  },
 }));
 
 function Dashboard(props) {
   const classes = useStyles();
 
-  const { profile, auth } = useSelector(
+  const { profile } = useSelector(
     state => state.firebase
   )
   
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if(profile.isLoaded){
+    if(profile.isLoaded ){
       dispatch(clearBackDrop())
+      
     }else dispatch(backDrop());
   }, [profile, props, dispatch]);
 
@@ -87,8 +99,6 @@ function Dashboard(props) {
     setExpanded(isExpanded ? panel : false);
   };
   
-
-  if (!auth.uid) return <Redirect to='/signin' />
   
   const matchdiv = profile.isLoaded
     ? matches 
@@ -112,19 +122,26 @@ function Dashboard(props) {
 
     console.log(profile.matches);
     console.log(profile);
-    const enMatchDiv = profile.isLoaded ? (profile.matches.length !== 0) ? profile.matches && profile.matches.map(match =>{
+    const enMatchDiv = profile.isLoaded && (profile.matches) ? matches !== undefined ? (profile.matches.length !== 0) ? profile.matches && profile.matches.map(match =>{
+      for (const i of matches)  if(match === i.id) match = i;
       if(match.lrdate<getCurrentdate()){
         return(
-          <Paper>
+          <Paper> 
             <Typography>You haven`t enrolled in any new matches</Typography>
             <br/> <span onClick={() => setExpanded('panel3')}>Enroll now!</span>
           </Paper>
         )
       }
       return(
-          <Paper key={match}>
-            <Typography>Match Name: </Typography>
-          </Paper>
+          <Box className={classes.enPaper} display="flex" flexDirection="column" alignContent="flex-end" key={match.id}>
+            {/* <Box alignSelf="center" flexGrow={1}><Typography variant="body1" >{match.id}</Typography></Box> */}
+            {/* <Box flexDirection="row"> */}
+              <Box><Typography variant="body2"><Event className={classes.icons}/>&nbsp;{match.mdate}&nbsp;</Typography></Box>
+              <Box><Typography variant="body2"><AccessAlarm className={classes.icons}/>&nbsp;{match.mtime}</Typography></Box>
+              <Box flexDirection="row" alignSelf="flex-end"><Typography variant="body1" style={{color: '#16d678'}}>{match.id}</Typography></Box>
+            {/* </Box> */}
+            
+          </Box>
           //<li className="" key={match}><div><span>Match Name : {match}</span><Link className="secondary-item" to={"/entermatch/"+match}><button className="waves-effect waves-light hoverable btn-small">Details</button></Link></div></li>
       )
    }) 
@@ -132,6 +149,7 @@ function Dashboard(props) {
         <Typography>You haven`t enrolled in any new matches</Typography>
         <br/> <Button size="small" align="right" variant="outlined" color="primary" onClick={() => setExpanded('panel3')}>Enroll now!</Button>
       </div>
+  : null
    : null
 
     // <React.Fragment>
@@ -152,7 +170,7 @@ function Dashboard(props) {
           border={1}>
             <Grid container alignItems="flex-end">
               <Grid item>
-                <AccountBox color="primary" style={{fontSize: 140}}/>
+                <AccountBox color="primary" style={{fontSize: 140}} className={classes.icons}/>
               </Grid>
               <Grid item>
                 <Typography gutterBottom variant="h5" style={{paddingBottom: 20}}>Hola, <br /><b>{profile.pubgid}!</b></Typography>
@@ -162,7 +180,7 @@ function Dashboard(props) {
             <Grid item xs={3} xl={1}>
               <Paper className={classes.killWallet}>
                 <Typography>
-                <CssBaseline><TrackChanges/> {profile.kills}</CssBaseline>
+                <CssBaseline><TrackChanges className={classes.icons}/> {profile.kills}</CssBaseline>
                 <br/>
                 Kills
                 </Typography>
@@ -171,7 +189,7 @@ function Dashboard(props) {
             <Grid item xs={3} xl={1} style={{paddingLeft: 1}}>
               <Paper className={classes.killWallet}>
                 <Typography>
-                <AccountBalanceWalletIcon/> {profile.wallet}
+                <AccountBalanceWalletIcon className={classes.icons}/> {profile.wallet}
                 <br/>
                 Coins
                 </Typography>
@@ -180,7 +198,7 @@ function Dashboard(props) {
             <Grid item xs={3} xl={1} style={{paddingLeft: 1}}>
               <Paper className={classes.killWallet}>
                 <Typography>
-                <AccountBalanceWalletIcon/> {profile.wallet}
+                <AccountBalanceWalletIcon className={classes.icons}/> {profile.wallet}
                 <br/>
                 Coins
                 </Typography>
@@ -189,7 +207,7 @@ function Dashboard(props) {
             <Grid item xs={3} xl={1} style={{paddingLeft: 1}}>
               <Paper className={classes.killWallet}>
                 <Typography>
-                <AccountBalanceWalletIcon/> {profile.wallet}
+                <AccountBalanceWalletIcon className={classes.icons}/> {profile.wallet}
                 <br/>
                 Coins
                 </Typography>
