@@ -10,7 +10,7 @@ import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import {firestoreConnect} from 'react-redux-firebase';
-import {isinDocs,getCurrentdate} from '../../Functions'
+import {isinDocs,getCurrentDate} from '../../Functions'
 import {compose} from 'redux';
 import MatchSummary from '../matches/MatchSummary';
 import { backDrop, clearBackDrop } from '../../store/actions/uiActions'
@@ -104,7 +104,7 @@ function Dashboard(props) {
     ? matches 
       ? matches && matches.map(match =>{//Used to Generate MatchList using ternary operator
         
-        if(match.lrdate<getCurrentdate()){//Hides a Match if its Last Enrollment Date has Passed
+        if(match.lrdate<getCurrentDate()){//Hides a Match if its Last Enrollment Date has Passed
           return null;
         }
         let isEnr =  isinDocs(profile.matches, match.id);//Checks if User has already ENrolled in the match
@@ -124,7 +124,7 @@ function Dashboard(props) {
     console.log(profile);
     const enMatchDiv = profile.isLoaded && (profile.matches) ? matches !== undefined ? (profile.matches.length !== 0) ? profile.matches && profile.matches.map(match =>{
       for (const i of matches)  if(match === i.id) match = i;
-      if(match.lrdate<getCurrentdate()){
+      if(match.lrdate<getCurrentDate()){
         return(
           <Paper> 
             <Typography>You haven`t enrolled in any new matches</Typography>

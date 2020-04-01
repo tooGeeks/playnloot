@@ -1,26 +1,44 @@
+import {getCurrentDate, getOS, getCDT} from '../../Functions'
+
 /*
   This File Contains All Payment Actions such as Credit Wallet, Manual Payment, etc. 
 */
 
-export const creditWallet = (noofcoins)=>{
+export const creditWallet = (data)=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
-        console.log(noofcoins);
+        console.log(data.noofcns);
         const st = getState();
         const pth="https://us-central1-playandloot.cloudfunctions.net/paytmpay";
         const method='POST';
         const {profile,auth} = st.firebase;
-        if(noofcoins===undefined || noofcoins<1){
+        if(data.noofcns===undefined || data.noofcns<1){
             dispatch({type:"CR_WALLET_ERR",err:"Coins Less Than 1"});
         }
         const form = document.createElement('form');
         form.method = method;
         form.action = pth;
-        var pdata={
-            'fname':profile.pubgid,
-            'mno':profile.mno,
-            'email':auth.email,
-            'noofcns':noofcoins
-        };
+        var pdata={};
+        switch(data.mode){
+            case "PayTM":
+                pdata={
+                    'fname':profile.pubgid,
+                    'mno':profile.mno,
+                    'email':auth.email,
+                    ...data,
+                    'platform':getOS(),
+                    'datetime':getCDT()
+                };
+                break;
+            case "AdminPayment":
+                alert(JSON.stringify(data))
+                pdata={
+                    ...data,
+                    'datetime':getCDT()
+                };
+                break;
+                default:
+                    break;
+        }
         for (const key in pdata) {
             let hiddenField = document.createElement('input');
             hiddenField.type = 'hidden';
@@ -34,25 +52,79 @@ export const creditWallet = (noofcoins)=>{
     }
 }
 
-export const manualPayment = (data)=>{
+export const requestWithdrawal = (data)=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
-        console.log("PID : "+data.pubgid+" Amount : "+data.amount);
+        const st = getState();
         const db = getFirestore();
-        db.collection('Users').where('pubgid','==',data.pubgid).get().then(snapshot => {
-            if(snapshot.empty){
-                console.error("PUBG ID : "+data.pubgid+" Not Found");
-                throw new Error("PUBG ID : "+data.pubgid+" Not Found");
+        db.collection('WithdrawalRequests').doc(st.firebase.auth.uid).get().then((snap)=>{
+            if(!snap.exists){
+                db.collection('WithdrawalRequests').doc(st.firebase.auth.uid).set({
+                    fname:st.firebase.auth.displayName,
+                    mno:st.firebase.profile.mno,
+                    requests:[{
+                        isComplete:false,
+                        reqdate : getCurrentDate(),
+                        ...data
+                    }]
+                }).then(()=>{
+                    dispatch({type:"RW_SUCCESS"})
+                })
             }else{
-                var usr = snapshot.docs[0];
-                var nwamt = (usr.data().wallet)+parseInt(data.amount);
-                db.collection("Users").doc(usr.id).set({
-                    wallet : nwamt
-                },{merge : true});
+                let rarr = snap.data().requests;
+                rarr.push({
+                    isComplete:false,
+                    reqdate : getCurrentDate(),
+                    ...data 
+                })
+                db.collection('WithdrawalRequests').doc(st.firebase.auth.uid).set({
+                    requests:rarr
+                },{merge:true}).then(()=>{
+                    dispatch({type:"RW_SUCCESS"})
+                })
             }
-        }).then(()=>{
-            dispatch({type:"MP_SUCCESS"});
-        }).catch((err)=>{
-            dispatch({type:"MP_ERR",err})
+            
+        })
+    }
+}
+
+export const confirmWithdrawal = (reqid)=>{
+    return(dispatch,getState,{getFirebase,getFirestore})=>{
+        console.log(reqid);
+        const db = getFirestore();
+        const uid = reqid.split('-')[0];
+        const ind = reqid.split('-')[1];
+        db.collection('WithdrawalRequests').doc(uid).get().then(snap=>{
+            let arr = snap.data().requests;
+            let req = arr[ind];
+            req.isComplete = true;
+            arr.splice(ind,1);
+            arr.push(req)
+            db.collection('Users').doc(uid).get().then(snap=>{
+                db.collection('Users').doc(uid).set({wallet:snap.data().wallet-req.coins},{merge:true}).then(()=>{
+                    db.collection('WithdrawalRequests').doc(uid).set({
+                        requests:arr
+                    },{merge:true})
+                }).then(()=>{
+                    dispatch({type:'RW_CNF'})
+                })
+            })
+        })
+    }
+}
+
+export const cancelWithdrawal = (reqid)=>{
+    return(dispatch,getState,{getFirebase,getFirestore})=>{
+        const uid = reqid.split('-')[0]
+        const ind = reqid.split('-')[1]
+        const db = getFirestore();
+        db.collection('WithdrawalRequests').doc(uid).get().then(snap=>{
+            let arr = snap.data().requests;
+            arr.splice(ind,1);
+            db.collection('WithdrawalRequests').doc(uid).set({
+                requests:arr
+            },{merge:true}).then(()=>{
+                dispatch({type:'RW_CAN'})
+            })
         })
     }
 }
