@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import MatchSummary from "./adminMatchSummary";
 import {firestoreConnect} from 'react-redux-firebase';
 import {compose} from 'redux';
-import {isinDocs,getCurrentdate} from '../../Functions'
+import {isinDocs,getCurrentDate} from '../../Functions'
 
 
 /*
@@ -14,7 +14,7 @@ import {isinDocs,getCurrentdate} from '../../Functions'
 const EnterMatch = (props) =>{
     const {matches,umatches} = props;
     const matchdiv = matches ? matches && matches.map(match =>{//Used to Generate MatchList using ternary operator
-       if(match.lrdate<getCurrentdate()){//Hides a Match if its Last Enrollment Date has Passed
+       if(match.lrdate<getCurrentDate()){//Hides a Match if its Last Enrollment Date has Passed
          return null;
        }
        let isEnr =  isinDocs(umatches,match.id);//Checks if User has already ENrolled in the match

@@ -1,5 +1,5 @@
 import React from "react";
-import { manualPayment } from '../../store/actions/PaymentActions';
+import { creditWallet } from '../../store/actions/PaymentActions';
 import {connect} from 'react-redux';
 import Nav from './AdminNav'
 
@@ -8,23 +8,18 @@ import Nav from './AdminNav'
 */
 
 const ManualPayment = (props)=>{
-    const [data,setd] = React.useState({amount:0})
+    const [data,setd] = React.useState({noofcoins:0,pubgid:""});
     const handleChange = (e)=>{
-        setd({...data,[e.target.id]:e.target.value})
+        setd({...data,[e.target.id]:e.target.value});
     }
     const handleSubmit = (e)=>{
         e.preventDefault();
-        if(parseInt(data.amount)===0){
-            alert("Amount must be greater than 0")
+        if(parseInt(data.noofcns)===0){
+            alert("Amount must be greater than 0"+data.noofcoins)
             return;
         }
-        if((data.amount)%5!==0){
-            alert("Amount must be a multiple of 5")
-            return;
-        }
-        const p = window.confirm("Are You Sure?")
-        if(p) props.manualPayment(data);
-        
+        const p = window.confirm("Are You Sure?");
+        if(p) props.creditWallet({noofcns:data.noofcoins,mode:"AdminPayment",pubgid:data.pubgid});
     }
 return(
     <React.Fragment>
@@ -33,12 +28,12 @@ return(
         <form onSubmit={handleSubmit}>
             <label>PUBG ID :</label>
             <input type="text" id="pubgid"  className="white-text" name="pubgid" required onChange={handleChange}/><br/>
+            <label>No. of Coins :</label>
+            <input type="number" className="white-text" id="noofcoins" name="noofcoins" required onChange={handleChange}/><br/>
             <label>Amount :</label>
-            <input type="number" className="white-text" id="amount" name="amount" required onChange={handleChange}/><br/>
-            <label>Coins :</label>
-            <input type="number" className="white-text" id="noofcns" name="noofcns" value={(data.amount)/5} disabled={true}/><br/>
+            <input type="number" className="white-text" id="amount" name="amount" value={(data.noofcoins)*5} disabled={true}/><br/>
             <button className="waves-effect waves-light btn">Credit</button>
-            </form>
+        </form>
         </div>
     </React.Fragment>
 )
@@ -46,7 +41,7 @@ return(
 
 const mapDispatchtoProps = (dispatch)=>{
     return{
-        manualPayment:(data)=>{dispatch(manualPayment(data))}
+        creditWallet:(data)=>{dispatch(creditWallet(data))}
     }
 }
 

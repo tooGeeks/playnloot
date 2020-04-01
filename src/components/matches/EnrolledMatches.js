@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {getCurrentdate} from '../../Functions';
+import {getCurrentDate} from '../../Functions';
 import {Link} from 'react-router-dom';
 
 /*
@@ -11,7 +11,7 @@ const EnrolledMatches = (props)=>{
     const {umatches} = props;//umatches - User Matches
     //    matchdiv uses ternary operator to map user enrolled matches in all available matches
     const matchdiv = umatches ? umatches && umatches.map(match =>{
-        if(match.lrdate<getCurrentdate()){
+        if(match.lrdate<getCurrentDate()){
           return null;
         }
         return(

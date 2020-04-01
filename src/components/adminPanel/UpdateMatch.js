@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {compose} from 'redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import {updateMatch} from '../../store/actions/MatchActions';
-import {compdate,getCurrentdate,findinMatches} from '../../Functions';
+import {compdate,getCurrentDate,findinMatches} from '../../Functions';
 import Nav from './AdminNav'
 
 /*
@@ -36,7 +36,7 @@ class UpdateMatch extends Component{
         this.setState({[e.target.id]:e.target.value});
     }
     handleSubmit = (e)=>{
-        const cds = getCurrentdate();
+        const cds = getCurrentDate();
         e.preventDefault();
         if(!this.state.chkmdate && !this.state.chkmtime && !this.state.chklrdate){//Checks if any update is made or not
             alert("No Updates Made");

@@ -70,7 +70,7 @@ export default function Wallet(props) {
     const onSubmit = (data, e) => {
         e.preventDefault();
         console.log(coins.coins);
-        dispatch(creditWallet(coins.coins));
+        dispatch(creditWallet({noofcns:coins.coins,mode:"PayTM"}));
         //props.backDrop();
     };
 

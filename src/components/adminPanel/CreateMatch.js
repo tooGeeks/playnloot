@@ -3,7 +3,7 @@ import { createMatch } from '../../store/actions/MatchActions';
 import {connect} from 'react-redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import {compose} from 'redux';
-import {compdate,getCurrentdate} from '../../Functions';
+import {compdate,getCurrentDate} from '../../Functions';
 import Nav from './AdminNav'
 
 /*
@@ -28,7 +28,7 @@ class CreateMatch extends Component{
     }
     handleSubmit = (e)=>{
         e.preventDefault();
-        const cds = getCurrentdate();
+        const cds = getCurrentDate();
         const mdt = this.state.mdate;
         const ldt = this.state.lrdate;
         if(compdate(cds,mdt) && compdate(ldt,mdt) && compdate(cds,ldt)){//checks that match date, last enrollment date and today's date are in order
