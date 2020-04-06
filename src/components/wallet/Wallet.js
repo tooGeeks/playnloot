@@ -35,6 +35,9 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+//unit for one coin (PaymentActions, Landing.js, Dashboard.js)
+const unit = 5;
+
 export default function Wallet(props) {
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -62,7 +65,7 @@ export default function Wallet(props) {
                     dispatch(showSnackbar({variant: 'success', message: `You credited Rs. ${mny}. You now have ${wallet} coins in your wallet`}));
                     break;
                 case "fail":
-                    dispatch(showSnackbar({variant: 'error', message: `An Error Occured.\n Couldn\'t process your payment.\n Try Again in some time!`}))
+                    dispatch(showSnackbar({variant: 'error', message: `An Error Occured.\n Couldn't process your payment.\n Try Again in some time!`}))
                     break;
                 default:
                     break;
@@ -85,6 +88,7 @@ export default function Wallet(props) {
     const onSubmitAddCoin = (data, e) => {
         e.preventDefault();
         dispatch(creditWallet({noofcns:coins.coins,mode:"PayTM"}));
+        reset();
         //props.backDrop();
     };
     const onSubmitRequest = (data, e) => {
@@ -100,7 +104,7 @@ export default function Wallet(props) {
                 <Grid container
                     direction="column" justify="center" alignItems="stretch" spacing={2} className={classes.grid}>
                     
-                    <Grid item xs={12}>
+                    <Grid item xs={12} id="buyCoins">
                     <form key={1} noValidate onSubmit={handleSubmit(onSubmitAddCoin)}>
                         <Card variant="outlined">
                             <CardHeader title="Buy Coins"
@@ -122,7 +126,7 @@ export default function Wallet(props) {
                                 <br />
                             <Paper className={classes.rsCard}>
                                 <Typography variant="body2" component="p">
-                                1 Coin costs Rs.5!
+                                1 Coin costs Rs.{unit}!
                                 </Typography>
                                     <TextField
                                         variant="filled"
@@ -146,7 +150,7 @@ export default function Wallet(props) {
                                         error={!!errors.coins}
                                     />
                                 <Typography variant="body2" component='p'>
-                                    Total: [{coins.coins}] x 5 = ₹{(coins.coins)*5}
+                                    Total: [{coins.coins}] x {unit} = ₹{(coins.coins)*unit}
                                 </Typography>
                             </Paper>
                                     
@@ -156,13 +160,13 @@ export default function Wallet(props) {
                                     <Button type="submit" className={classes.buy} style={{width: 120}} 
                                         variant="contained" 
                                         color="primary" disabled={((coins.coins)<=0)}>
-                                            Pay {((coins.coins)>0) ? ('₹' + (coins.coins)*5) : null}
+                                            Pay {((coins.coins)>0) ? ('₹' + (coins.coins)*unit) : null}
                                     </Button>
                             </CardActions>
                         </Card>
                         </form>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} id="requestWithdraw">
                         <form key={2} noValidate onSubmit={handleSubmit2(onSubmitRequest)}>
                             <Card varient="outlined">
                                 <CardHeader title="Request Withdrawal"
@@ -176,8 +180,9 @@ export default function Wallet(props) {
                                     <Grid container spacing={1} justify="center" alignItems="center">
                                         <Grid item>
                                             <Typography variant="body2">
-                                                You have <span color="primary">{profile.wallet}</span> coins in your wallet <br/>
-                                                Remaining Coins After Withdrawal : <span color="primary">₹{data.coins*5}</span>
+                                                You have <strong color="primary">{profile.wallet}</strong> coins in your wallet <br/>
+                                                Out of it, you can deduct only <strong>{profile.wallet - 1} coins (₹{(profile.wallet - 1)*unit})</strong>, because we gave you that one extra coin XD <br style={{paddingBottom: 5}}/>
+                                                Remaining Money After Withdrawal : <strong color="primary">₹{(profile.wallet - data.coins)*unit}</strong>
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={6}>
@@ -190,13 +195,16 @@ export default function Wallet(props) {
                                                 label="No of Coins"
                                                 type="number"
                                                 onChange={handleChange2}
-                                                helperText="eg. 2 coins ie. ₹10"
+                                                helperText={errors2.coins ? errors2.coins.type ==="required" ? "You forgot this!" : errors2.coins.type==="withinAvail" ? `You can only deduct ${profile.wallet - 1} coins` : null : "eg. 2 coins ie. ₹10"}
                                                 InputLabelProps={{
                                                     shrink: true,
                                                 }}
                                                 inputRef={
                                                     register2({
                                                         required: true,
+                                                        validate: {
+                                                            withinAvail: value => parseInt(value)<profile.wallet || "You don`t have these much coins!"
+                                                        }
                                                     })
                                                 }
                                                 error={!!errors2.coins}
@@ -212,7 +220,7 @@ export default function Wallet(props) {
                                                 }}
                                                 name="rupees"
                                                 id="rupees"
-                                                value={parseInt(data.coins)*5}
+                                                value={data.coins*unit}
                                                 label="In Rupees"
                                                 disabled
                                                 helperText="Total Amount"
@@ -280,7 +288,7 @@ export default function Wallet(props) {
                                     <Button type="submit" className={classes.buy} style={{minWidth: 160}} 
                                         variant="contained" 
                                         color="primary" disabled={((data.coins)<=0)}>
-                                            Request ₹{data.coins*5}
+                                            Request {(data.coins)>0 ? `₹${data.coins*unit}` : null}
                                     </Button>
                                 </CardActions>
                             </Card>

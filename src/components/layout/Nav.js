@@ -13,6 +13,7 @@ import Avatar from '@material-ui/core/Badge';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 
 
 const useStyles = makeStyles(theme => ({
@@ -64,6 +65,7 @@ const Nav = (props) => {
       history.goBack();
     }
 
+    // eslint-disable-next-line no-unused-vars
     const menuLinks = auth.uid ? <SignedInMenu modeControl={modeControl} anch={anchorEl} func1={mhandleClick} func2={mhandleClose} /> : <SignedOutMenu modeControl={modeControl} anch={anchorEl} func1={mhandleClick} func2={mhandleClose}/>
 
     const toggleDrawer = (side, open) => event => {
@@ -82,6 +84,7 @@ const Nav = (props) => {
         onClick={toggleDrawer(side, false)}
         onKeyDown={toggleDrawer(side, false)}
       >
+      <div align="center" style={{margin: 0, padding: 0}}><MoreHorizIcon/></div>
       <List>
         {links}
       </List>

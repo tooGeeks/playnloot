@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import { useSelector, connect, useDispatch, } from 'react-redux'
 
 //UI
-import { makeStyles, Grid, Container, Paper, List, Button, Typography, CssBaseline, Box, ListItem, ListItemAvatar, ListItemText, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from "@material-ui/core";
+import { makeStyles, Grid, Container, Paper, List, Button, Typography, CssBaseline, Box, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Avatar, Tooltip, Zoom } from "@material-ui/core";
 import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core'
 //import { ReactComponent as Solid } from '../../imgs/soldier2.svg'
-import { AccountBox, TrackChanges, Event, AccessAlarm } from '@material-ui/icons';
+import { AccountBox, TrackChanges, Event, AccessAlarm, MonetizationOn } from '@material-ui/icons';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
@@ -33,6 +33,11 @@ const useStyles = makeStyles(theme => ({
   },
   icons: {
     verticalAlign: 'middle',
+  },
+  ruppeIcon: {
+    backgroundColor: '#FFFFFF',
+    height: '1.2em',
+    width: '1.2em',
   },
   killWallet: {
     height: theme.spacing(10),
@@ -79,6 +84,9 @@ const useStyles = makeStyles(theme => ({
   },
   primryColor: { color: theme.palette.primary.main },
 }));
+
+//unit for one coin (PaymentActions, Landing.js)
+const unit = 5;
 
 function Dashboard(props) {
   const classes = useStyles();
@@ -204,17 +212,18 @@ function Dashboard(props) {
                 <Typography gutterBottom variant="h5" style={{paddingBottom: 20}}>Hola, <br /><b>{profile.pubgid}!</b></Typography>
               </Grid>
             </Grid>
-            <Grid item xs={12} container justify="space-around" alignItems="center">
-            <Grid item xs={3} xl={1}>
+            <Grid item xs={12} container alignItems='center' justify='space-around'>
+            <Grid item align="center">
               <Paper className={classes.killWallet}>
                 <Typography>
-                <CssBaseline><TrackChanges className={classes.icons}/> {profile.kills}</CssBaseline>
+                <CssBaseline><TrackChanges className={classes.icons}/>{profile.kills}
+                </CssBaseline>
                 <br/>
                 Kills
                 </Typography>
               </Paper>
             </Grid>
-            <Grid item xs={3} xl={1} style={{paddingLeft: 1}}>
+            <Grid item align="center">
               <Paper className={classes.killWallet}>
                 <Typography>
                 <AccountBalanceWalletIcon className={classes.icons}/> {profile.wallet}
@@ -223,16 +232,18 @@ function Dashboard(props) {
                 </Typography>
               </Paper>
             </Grid>
-            <Grid item xs={3} xl={1} style={{paddingLeft: 1}}>
+            <Grid item align="center">
               <Paper className={classes.killWallet}>
-                <Typography>
-                <AccountBalanceWalletIcon className={classes.icons}/> {profile.wallet}
-                <br/>
-                Coins
-                </Typography>
+                <Tooltip title="Coins in Ruppes(₹)" TransitionComponent={Zoom}>
+                  <Typography component="div">
+                    {/* <MonetizationOn className={classes.icons}/> <br/> */}
+                    <center><Avatar variant="circle" className={classes.ruppeIcon}>₹</Avatar></center>
+                    ₹{profile.isLoaded ? profile.wallet*unit : 0}
+                  </Typography>
+                </Tooltip>
               </Paper>
             </Grid>
-            <Grid item xs={3} xl={1} style={{paddingLeft: 1}}>
+            <Grid item align="center">
               <Paper className={classes.killWallet}>
                 <Typography>
                 <AccountBalanceWalletIcon className={classes.icons}/> {profile.wallet}

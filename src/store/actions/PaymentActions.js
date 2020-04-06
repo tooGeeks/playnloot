@@ -4,6 +4,9 @@ import {getCurrentDate, getOS, getCDT} from '../../Functions'
   This File Contains All Payment Actions such as Credit Wallet, Manual Payment, etc. 
 */
 
+//unit for one coin (Wallet.js)
+const unit = 5;
+
 export const creditWallet = (data)=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
         console.log(data.noofcns);
@@ -68,6 +71,7 @@ export const requestWithdrawal = (data)=>{
                     }]
                 }).then(()=>{
                     dispatch({type:"RW_SUCCESS"})
+                    dispatch({ type: 'SNACKBAR', variant: 'success', message: `Success! You\`ve requested for ₹${data.coins*unit}, Method: ${data.pmode}. We\`ll pop the admin! [Repeat]`});
                 })
             }else{
                 let rarr = snap.data().requests;
@@ -80,6 +84,7 @@ export const requestWithdrawal = (data)=>{
                     requests:rarr
                 },{merge:true}).then(()=>{
                     dispatch({type:"RW_SUCCESS"})
+                    dispatch({ type: 'SNACKBAR', variant: 'success', message: `Success! You\`ve requested for ₹${data.coins*unit}, Method: ${data.pmode}. We\`ll pop the admin!`});
                 })
             }
             
