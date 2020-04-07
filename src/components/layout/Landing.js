@@ -50,7 +50,8 @@ const useStyles = makeStyles(theme => ({
       borderRadius: '50%',
       width: '3rem', height: '3rem',
       color: theme.palette.getContrastText(theme.palette.primary.main),
-      backgroundColor: theme.palette.primary.main,
+      //backgroundColor: theme.palette.primary.main,
+      backgroundColor: 'linear-gradient(to bottom, #231f20, #110f10)'
     },
     stepTitle: {
       paddingLeft: theme.spacing(2),
@@ -65,7 +66,8 @@ const useStyles = makeStyles(theme => ({
       marginRight: theme.spacing(3),
     },
     stepContent: {
-      backgroundColor: theme.palette.background.paper,
+      //backgroundColor: theme.palette.background.paper,
+      backgroundColor: '#110f10',
       display: 'inline-block',
       padding: theme.spacing(2),
       borderRadius: 5,
