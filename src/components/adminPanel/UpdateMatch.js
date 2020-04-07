@@ -2,9 +2,8 @@ import React,{Component} from "react";
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import {firestoreConnect} from 'react-redux-firebase';
-import {updateMatch} from '../../store/actions/MatchActions';
+import {updateMatch} from '../../Store/Actions/MatchActions';
 import {compdate,getCurrentDate,findinMatches} from '../../Functions';
-import Nav from './AdminNav'
 
 /*
   This Component is used to Update Existing Match 
@@ -79,9 +78,7 @@ class UpdateMatch extends Component{
         const {matches} = this.props;
         const match = matches && findinMatches(matches,this.mid)
         return(
-            <React.Fragment>
-                <Nav/>
-                <div className='white-text'>
+            <div className='white-text container'>
                 <p>Match : {this.mid}</p>
                 <form onSubmit={this.handleSubmit}>
                     <label><input type="checkbox" id="chkmdate" onChange={this.handleChkbox}/><span><b>Date of Match :</b></span></label>
@@ -91,9 +88,8 @@ class UpdateMatch extends Component{
                     <label ><input type="checkbox" id="chklrdate" onChange={this.handleChkbox}/><span><b>Last Day of Registration :</b>{this.lrdmsg}</span></label>
                     <input type="date" defaultValue={match && match.lrdate} disabled={!this.state.chklrdate} className="white-text" id="ulrdate"onChange={this.handleChange}/><br/>
                     <button id="crnmbttn" disabled={(!this.state.chkmdate || !this.state.chklrdate) && !this.state.chkmtime} className="waves-effect waves-light btn hoverable">Update Match</button>
-                    </form>
-                </div>
-            </React.Fragment>
+                </form>
+            </div>
         )
     }
 }

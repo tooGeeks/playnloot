@@ -65,7 +65,7 @@ export const enterMatch = (mid,uid)=>{
         if(!isAlRegM && !isAlRegU){
             wallet-=2;
             cpmatches.push(mid);
-            players.push(cp);
+            players.push({[cp]:"0-0"});
             db.collection('Matches').doc(mid).set({
                 players:players,
                 plno:plno

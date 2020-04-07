@@ -1,30 +1,29 @@
 import React from "react";
-import { creditWallet } from '../../store/actions/PaymentActions';
+import { creditWallet } from '../../Store/Actions/PaymentActions';
 import {connect} from 'react-redux';
-import Nav from './AdminNav'
 
 /*
   This Component is used to add coins to user's wallet manually
 */
 
 const ManualPayment = (props)=>{
-    const [data,setd] = React.useState({noofcoins:0,pubgid:""});
+    const [data,setd] = React.useState({noofcoins:0,pubgid:""})
     const handleChange = (e)=>{
-        setd({...data,[e.target.id]:e.target.value});
+        setd({...data,[e.target.id]:e.target.value})
+        
     }
     const handleSubmit = (e)=>{
         e.preventDefault();
-        if(parseInt(data.noofcns)===0){
-            alert("Amount must be greater than 0"+data.noofcoins)
+        if(parseInt(data.noofcoins)===0){
+            alert("Amount must be greater than 0")
             return;
         }
-        const p = window.confirm("Are You Sure?");
+        const p = window.confirm("Are You Sure?")
         if(p) props.creditWallet({noofcns:data.noofcoins,mode:"AdminPayment",pubgid:data.pubgid});
+        
     }
 return(
-    <React.Fragment>
-        <Nav/>
-        <div className='container'>
+    <div className='container'>
         <form onSubmit={handleSubmit}>
             <label>PUBG ID :</label>
             <input type="text" id="pubgid"  className="white-text" name="pubgid" required onChange={handleChange}/><br/>
@@ -34,8 +33,7 @@ return(
             <input type="number" className="white-text" id="amount" name="amount" value={(data.noofcoins)*5} disabled={true}/><br/>
             <button className="waves-effect waves-light btn">Credit</button>
         </form>
-        </div>
-    </React.Fragment>
+    </div>
 )
 }
 

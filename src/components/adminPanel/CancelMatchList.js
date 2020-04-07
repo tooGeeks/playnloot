@@ -3,14 +3,18 @@ import {connect} from 'react-redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import {compose} from 'redux';
 import MatchSummary from "../MatchSummary";
+import {getCurrentDate} from '../../Functions'
 
-const UpdateMatchList = (props)=>{
+const CancelMatchList = (props)=>{
     const {matches} = props;
         return(
         <div className="container">
             {matches && matches.map(match =>{
+                if(match.mdate<getCurrentDate()){//Hides a Match if its Match Date has Passed
+                    return null;
+                }
                     return(
-                        <MatchSummary maxp='101' isCan={!match.isActive} match={match} loc={"/admin/updatematch/"} bttnname={"Select"} key={match.id}/>
+                        <MatchSummary maxp='101' isCan={!match.isActive} match={match} loc={"/admin/cancelmatch/false/"} bttnname={"Select"} key={match.id}/>
                     )
                 })}
         </div>
@@ -27,4 +31,4 @@ export default compose(
     firestoreConnect([
         {collection:'Matches'}
     ])
-)(UpdateMatchList);
+)(CancelMatchList);
