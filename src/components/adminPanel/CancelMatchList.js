@@ -2,7 +2,7 @@ import React from "react";
 import {connect} from 'react-redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import {compose} from 'redux';
-import MatchSummary from "../adminMatchSummary";
+import MatchSummary from "../matches/adminMatchSummary";
 import {getCurrentDate} from '../../Functions'
 import Nav from './AdminNav'
 

@@ -3,7 +3,7 @@ import WithdrawalDetails from './WithdrawalDetails'
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
-import {confirmWithdrawal} from '../../Store/Actions/PaymentActions';
+import {confirmWithdrawal} from '../../store/actions/PaymentActions';
 import Nav from './AdminNav'
 
 const WithdrawalList = (props)=>{

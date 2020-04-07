@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import {dateString} from '../../Functions'
 import { Link } from 'react-router-dom';
-import Nav from './AdminNav'
 
 const WithdrawalDetails = (props)=>{
     const {details,bttnname,hClick,ukey,columns,colValues} = props
@@ -22,7 +21,6 @@ const WithdrawalDetails = (props)=>{
     const status = isComplete ? <span className='green-text'>Status : Paid</span> : <span className='red-text'>Status : Pending</span>
     return(
         <React.Fragment>
-            <Nav/>
             <div className='row'>
                 <div className='col col s12 m6 offset-m3'>
                     <div className='card black'>

@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import {cancelMatch} from '../../store/actions/MatchActions';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
-import {findinMatches} from '../../Functions';import { Helmet } from 'react-helmet';
+import {findinMatches} from '../../Functions';
 import Nav from './AdminNav'
 
 const CancelMatch = (props)=>{
