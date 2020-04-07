@@ -27,12 +27,17 @@ const MatchDetails = (props)=>{
       </div>
     </div>
   </div></div>;
+  const stl = {
+    paddingBottom : 120
+  };
     return(
       <React.Fragment>
           <Nav/>
           <div className="container white-text">
               {msum}
-              <EnrPlayersDetails columns={['pubgid','mno','kills']} isEditing={false} colValues={{pubgid:'PUBG ID',mno:'WhatsApp No.',kills:'Kills'}} players={users && uinm}/>
+          </div>
+          <div className="container"  style={stl}>
+          <EnrPlayersDetails columns={['pubgid','mno','kills']} isEditing={false} colValues={{pubgid:'PUBG ID',mno:'WhatsApp No.',kills:'Kills'}} players={users && uinm}/>
           </div>
       </React.Fragment>
     ) 

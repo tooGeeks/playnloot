@@ -1,4 +1,6 @@
 import React, { Fragment } from 'react'
+import {Helmet} from 'react-helmet'
+
 
 const EnrPlayersDetails = (props)=>{
     const {columns,rstate,bttnname,players,colValues,isEditing} = props;
@@ -31,7 +33,7 @@ const EnrPlayersDetails = (props)=>{
         setState(arr)
     }
     //const ip = <div className='input-field col s2 m2'><input className="white-text" type='number'/></div>;
-    let ptable = players ? <table className="">
+    let ptable = players ? <table className="responsive-table">
     <thead>
         <tr>
             <th className="center">S.No.</th>
@@ -54,7 +56,6 @@ const EnrPlayersDetails = (props)=>{
                     })}
                     {inc()}
                 </tr>
-                
             )
         })}
     </tbody>
@@ -70,12 +71,14 @@ const EnrPlayersDetails = (props)=>{
     </div>
   </div></div>;
     return(
-        <div>
-            {ptable}
-            <div hidden={!bttnname}>
-                <button onClick={()=>rstate(state)}  className='waves-effect waves-light btn hoverable'>{bttnname}</button>
+        <React.Fragment>
+            <div>
+                {ptable}
+                <div hidden={!bttnname}>
+                    <button onClick={()=>rstate(state)}  className='waves-effect waves-light btn hoverable'>{bttnname}</button>
+                </div>
             </div>
-        </div>
+        </React.Fragment>
     )
 }
 
