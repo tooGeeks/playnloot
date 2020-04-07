@@ -5,6 +5,7 @@ import {findinMatches,isPlayerinMatch} from '../../Functions'
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import MatchSummary from '../matches/adminMatchSummary';
+import Nav from './AdminNav'
 
 const MatchDetails = (props)=>{
     const mid = props.match.params.mid;
@@ -27,11 +28,14 @@ const MatchDetails = (props)=>{
     </div>
   </div></div>;
     return(
-        <div className="container white-text">
-            {msum}
-            <EnrPlayersDetails columns={['pubgid','mno','kills']} isEditing={false} colValues={{pubgid:'PUBG ID',mno:'WhatsApp No.',kills:'Kills'}} players={users && uinm}/>
-        </div>
-    )
+      <React.Fragment>
+          <Nav/>
+          <div className="container white-text">
+              {msum}
+              <EnrPlayersDetails columns={['pubgid','mno','kills']} isEditing={false} colValues={{pubgid:'PUBG ID',mno:'WhatsApp No.',kills:'Kills'}} players={users && uinm}/>
+          </div>
+      </React.Fragment>
+    ) 
 }
 
 const mapStatetoProps = (state)=>{

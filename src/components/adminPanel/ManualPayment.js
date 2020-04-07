@@ -1,6 +1,7 @@
 import React from "react";
 import { creditWallet } from '../../store/actions/PaymentActions';
 import {connect} from 'react-redux';
+import Nav from './AdminNav'
 
 /*
   This Component is used to add coins to user's wallet manually
@@ -22,19 +23,22 @@ const ManualPayment = (props)=>{
         if(p) props.creditWallet({noofcns:data.noofcoins,mode:"AdminPayment",pubgid:data.pubgid});
         
     }
-return(
-    <div className='container'>
-        <form onSubmit={handleSubmit}>
-            <label>PUBG ID :</label>
-            <input type="text" id="pubgid"  className="white-text" name="pubgid" required onChange={handleChange}/><br/>
-            <label>No. of Coins :</label>
-            <input type="number" className="white-text" id="noofcoins" name="noofcoins" required onChange={handleChange}/><br/>
-            <label>Amount :</label>
-            <input type="number" className="white-text" id="amount" name="amount" value={(data.noofcoins)*5} disabled={true}/><br/>
-            <button className="waves-effect waves-light btn">Credit</button>
-        </form>
-    </div>
-)
+    return(
+        <React.Fragment>
+            <Nav/>
+            <div className='container'>
+                <form onSubmit={handleSubmit}>
+                    <label>PUBG ID :</label>
+                    <input type="text" id="pubgid"  className="white-text" name="pubgid" required onChange={handleChange}/><br/>
+                    <label>No. of Coins :</label>
+                    <input type="number" className="white-text" id="noofcoins" name="noofcoins" required onChange={handleChange}/><br/>
+                    <label>Amount :</label>
+                    <input type="number" className="white-text" id="amount" name="amount" value={(data.noofcoins)*5} disabled={true}/><br/>
+                    <button className="waves-effect waves-light btn">Credit</button>
+                </form>
+            </div>
+        </React.Fragment>
+    )
 }
 
 const mapDispatchtoProps = (dispatch)=>{

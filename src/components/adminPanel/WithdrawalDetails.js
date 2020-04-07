@@ -20,19 +20,21 @@ const WithdrawalDetails = (props)=>{
     </div>
     const status = isComplete ? <span className='green-text'>Status : Paid</span> : <span className='red-text'>Status : Pending</span>
     return(
-        <div className='row'>
-            <div className='col col s12 m6 offset-m3'>
-                <div className='card black'>
-                    <div className='card-content white-text'>
-                        {reqdiv}
-                        {status}
+        <React.Fragment>
+            <div className='row'>
+                <div className='col col s12 m6 offset-m3'>
+                    <div className='card black'>
+                        <div className='card-content white-text'>
+                            {reqdiv}
+                            {status}
+                        </div>
+                        <div hidden={!bttnname || isComplete} className="card-action">
+                        <Link className="white-text" to={window.location.pathname} onClick={()=>{hClick(ukey)}} ><button className="waves-effect waves-light btn-small">{bttnname}</button></Link>
                     </div>
-                    <div hidden={!bttnname || isComplete} className="card-action">
-                    <Link className="white-text" to={window.location.pathname} onClick={()=>{hClick(ukey)}} ><button className="waves-effect waves-light btn-small">{bttnname}</button></Link>
-                </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </React.Fragment>
     )
 }
 

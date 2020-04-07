@@ -6,6 +6,7 @@ import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import MatchSummary from '../matches/adminMatchSummary';
 import {updateFacts} from '../../store/actions/MatchActions'
+import Nav from './AdminNav'
 
 const UpdateMatchFacts = (props)=>{
     const mid = props.match.params.mid;
@@ -49,10 +50,13 @@ const UpdateMatchFacts = (props)=>{
     </div>
   </div></div>
     return(
-        <div className="container white-text center">
-            {msum}
-            <EnrPlayersDetails players={users && uinm} rstate={hdata} bttnname="Update Values" columns={['pubgid','mno','kills','wallet','rank']} isEditing={true} colValues={{pubgid:'PUBG ID',mno:'WhatsApp No.',kills:'Kills Before Match',wallet:"Wallet Amount",rank:"Rank"}}/>
-        </div>
+      <React.Fragment>
+          <Nav/>
+          <div className="container white-text center">
+              {msum}
+              <EnrPlayersDetails players={users && uinm} rstate={hdata} bttnname="Update Values" columns={['pubgid','mno','kills','wallet','rank']} isEditing={true} colValues={{pubgid:'PUBG ID',mno:'WhatsApp No.',kills:'Kills Before Match',wallet:"Wallet Amount",rank:"Rank"}}/>
+          </div>
+      </React.Fragment>
     )
 }
 
