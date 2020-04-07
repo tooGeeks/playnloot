@@ -3,7 +3,7 @@
 	{
 		"primary":
 		{
-			"main": "#694dcc"
+			"main": "#856cd5"
 		},
 		"secondary":
 		{
@@ -11,7 +11,7 @@
 		},
 		"error":
 		{
-			"main":"#f44336"
+			"main":"#ef5350"
 		},
 		"background":
 		{
