@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import {compose} from 'redux';
 import {compdate,getCurrentDate} from '../../Functions';
+import Nav from './AdminNav'
 
 /*
   This Component is used to Create a New Match
@@ -51,17 +52,20 @@ class CreateMatch extends Component{
     }
     render(){
         return(
-            <div className="container">
-                <form onSubmit={this.handleSubmit}>
-                    <label ><b>Date of Match :</b></label>
-                    <input type="date" className="white-text" id="mdate" onChange={this.handleChange}/><br/>
-                    <label ><b>Time of Match :</b></label>
-                    <input type="time" className="white-text" id="mtime" onChange={this.handleChange}/><br/>
-                    <label ><b>Last Day of Registration :</b></label>
-                    <input type="date" className="white-text" id="lrdate"onChange={this.handleChange}/><br/>
-                    <button id="crnmbttn" disabled={!this.state.mdate && !this.state.mtime && !this.state.lrdate} ref={this.reff} className="waves-effect waves-light btn hoverable">Create Match</button>
-                </form>
-            </div>
+            <React.Fragment>
+                <Nav/>
+                <div className="container">
+                    <form onSubmit={this.handleSubmit}>
+                        <label ><b>Date of Match :</b></label>
+                        <input type="date" className="white-text" id="mdate" onChange={this.handleChange}/><br/>
+                        <label ><b>Time of Match :</b></label>
+                        <input type="time" className="white-text" id="mtime" onChange={this.handleChange}/><br/>
+                        <label ><b>Last Day of Registration :</b></label>
+                        <input type="date" className="white-text" id="lrdate"onChange={this.handleChange}/><br/>
+                        <button id="crnmbttn" disabled={!this.state.mdate && !this.state.mtime && !this.state.lrdate} ref={this.reff} className="waves-effect waves-light btn hoverable">Create Match</button>
+                    </form>
+                </div>
+            </React.Fragment>
         )
     }
 }

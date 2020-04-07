@@ -1,6 +1,7 @@
 import React from "react";
 import {sendNewNot} from '../../Store/Actions/MatchActions'
 import {connect} from 'react-redux';
+import Nav from './AdminNav'
 
 /*
   This Component is used to Send Notifications to users! *UNDER MASSIVE CONSTRUCTION* 
@@ -18,15 +19,18 @@ const SendNotifications = (props)=>{
         
     }
     return(
-        <div className='container black'>
-            <form onSubmit={handleSubmit}>
-                <label>Notification Name : </label>
-                <input className="white-text" type="text" id="title" onChange={handleChange}/><br/>
-                <label>Notification Body : </label>
-                <input className="white-text" type="text" id="body" onChange={handleChange}/><br/>
-                <button className="waves-effect waves-light btn hoverable">Send</button>
-            </form>
-        </div>
+        <React.Fragment>
+            <Nav/>
+            <div className='container black'>
+                <form onSubmit={handleSubmit}>
+                    <label>Notification Name : </label>
+                    <input className="white-text" type="text" id="title" onChange={handleChange}/><br/>
+                    <label>Notification Body : </label>
+                    <input className="white-text" type="text" id="body" onChange={handleChange}/><br/>
+                    <button className="waves-effect waves-light btn hoverable">Send</button>
+                </form>
+            </div>
+        </React.Fragment>
     )
 }
 

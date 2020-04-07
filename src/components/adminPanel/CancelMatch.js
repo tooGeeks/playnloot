@@ -4,7 +4,8 @@ import { compose } from 'redux';
 import {cancelMatch} from '../../store/actions/MatchActions';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
-import {findinMatches} from '../../Functions';
+import {findinMatches} from '../../Functions';import { Helmet } from 'react-helmet';
+import Nav from './AdminNav'
 
 const CancelMatch = (props)=>{
     const mid = props.match.params.mid;
@@ -30,9 +31,12 @@ const CancelMatch = (props)=>{
     </div>
   </div></div> ;
     return(
-        <div className='container white-text'>
-            {matchdiv}
-        </div>
+        <React.Fragment>
+            <Nav/>
+            <div className='container white-text'>
+                {matchdiv}
+            </div>
+        </React.Fragment>
     )
 }
 
