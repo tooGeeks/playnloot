@@ -1,5 +1,5 @@
 import React,{Component} from "react";
-import { createMatch } from '../../Store/Actions/MatchActions';
+import { createMatch } from '../../store/actions/MatchActions';
 import {connect} from 'react-redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import {compose} from 'redux';

@@ -1,5 +1,5 @@
 import React from "react";
-import { creditWallet } from '../../Store/Actions/PaymentActions';
+import { creditWallet } from '../../store/actions/PaymentActions';
 import {connect} from 'react-redux';
 
 /*

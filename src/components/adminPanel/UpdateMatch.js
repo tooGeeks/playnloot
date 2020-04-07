@@ -2,7 +2,7 @@ import React,{Component} from "react";
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import {firestoreConnect} from 'react-redux-firebase';
-import {updateMatch} from '../../Store/Actions/MatchActions';
+import {updateMatch} from '../../store/actions/MatchActions';
 import {compdate,getCurrentDate,findinMatches} from '../../Functions';
 
 /*
