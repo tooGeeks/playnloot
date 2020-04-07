@@ -9,6 +9,7 @@ import { ReactComponent as Loading } from '../../imgs/loading.svg'
 const useStyles = makeStyles(theme => ({
   main: {
     display: 'flex',
+    backgroundColor: '#0f0909',
     },
     mobileback: {
       backgroundImage: `url(${Image})`,
@@ -31,6 +32,7 @@ const useStyles = makeStyles(theme => ({
     },
     root: {
       flexGrow: 1,
+      backgroundColor: '#0f0909',
     },
     HDivider: {
       //minHeight: theme.spacing(15),
@@ -50,8 +52,8 @@ const useStyles = makeStyles(theme => ({
       borderRadius: '50%',
       width: '3rem', height: '3rem',
       color: theme.palette.getContrastText(theme.palette.primary.main),
-      //backgroundColor: theme.palette.primary.main,
-      backgroundColor: 'linear-gradient(to bottom, #231f20, #110f10)'
+      backgroundColor: theme.palette.primary.main,
+      //backgroundColor: 'linear-gradient(to bottom, #231f20, #110f10)'
     },
     stepTitle: {
       paddingLeft: theme.spacing(2),
@@ -66,8 +68,8 @@ const useStyles = makeStyles(theme => ({
       marginRight: theme.spacing(3),
     },
     stepContent: {
-      //backgroundColor: theme.palette.background.paper,
-      backgroundColor: '#110f10',
+      backgroundColor: theme.palette.background.paper,
+      //backgroundColor: '#110f10',
       display: 'inline-block',
       padding: theme.spacing(2),
       borderRadius: 5,
@@ -98,17 +100,14 @@ const Landing = () => {
     console.log(JSON.parse((localStorage.getItem('getting_Started'))));
   }, [getStart])
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
+  const handleClicks = (opt) => {
+    switch(opt){
+      case 'handleNext': setActiveStep((prevActiveStep) => prevActiveStep + 1); break;
+      case 'handleBack': setActiveStep((prevActiveStep) => prevActiveStep - 1); break;
+      case 'handleReset': setActiveStep(0); break;
+      default: console.log("handleClick: Case Mismatch!"); break;
+    }
+  }
 
   function getSteps() {
     return ['Register on Playnloot', 'Buy a Coin', 'Enroll in a Match'];
@@ -119,7 +118,7 @@ const Landing = () => {
       case 0:
         return <Box className={classes.stepContent}>
                   First, you`ve to register on our app using your correct credentials!<br/>
-                  <Button m="auto" color="primary" variant="outlined" style={{marginTop: '5px'}} onClick={() => history.push('/signup')}>REGISTER</Button>
+                  <Button m="auto" color="primary" variant="outlined" style={{marginTop: '5px'}} onClick={() => {history.push('/signup')}}>REGISTER</Button>
                 </Box>;
       case 1:
         return <Box className={classes.stepContent}>
@@ -155,7 +154,7 @@ const Landing = () => {
               <br/>
               <Typography className={classes.enroll} variant="h6" >ENROLL IN A MATCH NOW!</Typography>
             </Typist>
-            <Button id="gt" onClick={() => setgetStart({...getStart, gt: true})}>Get Started!</Button>
+            <Button id="gt" onClick={() => {setgetStart({...getStart, gt: true}); document.querySelector('#getstarted').scrollIntoView({ behavior: 'smooth', block: 'center'})}}>Get Started!</Button>
           </Box>
         </Grid>
         <Hidden xsDown>
@@ -168,7 +167,7 @@ const Landing = () => {
           {steps.map((label, index) => (
             <React.Fragment key={label}>
               <Grid item xs={12} id={index}>
-                <Box className={classes.stepHeading} alignItems="center"><Box><Avatar edge="start" className={classes.stepNo}>{index + 1}</Avatar></Box>&nbsp;<Typography variant="h6" className={classes.stepTitle} onClick={handleReset}>{label}</Typography></Box>
+                <Box className={classes.stepHeading} alignItems="center"><Box><Avatar edge="start" className={classes.stepNo}>{index + 1}</Avatar></Box>&nbsp;<Typography variant="h6" className={classes.stepTitle} onClick={() => handleClicks('handleReset')}>{label}</Typography></Box>
               </Grid>
               <Grid item xs={12}>
                 <Collapse in={index === activeStep} {...(activeStep ? { timeout: 1000 } : {})}>
@@ -176,7 +175,7 @@ const Landing = () => {
                     <Hidden xsUp={index === steps.length -1  ? true : false}><Box className={classes.HDivider} /></Hidden>
                     <Box className={classes.stepBody}  display="flex" flexDirection="column" justifyContent="center">
                       {getStepContent(index)}
-                      <Box className={classes.stepAction}><Button color="primary" disabled={index === 0} onClick={handleBack}>Back</Button><Button color="primary" variant="contained" onClick={handleNext}>{index>=2 ? "Finish" : "Next"}</Button></Box>
+                      <Box className={classes.stepAction}><Button color="primary" disabled={index === 0} onClick={() => handleClicks('handleBack')}>Back</Button><Button color="primary" variant="contained" onClick={() => handleClicks('handleNext')}>{index>=2 ? "Finish" : "Next"}</Button></Box>
                     </Box>
                   </Box>
                 </Collapse>
