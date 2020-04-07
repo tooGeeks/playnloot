@@ -1,6 +1,6 @@
-import {isinDocs} from '../../Functions'
+import {isinDocs,findinMatches} from '../../Functions'
 import 'firebase/functions'
-
+import { isEmpty } from 'react-redux-firebase';
 
 /*
   This File Contains All Match Actions such as Create Match, Update Match, Enter Match, etc. 
@@ -82,6 +82,106 @@ export const enterMatch = (mid,uid)=>{
         }
         
     }
+}
+
+export const updateFacts = (players,mid)=>{
+    return(dispatch,getState,{getFirebase,getFirestore})=>{
+        for(let x in players){
+            if(players[x].ukills===undefined || players[x].uwallet===undefined) {
+                alert("Please Fill The Details properly");
+                return true;
+            }
+        }
+        const db = getFirestore();
+        ufacts(db,players).then((plist)=>{
+            db.collection("Matches").doc(mid).set({players:plist},{merge:true}).then(()=>{
+                dispatch({type:'MTHF_UPD'})
+            })
+        })
+    }
+}
+
+const ufacts = (db,players)=>{
+    return new Promise((resolve,reject)=>{
+        let plist = [];
+        players.map((pl)=>{
+            console.log(pl.id)
+            plist.push({[pl.pubgid]:pl.ukills+"-"+pl.rank})
+            db.collection("Users").doc(pl.id).set({
+                kills:(pl.kills+pl.ukills),
+                wallet:(pl.wallet+pl.uwallet)
+            },{merge:true})
+            return pl;
+        })
+        resolve(plist)
+    })
+}
+
+export const cancelMatch = (mid)=>{
+    return(dispatch,getState,{getFirebase,getFirestore})=>{
+        const st = getState();
+        const db = getFirestore();
+        const matches = st.firestore.ordered.Matches;
+        const match = matches ? findinMatches(matches,mid) : null;
+        if(matches && !match.isActive){
+            dispatch({type:"MTH_CAN_ERR",err:"Match Already Canceled"})
+            return;
+        }
+        getPlayers(mid,st).then((players)=>{
+            let batch = db.batch();
+            if(isEmpty(players)) return;
+            if(players.length<10){
+                let i,batch = db.batch();
+            for(i=0;i<players.length;i+=10){
+                let nPlayers = players.splice(0,10)
+                db.collection("Users").where('pubgid','in',nPlayers).get().then((snaps)=>{
+                    snaps.forEach(snap => {
+                        let wallet = snap.data().wallet;
+                        wallet+=2;
+                        let docRef = db.collection("Users").doc(snap.id)
+                        batch.update(docRef,{wallet:wallet})
+                    });
+                }).then(()=>{
+                    if(isEmpty(players)){
+                        batch.commit().then(()=>{
+                            db.collection('Matches').doc(mid).set({isActive:false},{merge:true}).then(()=>{
+                                dispatch({type:"MTH_CAN_SUCC"})
+                            })
+                        })
+                    }
+                })
+            }
+            }else{
+                db.collection("Users").where('pubgid','in',players).get().then((snaps)=>{
+                    snaps.forEach(snap => {
+                        console.log(snap.data());
+                        let wallet = snap.data().wallet;
+                        wallet+=2;
+                        let docRef = db.collection("Users").doc(snap.id)
+                        batch.update(docRef,{wallet:wallet})
+                    });
+                })
+                batch.commit().then(()=>{
+                    console.log('Done');
+                })
+            }
+        })
+    }
+}
+
+const getPlayers = (mid,st)=>{
+    return new Promise((resolve,reject)=>{
+        const matches = st.firestore.ordered.Matches;
+        const match = matches ? findinMatches(matches,mid) : null;
+        const players = match && match.players;
+        let parr = []
+        for(let x in players){
+            for(let y in players[x]){
+                parr.push(y)
+            }
+        }
+        resolve(parr)
+    })
 }
 
 export const sendNewNot = (msg)=>{

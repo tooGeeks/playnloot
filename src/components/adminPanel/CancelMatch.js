@@ -1,7 +1,7 @@
 import React,{useEffect} from 'react';
-import MatchSummary from "../MatchSummary";
+import MatchSummary from "../matches/adminMatchSummary";
 import { compose } from 'redux';
-import {cancelMatch} from '../../Store/Actions/MatchActions';
+import {cancelMatch} from '../../store/actions/MatchActions';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import {findinMatches} from '../../Functions';

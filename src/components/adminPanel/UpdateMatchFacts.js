@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import {findinMatches,isPlayerinMatch} from '../../Functions'
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
-import MatchSummary from '../MatchSummary';
-import {updateFacts} from '../../Store/Actions/MatchActions'
+import MatchSummary from '../matches/adminMatchSummary';
+import {updateFacts} from '../../store/actions/MatchActions'
 
 const UpdateMatchFacts = (props)=>{
     const mid = props.match.params.mid;

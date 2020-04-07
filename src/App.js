@@ -21,6 +21,9 @@ import UpdateMatch from './components/adminPanel/UpdateMatch'
 import UpdateMatchList from './components/adminPanel/UpdateMatchList'
 import AdminHome from './components/adminPanel/AdminHome'
 import ManualPayment from './components/adminPanel/ManualPayment'
+import MatchDetails from './components/adminPanel/MatchDetails'
+import UpdateMatchFacts from './components/adminPanel/UpdateMatchFacts'
+import CancelMatch from './components/adminPanel/CancelMatch'
 
 //Styling
 import { MuiThemeProvider, createMuiTheme  } from '@material-ui/core/styles';
@@ -100,8 +103,11 @@ const App = () => {
                 <ProtectedRoutes path="/admin/creatematch" component={CreateMatch}/>
                 <ProtectedRoutes path="/admin/updatematch/:mid" component={UpdateMatch}/>
                 <ProtectedRoutes path="/admin/updatematch" component={UpdateMatchList}/>
-                <ProtectedRoutes exact path="/admin" component={AdminHome}/>
                 <ProtectedRoutes path="/admin/manualpayment" component={ManualPayment}/>
+                <ProtectedRoutes path="/admin/matchdetails/:mid" component={MatchDetails}/>
+                <ProtectedRoutes path="/admin/updatematchfacts/:mid" component={UpdateMatchFacts}/>
+                <ProtectedRoutes path="/admin/cancelmatch/:bln/:mid" component={CancelMatch}/>
+                <ProtectedRoutes exact path="/admin" component={AdminHome}/>
 
                 <Route path="*" component={() => "404: Not Found! Wrong URL"}/>
               </Switch>
