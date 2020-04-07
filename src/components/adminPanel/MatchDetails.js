@@ -37,7 +37,7 @@ const MatchDetails = (props)=>{
               {msum}
           </div>
           <div className="container"  style={stl}>
-          <EnrPlayersDetails columns={['pubgid','mno','kills']} isEditing={false} colValues={{pubgid:'PUBG ID',mno:'WhatsApp No.',kills:'Kills'}} players={users && uinm}/>
+          <EnrPlayersDetails columns={['srno','pubgid','mno','kills','rank']} isEditing={false} colValues={{srno:"Sr. No",pubgid:'PUBG ID',mno:'WhatsApp No.',kills:'Kills',rank:"Rank"}} players={users && uinm}/>
           </div>
       </React.Fragment>
     ) 

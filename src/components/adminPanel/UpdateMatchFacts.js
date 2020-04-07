@@ -25,7 +25,6 @@ const UpdateMatchFacts = (props)=>{
     users && users.map(user=>{
         if(isPlayerinMatch(match.players,user.pubgid)){
           var xm = getPlayerfromMatch(match.players,user.pubgid)
-          console.log("XM : "+JSON.stringify(xm));
           var px = xm[user.pubgid];
           uinm.push({...user,ukills:parseInt(px.split('-')[0]),uwallet:parseInt(px.split('-')[0])*5,rank:parseInt(px.split('-')[1])})
 
@@ -38,7 +37,8 @@ const UpdateMatchFacts = (props)=>{
       
       
   }
-    const msum = match ? <MatchSummary maxp='101' match={matches && match}/> : <div className="center"><p>Loading Match Details...</p><div className="preloader-wrapper small active center">
+    const msum = match ? <MatchSummary maxp='101' match={matches && match}/> 
+    : <div className="center"><p>Loading Match Details...</p><div className="preloader-wrapper small active center">
     <div className="spinner-layer spinner-blue-only">
       <div className="circle-clipper left">
         <div className="circle"></div>
@@ -52,7 +52,7 @@ const UpdateMatchFacts = (props)=>{
     return(
       <React.Fragment>
           <Nav/>
-          <div className="container white-text center">
+          <div className="container white-text">
               {msum}
               <EnrPlayersDetails players={users && uinm} rstate={hdata} bttnname="Update Values" columns={['pubgid','mno','kills','wallet','rank']} isEditing={true} colValues={{pubgid:'PUBG ID',mno:'WhatsApp No.',kills:'Kills Before Match',wallet:"Wallet Amount",rank:"Rank"}}/>
           </div>

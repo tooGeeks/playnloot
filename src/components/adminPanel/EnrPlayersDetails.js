@@ -1,10 +1,11 @@
 import React, { Fragment } from 'react'
-import {Helmet} from 'react-helmet'
+import MaterialTable from 'material-table'
+
 
 
 const EnrPlayersDetails = (props)=>{
     const {columns,rstate,bttnname,players,colValues,isEditing} = props;
-    const [state,setState] = React.useState(props);
+    const [state,setState] = React.useState();
     React.useEffect(()=>{
         setState(players)
     },[players])
@@ -69,13 +70,56 @@ const EnrPlayersDetails = (props)=>{
         <div className="circle"></div>
       </div>
     </div>
-  </div></div>;
+    </div></div>;
+    const colHeads = columns.map((cl)=>{
+        return cl==='kills'||cl==='rank'||cl==='wallet'
+        ? {title:colValues[cl],field:cl,type:'numeric',editable: 'onUpdate'}
+        : {title:colValues[cl],field:cl,editable: 'never'}
+    });
+
+    const colData = players && players.map((pl,ind)=>{
+        let cp={}
+        columns && columns.map((cl,cind)=>{
+            return cl==='srno'? cp[cl]=players.indexOf(pl)+1 : cp[cl]=pl[cl]
+        })
+        return cp;
+    })
+
+    const tRef = React.createRef();
+    
+    const editF = {
+        onRowAdd:null,
+        onRowUpdate:(newData,oldData)=>
+        new Promise((resolve,reject)=>{
+            setTimeout(()=>{
+            let data = state;
+            console.log(state)
+            let inx = data.indexOf(oldData);
+            newData['kills']=parseInt(newData['kills'])
+            newData['wallet']=parseInt(newData['wallet'])
+            newData['rank']=parseInt(newData['rank'])
+            data[inx] = newData;
+            
+            resolve();
+            },1000)
+        }),
+        onRowDelete : null
+    };
+    
+    const tRF = ()=>{
+    }
     return(
         <React.Fragment>
             <div>
-                {ptable}
+                <MaterialTable
+                    tableRef={tRef}
+                    title="Players"
+                    columns={colHeads}
+                    data={state}
+                    editable={isEditing? editF : null}
+                />
                 <div hidden={!bttnname}>
-                    <button onClick={()=>rstate(state)}  className='waves-effect waves-light btn hoverable'>{bttnname}</button>
+                    <button onClick={()=>console.log(state)}  className='waves-effect waves-light btn hoverable'>{bttnname}</button>
                 </div>
             </div>
         </React.Fragment>

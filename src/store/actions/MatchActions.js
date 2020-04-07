@@ -17,6 +17,7 @@ export const createMatch = (match)=>{
                 ...match,
                 players:[],
                 plno:1,
+                isActive : true,
                 createdAt : new Date()
             }).then(()=>{
                 dispatch({type:"CR_MATCH",match});
