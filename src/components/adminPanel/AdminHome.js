@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import MatchSummary from "../matches/adminMatchSummary";
 import {firestoreConnect} from 'react-redux-firebase';
 import {compose} from 'redux';
+import { Helmet } from 'react-helmet';
 
 /*
   This Component is Admin Home
@@ -26,10 +27,16 @@ const AdminHome = (props)=>{
     </div>
   </div></div> ;
   return(
-    <div className="container white-text">
+    <React.Fragment>
+      <Helmet>
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+      </Helmet>
+      <div className="container white-text">
         <h3>Welcom Back, Admin</h3>
         {matchdiv}
-    </div>
+      </div>
+    </React.Fragment>
     )
 }
 

@@ -91,7 +91,7 @@ const App = () => {
                 <Route path='/signup' component={SignUp} />
                 <ProtectedRoutes path='/create' component={CreateProject} />
                 <Route exact path='/' component={Landing}/>
-                <Route exact path='/:gti' component={Landing}/>
+                {/* <Route exact path='/:gti' component={Landing}/> This is intended for Getting-Started Tour*/}
                 <ProtectedRoutes exact path='/wallet/:use/:mny' component={Wallet}/>
                 <ProtectedRoutes path="/entermatch/:mid" component={EnterMatch}/>
                 <ProtectedRoutes path="/enrolledmatches/" component={EnrolledMatches}/>
