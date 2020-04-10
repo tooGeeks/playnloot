@@ -5,7 +5,7 @@ import { useSelector, connect, useDispatch, } from 'react-redux'
 import { makeStyles, Grid, Container, Paper, List, Button, Typography, CssBaseline, Box, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Avatar, Tooltip, Zoom } from "@material-ui/core";
 import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core'
 //import { ReactComponent as Solid } from '../../imgs/soldier2.svg'
-import { AccountBox, TrackChanges, Event, AccessAlarm, MonetizationOn } from '@material-ui/icons';
+import { AccountBox, TrackChanges, Event, AccessAlarm } from '@material-ui/icons';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
