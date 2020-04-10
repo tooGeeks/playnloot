@@ -24,6 +24,7 @@ yarn-error.log*
 
 #Dev
 /src/config/fbConfig.js
-.firebase
+.firebase/
 /NNpackage.json
 /Changes Kand
+build/

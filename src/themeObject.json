@@ -3,7 +3,7 @@
 	{
 		"primary":
 		{
-			"main": "#856cd5"
+			"main": "#5ddf93"
 		},
 		"secondary":
 		{
@@ -15,8 +15,8 @@
 		},
 		"background":
 		{
-			"paper": "#312c40",
-			"default": "#2d2839"
+			"paper": "#2b3138",
+			"default": "#202329"
 		},
 		"type": "dark"
 	},
