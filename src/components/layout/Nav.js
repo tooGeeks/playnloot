@@ -13,7 +13,6 @@ import Avatar from '@material-ui/core/Badge';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 
 
 const useStyles = makeStyles(theme => ({
@@ -84,7 +83,7 @@ const Nav = (props) => {
         onClick={toggleDrawer(side, false)}
         onKeyDown={toggleDrawer(side, false)}
       >
-      <div align="center" style={{margin: 0, padding: 0}}><MoreHorizIcon/></div>
+      {/* <div align="center" style={{margin: 0, padding: 0}}><MoreHorizIcon/></div> */}
       <List>
         {links}
       </List>

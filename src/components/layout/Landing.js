@@ -150,11 +150,13 @@ const Landing = () => {
               <Typography variant="h5"> Welcome Pro Players! </Typography>
               <Typist.Backspace count={22} delay={200} />
               <Typography variant="subtitle1"> Want to loot real money? </Typography>
-              <Typography variant="body1">Earn money on your every kill</Typography>
-              <br/>
-              <Typography className={classes.enroll} variant="h6" >ENROLL IN A MATCH NOW!</Typography>
+              <Typography component="span" variant="body1">Earn money on your every kill</Typography>
             </Typist>
-            <Button id="gt" onClick={() => {setgetStart({...getStart, gt: true}); document.querySelector('#getstarted').scrollIntoView({ behavior: 'smooth', block: 'center'})}}>Get Started!</Button>
+            <Typist cursor={{hideWhenDone: true}}>
+              <Typography className={classes.enroll} variant="h6" >ENROLL IN A MATCH NOW!</Typography>
+              <br/>
+              <Button variant="outlined" size="large" id="gt" onClick={() => {setgetStart({...getStart, gt: true}); document.querySelector('#getstarted').scrollIntoView({ behavior: 'smooth', block: 'center'})}}>Get Started</Button>
+            </Typist>
           </Box>
         </Grid>
         <Hidden xsDown>
