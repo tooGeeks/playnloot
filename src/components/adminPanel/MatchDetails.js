@@ -13,7 +13,7 @@ const MatchDetails = (props)=>{
     const match = matches && findinMatches(matches,mid);
     const cols = ['srno','pubgid','mno','ukills','rank'] 
     let tableMetadata = {pages:0,psi:0,page:0,count:0 //psi - Player Starting Index, pei - Player Ending Index
-      ,ppp:1} //ppp means Player Per Page 
+      ,ppp:5} //ppp means Player Per Page 
     tableMetadata['pei']=tableMetadata['ppp']
     tableMetadata.pages = users && (users.length/tableMetadata.ppp)
     let ind = 1
@@ -23,7 +23,7 @@ const MatchDetails = (props)=>{
         cols.map(cl=>{
         return  cl==='srno' ? ux[cl]=ind++ : ux[cl]=user[cl]
       })
-        return {...ux,ukills:parseInt(px.split('-')[0]),uwallet:parseInt(px.split('-')[0])*5,rank:parseInt(px.split('-')[1])}
+        return {...ux,ukills:parseInt(px)}
     })
     tableMetadata['count'] = uinm && uinm.length
     let players = uinm && uinm.slice(tableMetadata.psi,tableMetadata.pei)
