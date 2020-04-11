@@ -1,3 +1,5 @@
+import { clearDialog } from "./uiActions";
+
 export const signIn = (credentials) => {
   return (dispatch, getState, {getFirebase}) => {
     const firebase = getFirebase();
@@ -85,14 +87,19 @@ export const signUp = (newUser) => {
   }
 }
 
-export const resetPassword = ()=>{
+export const resetPassword = (email)=>{
   return(dispatch,getState,{getFirebase,getFirestore})=>{
       const fb = getFirebase();
-      const st = getState();
-      fb.auth().sendPasswordResetEmail(st.firebase.auth.email).then(()=>{
+      // const st = getState();
+      // console.log(st);
+      fb.auth().sendPasswordResetEmail(email).then(()=>{
           dispatch({type:"PWD_RST"})
+          dispatch(clearDialog())
+          dispatch({ type: 'SNACKBAR', variant: 'success', message: "Check ur Email: We sent you a reset passwaord link!" });
       }).catch((err)=>{
           dispatch({type:"PWD_RST_ERR",err})
+          dispatch(clearDialog());
+          dispatch({ type: 'SNACKBAR', variant: 'error', message: `Something went wrong! Don\`t worry just contact Admin (${err})` });
       })
   }
 }

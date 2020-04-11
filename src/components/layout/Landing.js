@@ -3,7 +3,7 @@ import Image from '../imgs/bg-9.jpg'
 import { makeStyles } from '@material-ui/styles'
 import Typist from 'react-typist';
 import { useHistory, useParams } from 'react-router-dom'
-import { useMediaQuery, useTheme , Typography, Box, Grid, Avatar, Button, Hidden, Collapse } from '@material-ui/core';
+import { useMediaQuery, useTheme , Typography, Box, Grid, Avatar, Button, Hidden, Collapse, Container } from '@material-ui/core';
 import { ReactComponent as Loading } from '../../imgs/loading.svg'
 
 const useStyles = makeStyles(theme => ({
@@ -165,6 +165,7 @@ const Landing = () => {
           </Grid>
         </Hidden>
         </Grid>
+        <Container>
         <Grid container direction="row" justify="center" alignItems="center" id="getstarted">
           {steps.map((label, index) => (
             <React.Fragment key={label}>
@@ -185,9 +186,11 @@ const Landing = () => {
             </React.Fragment>
           ))}
         </Grid>
+        </Container>
         <Grid item xs={12} sm={6}>
           
         </Grid>
+        
       </Grid>
     </div>
   );
