@@ -12,7 +12,7 @@ const EnrPlayersDetails = (props)=>{
         setState({data:players})
         setStableMetadata({...tableMetadata})
     },[players,tableMetadata])    
-    
+
     let ptable = <div className="center"><p>Loading Player Details...</p><div className="preloader-wrapper small active center">
     <div className="spinner-layer spinner-blue-only">
       <div className="circle-clipper left">
@@ -30,7 +30,7 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
               'mno':{title:'WhatsApp No.',field:'mno',type:'numeric',editable: 'never'},
               'kills':{title:'Kills',field:'kills',type:'numeric',editable: 'onUpdate'},
               'ukills':{title:'Kills in Match',field:'ukills',type:'numeric',editable: 'onUpdate'},
-              'wallet':{title:'Wallet Amount',field:'wallet',type:'currency',currencySetting:{},editable: 'never'},
+              'wallet':{title:'Wallet Amount',field:'wallet',type:'numeric',editable: 'never'},
               'rank':{title:'Rank',field:'rank',type:'numeric',editable: 'onUpdate'}}
 
 
