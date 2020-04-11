@@ -39,9 +39,8 @@ export const isinDocs = (docs,id)=>{//Used to Check if a certain doc exists in a
     return docs.find((doc)=>id===doc) ? true : false;
 }
 export const isPlayerinMatch = (docs,id)=>{//Used to Check if a certain doc exists in a given list.
-    return docs.find((doc)=>{
-        for(let x in doc) return id===x
-        return doc;
+    return Object.keys(docs).find((doc)=>{
+        return id===doc
     }) ? true : false;
 }
 export const findinMatches = (docs,id)=>{//Used to Find and return a match using its name Ex. MTH2001
@@ -106,6 +105,10 @@ export const getOS = ()=>{
       os = 'Linux';
     }
     return os;
+}
+
+export const getPlayerfromMatch = (plist,pid)=>{
+    return plist[pid]===undefined ? null : plist[pid]
 }
 
 

@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import MatchSummary from "../matches/adminMatchSummary";
 import {firestoreConnect} from 'react-redux-firebase';
 import {compose} from 'redux';
-import { Helmet } from 'react-helmet';
 import Nav from './AdminNav'
 
 /*

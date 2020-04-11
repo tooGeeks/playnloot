@@ -1,66 +1,19 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import MaterialTable from 'material-table'
+import { TablePagination } from '@material-ui/core';
 
 
 
 const EnrPlayersDetails = (props)=>{
-    const {columns,rstate,bttnname,players,colValues,isEditing} = props;
+    const {columns,rstate,bttnname,players,isEditing,tableMetadata,handlePageChange,handleChangeRowsPerPage} = props;
     const [state,setState] = React.useState();
+    const [stableMetadata,setStableMetadata] = React.useState();
     React.useEffect(()=>{
-        setState(players)
-    },[players])
-    let cnt=0;
-    const inc = ()=>{
-        cnt++;
-    }
-    const hChange = (e)=>{
-        if(e.target.textContent==='') return;
-        let idn = (e.target.id).split('-')[0];
-        console.log(e.target.id);
-        let arr = [...state]
-        let x = state[idn];
-        switch((e.target.id).split('-')[1]){
-            case 'kills':
-                x['ukills']=parseInt(e.target.textContent);
-                x['uwallet']=parseInt(e.target.textContent)*5;
-                break;
-            case 'rank':
-                x['rank']=parseInt(e.target.textContent);
-                break;
-            default:
-                break;
-        }
-        arr[idn]=x;
-        setState(arr)
-    }
-    //const ip = <div className='input-field col s2 m2'><input className="white-text" type='number'/></div>;
-    let ptable = players ? <table className="responsive-table">
-    <thead>
-        <tr>
-            <th className="center">S.No.</th>
-            {columns && columns.map(x=>{
-                if(x==='kills' && isEditing) return <Fragment key={"LOL"}><th className="center" key={x}>{colValues[x]}</th><th></th><th className="center" key={x+'m'}>{"Kills in Match"}</th></Fragment>
-                return <th className="center" key={x}>{colValues[x]}</th>
-            })}
-        </tr>
-    </thead>
-    <tbody>
-        {players && players.map(pl=>{
-            return(
-                <tr key={pl.pubgid}>
-                    <td className='center'>{cnt+1}</td>
-                    {columns.map(cl=>{
-                        if(cl==='kills' && isEditing) return(<Fragment key="l1"><td className='center'>{pl[cl]}</td><td className='center'>+</td><td className='center input-field' id={cnt+"-"+cl} onKeyUp={hChange} suppressContentEditableWarning={true} contentEditable={true} key={'e'+cl}>{pl['u'+cl]}</td></Fragment>)
-                        if(cl==='rank' && isEditing) return(<Fragment key="rnk"><td className='center input-field' id={cnt+"-"+cl} onKeyUp={hChange} suppressContentEditableWarning={true} contentEditable={true} key={'e'+cl}>{pl[cl]}</td></Fragment>)
-                        if(cl==='wallet' && isEditing) return(<td className='center'  key={cl}>{pl[cl]+(isNaN(pl['u'+cl]) ? '' : pl['u'+cl])}</td>)
-                        return(<td className='center' key={cl}>{pl[cl]}</td>)
-                    })}
-                    {inc()}
-                </tr>
-            )
-        })}
-    </tbody>
-</table> : <div className="center"><p>Loading Player Details...</p><div className="preloader-wrapper small active center">
+        setState({data:players})
+        setStableMetadata({...tableMetadata})
+    },[players,tableMetadata])    
+    
+    let ptable = <div className="center"><p>Loading Player Details...</p><div className="preloader-wrapper small active center">
     <div className="spinner-layer spinner-blue-only">
       <div className="circle-clipper left">
         <div className="circle"></div>
@@ -71,55 +24,107 @@ const EnrPlayersDetails = (props)=>{
       </div>
     </div>
     </div></div>;
-    const colHeads = columns.map((cl)=>{
-        return cl==='kills'||cl==='rank'||cl==='wallet'
-        ? {title:colValues[cl],field:cl,type:'numeric',editable: 'onUpdate'}
-        : {title:colValues[cl],field:cl,editable: 'never'}
-    });
 
-    const colData = players && players.map((pl,ind)=>{
-        let cp={}
-        columns && columns.map((cl,cind)=>{
-            return cl==='srno'? cp[cl]=players.indexOf(pl)+1 : cp[cl]=pl[cl]
-        })
-        return cp;
+const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 'never'},
+              'pubgid':{title:'PUBG ID',field:'pubgid',editable: 'never'},
+              'mno':{title:'WhatsApp No.',field:'mno',type:'numeric',editable: 'never'},
+              'kills':{title:'Kills',field:'kills',type:'numeric',editable: 'onUpdate'},
+              'ukills':{title:'Kills in Match',field:'ukills',type:'numeric',editable: 'onUpdate'},
+              'wallet':{title:'Wallet Amount',field:'wallet',type:'currency',currencySetting:{},editable: 'never'},
+              'rank':{title:'Rank',field:'rank',type:'numeric',editable: 'onUpdate'}}
+
+
+    const cols = columns && columns.map((cl)=>{
+        return {...colDetails[cl]}
     })
-
-    const tRef = React.createRef();
     
+
     const editF = {
         onRowAdd:null,
         onRowUpdate:(newData,oldData)=>
         new Promise((resolve,reject)=>{
             setTimeout(()=>{
-            let data = state;
-            console.log(state)
+            let data = state.data;
             let inx = data.indexOf(oldData);
             newData['kills']=parseInt(newData['kills'])
+            newData['ukills']=parseInt(newData['ukills'])
             newData['wallet']=parseInt(newData['wallet'])
             newData['rank']=parseInt(newData['rank'])
+            const jdiff = cJSON(oldData,newData)
+            if(Object.keys(jdiff)[0]==='ukills' && oldData['ukills']<newData['ukills']){
+                let kdiff = newData['ukills'] - oldData['ukills']
+                newData['wallet'] = parseInt(newData['wallet']) + kdiff * 5
+            }else if(Object.keys(jdiff)[0]==='ukills' && oldData['ukills']>newData['ukills']){
+                let kdiff = oldData['ukills'] - newData['ukills']
+                newData['wallet'] = parseInt(newData['wallet']) - kdiff * 5
+            }
             data[inx] = newData;
-            
+            setState({data})
             resolve();
             },1000)
         }),
         onRowDelete : null
     };
     
-    const tRF = ()=>{
+    const cJSON = (oj,nj)=>{
+        let rj = {};
+        for(let key in oj){
+            if(oj[key]!==nj[key]) {
+                rj[key] = nj[key]
+            }
+        }
+        return rj;
     }
+    
+
     return(
         <React.Fragment>
             <div>
-                <MaterialTable
-                    tableRef={tRef}
+                {state && stableMetadata ? <MaterialTable
                     title="Players"
-                    columns={colHeads}
-                    data={state}
+                    columns={cols}
+                    data={state && state.data}
                     editable={isEditing? editF : null}
-                />
+                    localization={{
+                        body:{
+                            emptyDataSourceMessage : 'No Players Available'
+                        }
+                    }}
+                    options={{
+                        pageSizeOptions:[5,10,15,20]
+                    }}
+                    components={{
+                        Pagination: props=> (
+                            <TablePagination
+                            {...props}
+                            rowsPerPage={stableMetadata && stableMetadata.ppp}
+                            rowsPerPageOptions={[1,5,10,15]}
+                            count={stableMetadata && stableMetadata.count}
+                            page={stableMetadata && stableMetadata.page}
+                            
+                            onChangePage={(e,page)=>{
+                                handlePageChange(page).then((pageUpdate)=>{
+                                    setStableMetadata({...pageUpdate.tableMetadata})
+                                    setState({data:pageUpdate.players})
+                                })
+                            }}
+                            onChangeRowsPerPage={(e)=>{
+                                handleChangeRowsPerPage(e.target.value).then((pageUpdate)=>{
+                                    setStableMetadata(pageUpdate.tableMetadata)
+                                    setState({data:pageUpdate.players})
+                                })
+                                }}
+                            />
+                        )
+                    }}  
+                /> : ptable}
                 <div hidden={!bttnname}>
-                    <button onClick={()=>console.log(state)}  className='waves-effect waves-light btn hoverable'>{bttnname}</button>
+                    <button onClick={()=>{
+                        rstate(state.data)
+                        handlePageChange(stableMetadata['page']+1).then((pageUpdate)=>{
+                            setStableMetadata(pageUpdate.tableMetadata)
+                            setState({data:pageUpdate.players})
+                        })}}  className='waves-effect waves-light btn hoverable'>{bttnname}</button>
                 </div>
             </div>
         </React.Fragment>

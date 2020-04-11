@@ -1,4 +1,4 @@
-import {isinDocs,findinMatches} from '../../Functions'
+import {isinDocs,findinMatches,isPlayerinMatch} from '../../Functions'
 import 'firebase/functions'
 import { isEmpty } from 'react-redux-firebase';
 
@@ -15,7 +15,7 @@ export const createMatch = (match)=>{
             let mname ="MTH" +(2000 + parseInt(size)+1)
             db.collection("Matches").doc(mname).set({
                 ...match,
-                players:[],
+                players:{},
                 plno:1,
                 isActive : true,
                 createdAt : new Date()
@@ -59,14 +59,14 @@ export const enterMatch = (mid,uid)=>{
         let cpmatches = st.firebase.profile.matches;
         const isAlRegU = isinDocs(cpmatches,mid);
         let players = match.players;
-        const isAlRegM = isinDocs(players,cp);
+        const isAlRegM = isPlayerinMatch(players,cp);
         console.log("isAlRegM : "+isAlRegM+" isAlRegU : "+isAlRegU);
         let plno = match.plno;
         plno+=1;
         if(!isAlRegM && !isAlRegU){
             wallet-=2;
             cpmatches.push(mid);
-            players.push({[cp]:"0-0"});
+            players[cp] = "0-0";
             db.collection('Matches').doc(mid).set({
                 players:players,
                 plno:plno
@@ -95,8 +95,15 @@ export const updateFacts = (players,mid)=>{
         }
         const db = getFirestore();
         ufacts(db,players).then((plist)=>{
-            db.collection("Matches").doc(mid).set({players:plist},{merge:true}).then(()=>{
-                dispatch({type:'MTHF_UPD'})
+            db.collection("Matches").doc(mid).get().then((doc)=>{
+                if(!doc.exists) return;
+                let mpl = doc.data().players;
+                for(let pl in plist){
+                    mpl[pl] = plist[pl]
+                }
+                db.collection("Matches").doc(mid).set({players:mpl},{merge:true}).then(()=>{
+                    dispatch({type:'MTHF_UPD'})
+                })
             })
         })
     }
@@ -104,13 +111,13 @@ export const updateFacts = (players,mid)=>{
 
 const ufacts = (db,players)=>{
     return new Promise((resolve,reject)=>{
-        let plist = [];
+        let plist = {};
         players.map((pl)=>{
             console.log(pl.id)
-            plist.push({[pl.pubgid]:pl.ukills+"-"+pl.rank})
+            plist[pl.pubgid] = pl.ukills+"-"+pl.rank
             db.collection("Users").doc(pl.id).set({
                 kills:(pl.kills+pl.ukills),
-                wallet:(pl.wallet+pl.uwallet)
+                wallet:(pl.wallet)
             },{merge:true})
             return pl;
         })
