@@ -29,9 +29,10 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
               'pubgid':{title:'PUBG ID',field:'pubgid',editable: 'never'},
               'mno':{title:'WhatsApp No.',field:'mno',type:'numeric',editable: 'never'},
               'kills':{title:'Kills',field:'kills',type:'numeric',editable: 'onUpdate'},
-              'ukills':{title:'Kills in Match',field:'ukills',type:'numeric',editable: 'onUpdate'},
-              'wallet':{title:'Wallet Amount',field:'wallet',type:'numeric',editable: 'never'},
-              'rank':{title:'Rank',field:'rank',type:'numeric',editable: 'onUpdate'}}
+              'ukills':{title:'Kills in Match',field:'ukills',type:'numeric',editable: 'onUpdate',defaultSort:'desc'},
+              'wallet':{title:'Wallet Amount',field:'wallet',type:'numeric',editable: 'never'}
+              //'rank':{title:'Rank',field:'rank',type:'numeric',editable: 'onUpdate'}
+            }
 
 
     const cols = columns && columns.map((cl)=>{
@@ -91,8 +92,10 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
                         }
                     }}
                     options={{
-                        pageSizeOptions:[5,10,15,20]
+                        pageSizeOptions:[5,10,15,20],
+                        actionsColumnIndex: -1
                     }}
+                    isLoading={!state}
                     components={{
                         Pagination: props=> (
                             <TablePagination

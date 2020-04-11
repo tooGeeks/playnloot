@@ -66,7 +66,7 @@ export const enterMatch = (mid,uid)=>{
         if(!isAlRegM && !isAlRegU){
             wallet-=2;
             cpmatches.push(mid);
-            players[cp] = "0-0";
+            players[cp] = 0;
             db.collection('Matches').doc(mid).set({
                 players:players,
                 plno:plno
@@ -114,7 +114,7 @@ const ufacts = (db,players)=>{
         let plist = {};
         players.map((pl)=>{
             console.log(pl.id)
-            plist[pl.pubgid] = pl.ukills+"-"+pl.rank
+            plist[pl.pubgid] = pl.ukills
             db.collection("Users").doc(pl.id).set({
                 kills:(pl.kills+pl.ukills),
                 wallet:(pl.wallet)
