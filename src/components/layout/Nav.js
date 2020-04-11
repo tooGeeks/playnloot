@@ -101,40 +101,39 @@ const Nav = (props) => {
       )
     }
     return(
-        <div>
-          {console.info(history)}
-            <AppBar position="fixed" color="primary" className={classes.appBar}>
-                <Toolbar>
-                    <IconButton edge="start" color="inherit" aria-label="back" onClick={mhandleBack}>
-                      <ArrowBackIcon />   
-                    </IconButton>
-
-                    {/*
-                    <Fab color="secondary" aria-label="add" className={classes.fabButton}>
-                        { profile.pubgid ? profile.pubgid : <AddIcon />}
-                    </Fab>
-                    */}
-                    <div className={classes.grow} />
-                    {auth.uid ? <Coincount/> : null}
-                    {/* <IconButton edge="end" color="inherit" onClick={mhandleClick}>
-                        <MoreIcon/>
-                    </IconButton> */}
-                    <IconButton edge="end" color="inherit" aria-label="open drawer" onClick={toggleDrawer('bottom', true)}>
-                        <MenuIcon />
-                    </IconButton>
-                </Toolbar>
-                <SwipeableDrawer
-                    anchor="bottom"
-                    swipeAreaWidth={30}
-                    open={state.bottom}
-                    onClose={toggleDrawer('bottom', false)}
-                    onOpen={toggleDrawer('bottom', true)}
-                >
-                    {fullList('bottom')}
-                </SwipeableDrawer>
-            </AppBar>
-            {/* {menuLinks} */}
-        </div>
+      <div>
+        {console.info(history)}
+          <AppBar position="fixed" color="primary" className={classes.appBar}>
+              <Toolbar>
+                  <IconButton edge="start" color="inherit" aria-label="back" onClick={mhandleBack}>
+                    <ArrowBackIcon />   
+                  </IconButton>
+                  {/*
+                  <Fab color="secondary" aria-label="add" className={classes.fabButton}>
+                      { profile.pubgid ? profile.pubgid : <AddIcon />}
+                  </Fab>
+                  */}
+                  <div className={classes.grow} />
+                  {auth.uid ? <Coincount/> : null}
+                  {/* <IconButton edge="end" color="inherit" onClick={mhandleClick}>
+                      <MoreIcon/>
+                  </IconButton> */}
+                  <IconButton edge="end" color="inherit" aria-label="open drawer" onClick={toggleDrawer('bottom', true)}>
+                      <MenuIcon />
+                  </IconButton>
+              </Toolbar>
+              <SwipeableDrawer
+                  anchor="bottom"
+                  swipeAreaWidth={30}
+                  open={state.bottom}
+                  onClose={toggleDrawer('bottom', false)}
+                  onOpen={toggleDrawer('bottom', true)}
+              >
+                  {fullList('bottom')}
+              </SwipeableDrawer>
+          </AppBar>
+          {/* {menuLinks} */}
+      </div>
     )
 }
 const mapStateToProps = (state) => {

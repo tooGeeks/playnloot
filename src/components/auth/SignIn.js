@@ -1,8 +1,8 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import { signIn } from '../../store/actions/authActions'
+import { connect, useDispatch } from 'react-redux'
+import { signIn, resetPassword } from '../../store/actions/authActions'
 //eslint-disable-next-line
-import { backDrop } from '../../store/actions/uiActions'
+import { backDrop, showDialog } from '../../store/actions/uiActions'
 import { Redirect, Link } from 'react-router-dom'
 
 import useForm from "react-hook-form";
@@ -57,27 +57,39 @@ function Copyright() {
   );
 }
 
+const PassReset = () => {
+  const dispatch = useDispatch();
+  const [email, setemail] = React.useState(false);
+  const handleChange = (e) => {
+    e.preventDefault();
+    setemail(e.target.value)
+  }
+  return (
+    <React.Fragment>
+      <Box display="flex" alignContent="center" justifyItems="center" textAlign="center">
+        <TextField autoFocus required variant="outlined" size="small" margin="dense" label="Enter Email Address" id="email" type="email"
+          autoComplete="email"
+          InputLabelProps={{
+            shrink: true,
+          }} 
+          onChange={handleChange}/>
+        <Button disabled={!email} onClick={() => dispatch(resetPassword(email))}>Reset</Button>
+      </Box>
+    </React.Fragment>
+  )
+}
+
 const SignIn = (props) => {
   const { register, handleSubmit, errors } = useForm();
+  const dispatch = useDispatch();
   const onSubmit = (data, e) => {
     e.preventDefault();
     props.signIn(data);
     props.backDrop();
   };
-  /*
-  const [inputs, setInputs] = useState({});
-  const handleSubmit = (event) => {
-    if (event) {
-      event.preventDefault();
-    }
-    props.signIn(inputs)
-    props.showSnackbar()
+  const resetHandle = () => {
+    dispatch(showDialog({title: "Password Reset", content: <PassReset />}))
   }
-  const handleInputChange = (event) => {
-    event.persist();
-    setInputs(inputs => ({...inputs, [event.target.name]: event.target.value}));
-  }
-  */
 
   const { auth, classes } = props;
   if (auth.uid) return <Redirect to='/dashboard' />
@@ -142,9 +154,10 @@ const SignIn = (props) => {
           </Button>
           <Grid container>
             <Grid item xs>
-              <MUILink component={Link} to={'/'} variant="body2">
+              <MUILink onClick={resetHandle} variant="body2">
                 Forgot password?
               </MUILink>
+              {/* <Button variant="text"  onClick={() => props.resetPassword()}>Forgot password?</Button> */}
             </Grid>
             <Grid item>
               <MUILink component={Link} to={'/signup'} variant="body2">

@@ -74,7 +74,7 @@ const { SnackbarVariant, SnackbarMessage, SnackbarOpen } = useSelector(
       }}
       className={classes.root}
       open={SnackbarOpen}
-      autoHideDuration={4000}
+      autoHideDuration={SnackbarVariant === 'error' ? null : 4000}
       onClose={handleClose}
       aria-describedby="client-snackbar"
       /*message={

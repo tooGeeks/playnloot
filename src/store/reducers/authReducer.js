@@ -36,12 +36,10 @@ const authReducer = (state = initState, action) => {
         authError: action.err.message
       }
     case 'PWD_RST':
-      alert("Password Reset Email Sent!");
       console.log("Reset Email Sent!");
       return state;
     case 'PWD_RST_ERR':
       console.log("Error Send Password Reset Password Email",action.err);
-      alert(action.err.message);
       return state;
     default:
       return state
