@@ -1,6 +1,7 @@
 import {isinDocs,findinMatches,isPlayerinMatch} from '../../Functions'
 import 'firebase/functions'
 import { isEmpty } from 'react-redux-firebase';
+const unit = 5;
 
 /*
   This File Contains All Match Actions such as Create Match, Update Match, Enter Match, etc. 
@@ -192,6 +193,32 @@ const getPlayers = (mid,st)=>{
     })
 }
 
+export const updateWinner = (winner)=>{
+    return(dispatch,getState,{getFirebase,getFirestore})=>{
+        const db = getFirestore()
+        db.collection('Users').where('pubgid','==',winner.pubgid).get().then((snaps)=>{
+            if(snaps.isEmpty) return
+            let winnerSnap = snaps.docs[0];
+            winner['id']=winnerSnap.id
+            winner['kills']=winnerSnap.data().kills;
+            winner['wallet'] =winnerSnap.data().wallet + (winner['ukills'] * unit)
+            db.collection("Users").doc(winner.id).set({
+                kills:(winner.kills+winner.ukills),
+                wallet:(winner.wallet)
+            },{merge:true}).then(()=>{
+                db.collection("Matches").doc(winner.mid).get().then((doc)=>{
+                    if(!doc.exists) return;
+                    let mpl = doc.data().players;
+                    mpl[winner.pubgid] = winner.ukills
+                    db.collection("Matches").doc(winner.mid).set({players:mpl,winner:winner.pubgid},{merge:true}).then(()=>{
+                        dispatch({type:'MTHF_UPD'})
+                    })
+                })
+            })
+        })
+    }
+}
+
 export const sendNewNot = (msg)=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
         console.log(msg);
@@ -199,7 +226,6 @@ export const sendNewNot = (msg)=>{
         let f = fb.functions().httpsCallable('newNotification');
         f({msg}).then(()=>{
             console.log("Sent");
-            
         }).catch((err)=>{
             console.log(err);
             

@@ -5,13 +5,13 @@ import {findinMatches,getPlayerfromMatch,matchStr} from '../../Functions'
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import MatchSummary from '../matches/adminMatchSummary';
-import {updateFacts} from '../../store/actions/MatchActions'
+import {updateFacts,updateWinner} from '../../store/actions/MatchActions'
 import Nav from './AdminNav'
 import { TextField } from '@material-ui/core';
 
 const UpdateMatchFacts = (props)=>{
     const mid = props.match.params.mid;
-    const [state,setState] = React.useState({searchText:''});
+    const [state,setState] = React.useState({winner_id:''});
     const {matches,users} = props;
     const match = matches && findinMatches(matches,mid);
     let tableMetadata = {pages:0,psi:0,page:0,count:0 //psi - Player Starting Index, pei - Player Ending Index
@@ -23,7 +23,6 @@ const UpdateMatchFacts = (props)=>{
     
     const handlePageChange = (nPage)=>{
       return new Promise((resolve,reject)=>{
-        console.log(tableMetadata['pages'])
         if(nPage>tableMetadata.page && nPage<tableMetadata['pages']){
           let pdiff = nPage - tableMetadata['page']
           tableMetadata['psi'] = tableMetadata['psi'] + pdiff * tableMetadata['ppp']
@@ -52,28 +51,26 @@ const UpdateMatchFacts = (props)=>{
       })
     }
 
-    const findPlayer = ()=>{
-      let text = state.searchText
-      if(text==='') return null;
-      let np = []
-      players.map((pl)=>{
-        if(matchStr(pl.pubgid,'*'+text+'*')){
-          np.push(pl.pubgid)
-        }
-        return pl.pubgid
-      })
-      console.log(np)
-      
-      return np
+    const updateWinner = ()=>{
+      let winner_id = state.winner_id;
+      let winner_kills = parseInt(state.winner_kills);
+      if(winner_id==='') return null;
+      props.updateWinner({pubgid:winner_id,ukills:winner_kills,mid:mid})
     }
 
     const hdata = (players)=>{
-      props.updateFacts(players,mid);
+      let list = []
+      players.map((pl)=>{
+        if(pl.pubgid!==match.winner) list.push(pl)
+        return null
+      })
+      console.log(list)
+      props.updateFacts(list,mid);
     }
 
     const handleChange = (e)=>{
       e.preventDefault();
-      setState({searchText:e.target.value})
+      setState({...state,[e.target.id]:e.target.value})
     }
 
     const cols = ['srno','pubgid','mno','ukills','wallet']
@@ -84,12 +81,11 @@ const UpdateMatchFacts = (props)=>{
       cols.map(cl=>{
         return  cl==='srno' ? ux[cl]=ind++ : ux[cl]=user[cl]
       })
-      px && uinm.push({...ux,id:user.id,ukills:parseInt(px)})
+      uinm.push({...ux,id:user.id,ukills:parseInt(px)})
       return user
     })
     tableMetadata['count'] = uinm && uinm.length
     let players = uinm.slice(tableMetadata.psi,tableMetadata.pei)
-
     const msum = match ? <MatchSummary maxp='101' match={matches && match}/> 
     : <div className="center"><p>Loading Match Details...</p><div className="preloader-wrapper small active center">
     <div className="spinner-layer spinner-blue-only">
@@ -126,9 +122,14 @@ const UpdateMatchFacts = (props)=>{
                   <input id="winner_id" type="text" className="validate white-text"
                    onKeyUp={handleChange}/>
                   <label htmlFor="last_name">Winner ID</label>
+                </div>
+                <div className="input-field white-text col s4">
+                  <input id="winner_kills" type="number" className="validate white-text"
+                   onKeyUp={handleChange}/>
+                  <label htmlFor="last_name">Winner Kills</label>
                 </div><br/>
                 <div className="col s4">
-                  <button className='waves-effect waves-light btn hoverable' onClick={findPlayer}>Search Player</button>
+                  <button className='waves-effect waves-light btn hoverable' onClick={updateWinner}>Update Winner</button>
                 </div>
               </div> : null }<br/><br/>
               {playerDetails}
@@ -146,7 +147,8 @@ const mapStatetoProps = (state)=>{
 
 const mapDispatchtoProps = (dispatch)=>{
     return{
-      updateFacts:(players,mid)=>dispatch(updateFacts(players,mid))
+      updateFacts:(players,mid)=>dispatch(updateFacts(players,mid)),
+      updateWinner:(winner)=>dispatch(updateWinner(winner))
     }
 }
 
