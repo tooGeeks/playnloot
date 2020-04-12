@@ -23,6 +23,7 @@ const UpdateMatchFacts = (props)=>{
     
     const handlePageChange = (nPage)=>{
       return new Promise((resolve,reject)=>{
+        console.log(tableMetadata['pages'])
         if(nPage>tableMetadata.page && nPage<tableMetadata['pages']){
           let pdiff = nPage - tableMetadata['page']
           tableMetadata['psi'] = tableMetadata['psi'] + pdiff * tableMetadata['ppp']
@@ -45,6 +46,7 @@ const UpdateMatchFacts = (props)=>{
       return new Promise((resolve,reject)=>{
         tableMetadata['ppp']=nrpp;
         tableMetadata['pei']=tableMetadata['psi']+nrpp;
+        tableMetadata['pages'] = users && (users.length/tableMetadata.ppp)
         players = uinm.slice(tableMetadata.psi,tableMetadata.pei)
         resolve({players,tableMetadata})
       })

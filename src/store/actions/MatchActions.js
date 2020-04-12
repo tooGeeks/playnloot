@@ -88,7 +88,7 @@ export const enterMatch = (mid,uid)=>{
 export const updateFacts = (players,mid)=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
         for(let x in players){
-            if(players[x].ukills===undefined || players[x].uwallet===undefined) {
+            if(players[x].ukills===undefined) {
                 alert("Please Fill The Details properly");
                 return true;
             }
