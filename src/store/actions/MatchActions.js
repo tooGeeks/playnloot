@@ -114,7 +114,6 @@ const ufacts = (db,players)=>{
     return new Promise((resolve,reject)=>{
         let plist = {};
         players.map((pl)=>{
-            console.log(pl.id)
             plist[pl.pubgid] = pl.ukills
             db.collection("Users").doc(pl.id).set({
                 kills:(pl.kills+pl.ukills),
@@ -201,7 +200,7 @@ export const updateWinner = (winner)=>{
             let winnerSnap = snaps.docs[0];
             winner['id']=winnerSnap.id
             winner['kills']=winnerSnap.data().kills;
-            winner['wallet'] =winnerSnap.data().wallet + (winner['ukills'] * unit)
+            winner['wallet'] =winnerSnap.data().wallet + (winner['ukills'] * winner.unit)
             db.collection("Users").doc(winner.id).set({
                 kills:(winner.kills+winner.ukills),
                 wallet:(winner.wallet)

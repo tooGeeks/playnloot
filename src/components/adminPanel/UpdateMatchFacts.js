@@ -7,11 +7,10 @@ import { firestoreConnect } from 'react-redux-firebase';
 import MatchSummary from '../matches/adminMatchSummary';
 import {updateFacts,updateWinner} from '../../store/actions/MatchActions'
 import Nav from './AdminNav'
-import { TextField } from '@material-ui/core';
 
 const UpdateMatchFacts = (props)=>{
     const mid = props.match.params.mid;
-    const [state,setState] = React.useState({winner_id:''});
+    const [state,setState] = React.useState({winner_id:'',unit:1,winner_kills:0});
     const {matches,users} = props;
     const match = matches && findinMatches(matches,mid);
     let tableMetadata = {pages:0,psi:0,page:0,count:0 //psi - Player Starting Index, pei - Player Ending Index
@@ -51,11 +50,16 @@ const UpdateMatchFacts = (props)=>{
       })
     }
 
+    const getUnit = ()=>{
+      return state.unit
+    }
+
     const updateWinner = ()=>{
       let winner_id = state.winner_id;
       let winner_kills = parseInt(state.winner_kills);
+      let unit = parseInt(state.unit);
       if(winner_id==='') return null;
-      props.updateWinner({pubgid:winner_id,ukills:winner_kills,mid:mid})
+      props.updateWinner({pubgid:winner_id,ukills:winner_kills,mid:mid,unit:unit})
     }
 
     const hdata = (players)=>{
@@ -64,7 +68,6 @@ const UpdateMatchFacts = (props)=>{
         if(pl.pubgid!==match.winner) list.push(pl)
         return null
       })
-      console.log(list)
       props.updateFacts(list,mid);
     }
 
@@ -73,7 +76,7 @@ const UpdateMatchFacts = (props)=>{
       setState({...state,[e.target.id]:e.target.value})
     }
 
-    const cols = ['srno','pubgid','mno','ukills','wallet']
+    const cols = ['srno','pubgid','mno','ukills','wallet','rank']
     var ind = 1;
     users && users.map((user)=>{
       var px = match && getPlayerfromMatch(match.players,user.pubgid)
@@ -84,8 +87,15 @@ const UpdateMatchFacts = (props)=>{
       uinm.push({...ux,id:user.id,ukills:parseInt(px)})
       return user
     })
+    let winner = match && match.winner;
     tableMetadata['count'] = uinm && uinm.length
     let players = uinm.slice(tableMetadata.psi,tableMetadata.pei)
+    players.sort((a,b)=>{
+      return a.ukills<b.ukills ? 1 : -1;
+    })
+    for(let x in players){
+      players[x].rank = parseInt(x) + 1
+    }
     const msum = match ? <MatchSummary maxp='101' match={matches && match}/> 
     : <div className="center"><p>Loading Match Details...</p><div className="preloader-wrapper small active center">
     <div className="spinner-layer spinner-blue-only">
@@ -100,7 +110,7 @@ const UpdateMatchFacts = (props)=>{
   </div></div>
 
   let playerDetails = users ?
-  <EnrPlayersDetails players={users && players} tableMetadata={tableMetadata} handleChangeRowsPerPage={handleChangeRowsPerPage} handlePageChange={handlePageChange} rstate={hdata} bttnname="Update Values" columns={cols} isEditing={true}/>
+  <EnrPlayersDetails getUnit={getUnit} winner={winner} players={users && players} tableMetadata={tableMetadata} handleChangeRowsPerPage={handleChangeRowsPerPage} handlePageChange={handlePageChange} rstate={hdata} bttnname="Update Values" columns={cols} isEditing={true}/>
   : <div className="center"><p>Loading Player Details...</p><div className="preloader-wrapper small active center">
   <div className="spinner-layer spinner-blue-only">
     <div className="circle-clipper left">
@@ -119,14 +129,19 @@ const UpdateMatchFacts = (props)=>{
               {msum}
               {users ? <div className="row">
                 <div className="input-field white-text col s4">
+                  <input id="unit" type="number" className="validate white-text"
+                   onKeyUp={handleChange} defaultValue='1' autoFocus={true}/>
+                  <label htmlFor="unit">Kill to Coin Unit</label>
+                </div>
+                <div className="input-field white-text col s4">
                   <input id="winner_id" type="text" className="validate white-text"
                    onKeyUp={handleChange}/>
-                  <label htmlFor="last_name">Winner ID</label>
+                  <label htmlFor="winner_id">Winner ID</label>
                 </div>
                 <div className="input-field white-text col s4">
                   <input id="winner_kills" type="number" className="validate white-text"
                    onKeyUp={handleChange}/>
-                  <label htmlFor="last_name">Winner Kills</label>
+                  <label htmlFor="winner_kills">Winner Kills</label>
                 </div><br/>
                 <div className="col s4">
                   <button className='waves-effect waves-light btn hoverable' onClick={updateWinner}>Update Winner</button>

@@ -5,7 +5,7 @@ import { TablePagination } from '@material-ui/core';
 
 
 const EnrPlayersDetails = (props)=>{
-    const {columns,rstate,bttnname,players,isEditing,tableMetadata,handlePageChange,handleChangeRowsPerPage} = props;
+    const {columns,rstate,getUnit,bttnname,players,winner,isEditing,tableMetadata,handlePageChange,handleChangeRowsPerPage} = props;
     const [state,setState] = React.useState();
     const [stableMetadata,setStableMetadata] = React.useState();
     React.useEffect(()=>{
@@ -30,8 +30,8 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
               'mno':{title:'WhatsApp No.',field:'mno',type:'numeric',editable: 'never'},
               'kills':{title:'Kills',field:'kills',type:'numeric',editable: 'onUpdate'},
               'ukills':{title:'Kills in Match',field:'ukills',type:'numeric',editable: 'onUpdate',defaultSort:'desc'},
-              'wallet':{title:'Wallet Amount',field:'wallet',type:'numeric',editable: 'never'}
-              //'rank':{title:'Rank',field:'rank',type:'numeric',editable: 'onUpdate'}
+              'wallet':{title:'Wallet Amount',field:'wallet',type:'numeric',editable: 'never'},
+              'rank':{title:'Rank',field:'rank',type:'numeric',editable: 'never'}
             }
 
 
@@ -46,6 +46,7 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
         new Promise((resolve,reject)=>{
             setTimeout(()=>{
             let data = state.data;
+            let unit = getUnit()
             let inx = data.indexOf(oldData);
             newData['kills']=parseInt(newData['kills'])
             newData['ukills']=parseInt(newData['ukills'])
@@ -54,19 +55,27 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
             const jdiff = cJSON(oldData,newData)
             if(Object.keys(jdiff)[0]==='ukills' && oldData['ukills']<newData['ukills']){
                 let kdiff = newData['ukills'] - oldData['ukills']
-                newData['wallet'] = parseInt(newData['wallet']) + kdiff * 5
+                newData['wallet'] = parseInt(newData['wallet']) + kdiff * unit
             }else if(Object.keys(jdiff)[0]==='ukills' && oldData['ukills']>newData['ukills']){
                 let kdiff = oldData['ukills'] - newData['ukills']
-                newData['wallet'] = parseInt(newData['wallet']) - kdiff * 5
+                newData['wallet'] = parseInt(newData['wallet']) - kdiff * unit
             }
             data[inx] = newData;
+            data.sort((a,b)=>{
+                return a.ukills<b.ukills ? 1 : -1;
+            })
+            for(let x in data){
+                data[x].rank = parseInt(x)+1
+            }
+            console.log(data)
             setState({data})
             resolve();
             },1000)
         }),
         onRowDelete : null
     };
-    
+
+
     const cJSON = (oj,nj)=>{
         let rj = {};
         for(let key in oj){
@@ -93,7 +102,10 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
                     }}
                     options={{
                         pageSizeOptions:[5,10,15,20],
-                        actionsColumnIndex: -1
+                        rowStyle:rowData =>(
+                            {
+                            backgroundColor : winner===rowData.pubgid ? '#5DDF93' : '#2B3138'
+                        })
                     }}
                     isLoading={!state}
                     components={{
