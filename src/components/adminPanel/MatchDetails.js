@@ -3,21 +3,25 @@ import EnrPlayersDetails from './EnrPlayersDetails'
 import { connect } from 'react-redux';
 import {findinMatches,getPlayerfromMatch} from '../../Functions'
 import { compose } from 'redux';
+import {useSelector} from 'react-redux'
 import { firestoreConnect } from 'react-redux-firebase';
 import MatchSummary from '../matches/adminMatchSummary';
 import Nav from './AdminNav'
+import {useFirestoreConnect} from 'react-redux-firebase'
 
 const MatchDetails = (props)=>{
-    const mid = props.match.params.mid;
-    const {matches,users} = props;
-    const match = matches && findinMatches(matches,mid);
+  const mid = props.match.params.mid;
+  useFirestoreConnect([{collection:"Matches",doc:mid},{collection:"Users",where:['matches','array-contains',mid]}])
+  const {Matches,Users} = useSelector(state =>state.firestore.ordered)
+  console.log(Matches)
+    const match = Matches && findinMatches(Matches,mid);
     const cols = ['srno','pubgid','mno','ukills','rank'] 
     let tableMetadata = {pages:0,psi:0,page:0,count:0 //psi - Player Starting Index, pei - Player Ending Index
       ,ppp:5} //ppp means Player Per Page 
     tableMetadata['pei']=tableMetadata['ppp']
-    tableMetadata.pages = users && (users.length/tableMetadata.ppp)
+    tableMetadata.pages = Users && (Users.length/tableMetadata.ppp)
     let ind = 1
-    let uinm = users && users.map(user=>{
+    let uinm = Users && Users.map(user=>{
         var px = match && getPlayerfromMatch(match.players,user.pubgid)
         var ux = {};
         cols.map(cl=>{
@@ -69,7 +73,7 @@ const MatchDetails = (props)=>{
     </div>
   </div></div>;
 
-    const msum = match ? <MatchSummary match={matches && match} maxp={101} bttnname="Update Facts" loc="/admin/updatematchfacts/" /> 
+    const msum = match ? <MatchSummary match={Matches && match} maxp={101} bttnname="Update Facts" loc="/admin/updatematchfacts/" /> 
     : loadCircle
   const stl = {
     paddingBottom : 120
@@ -81,7 +85,7 @@ const MatchDetails = (props)=>{
               {msum}
           </div>
           <div className="container"  style={stl}>
-          {users && players ? <EnrPlayersDetails handleChangeRowsPerPage={handleChangeRowsPerPage} handlePageChange={handlePageChange} columns={cols} tableMetadata={tableMetadata} isEditing={false} players={users && players}/> : loadCircle}
+          {Users && players ? <EnrPlayersDetails handleChangeRowsPerPage={handleChangeRowsPerPage} handlePageChange={handlePageChange} columns={cols} tableMetadata={tableMetadata} isEditing={false} players={Users && players}/> : loadCircle}
           </div>
       </React.Fragment>
     ) 
@@ -93,11 +97,12 @@ const mapStatetoProps = (state)=>{
         users:state.firestore.ordered.Users
     }
 }
-
+export default MatchDetails
+/**
 export default compose(
     connect(mapStatetoProps),
     firestoreConnect(props => [
         {collection:'Matches',doc:props.match.params.mid},
         {collection:'Users',where:['matches','array-contains',props.match.params.mid]}
     ])
-)(MatchDetails)
+)(MatchDetails) */

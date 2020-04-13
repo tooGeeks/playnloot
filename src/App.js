@@ -27,6 +27,7 @@ import UpdateMatchFacts from './components/adminPanel/UpdateMatchFacts'
 import CancelMatch from './components/adminPanel/CancelMatch'
 import CancelMatchList from './components/adminPanel/CancelMatchList'
 import WithdrawalList from './components/adminPanel/WithdrawalList'
+import SendNotifications from './components/adminPanel/SendNotifications'
 
 //Styling
 import { MuiThemeProvider, createMuiTheme  } from '@material-ui/core/styles';
@@ -112,6 +113,7 @@ const App = () => {
                 <ProtectedRoutes path="/admin/cancelmatch/:bln/:mid" component={CancelMatch}/>
                 <ProtectedRoutes path="/admin/cancelmatch" component={CancelMatchList}/>
                 <ProtectedRoutes path="/admin/withdrawalreqlist/" component={WithdrawalList}/>
+                <ProtectedRoutes path="/admin/sendnotifications/" component={SendNotifications}/>
                 <ProtectedRoutes exact path="/admin" component={AdminHome}/>
 
                 <Route path="*" component={() => "404: Not Found! Wrong URL"}/>
