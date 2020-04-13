@@ -38,6 +38,7 @@ import SnackSnackbar from './components/SnackSnackbar'
 import AlertDialog from './components/AlertDialog'
 import BackDrop from './components/BackDrop';
 import { ReactComponent as Loading } from './imgs/loading.svg';
+import { dark } from '@material-ui/core/styles/createPalette';
 
 
 const AuthIsLoaded = ({children})=>{
@@ -78,6 +79,7 @@ const App = () => {
     console.log(themeConfig);
     
     let Navbottom = matchStr(window.location.pathname, "/") ? null : <Nav modeControl={toggleDarkMode} />;
+    //let Navbottom = <Nav modeControl={toggleDarkMode}/>
     return (
       <BrowserRouter>
         <AuthIsLoaded>

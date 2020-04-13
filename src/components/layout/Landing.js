@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
       paddingTop: 50,
     },
     enroll: {
-      paddingTop: '55vh',
+      paddingTop: '65vh',
       color: '#f55c2d'
     },
     root: {
@@ -118,7 +118,7 @@ const Landing = () => {
       case 0:
         return <Box className={classes.stepContent}>
                   First, you`ve to register on our app using your correct credentials!<br/>
-                  <Button m="auto" color="primary" variant="outlined" style={{marginTop: '5px'}} onClick={() => {history.push('/signup')}}>REGISTER</Button>
+                  <Button m="auto" color="primary" variant="outlined" style={{marginTop: '5px'}} onClick={() => {window.location.pathname = '/signup'}}>REGISTER</Button>
                 </Box>;
       case 1:
         return <Box className={classes.stepContent}>

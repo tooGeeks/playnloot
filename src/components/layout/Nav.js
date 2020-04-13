@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
 import SignedIn, { SignedInMenu } from './SignedIn'
@@ -16,31 +16,30 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 
 const useStyles = makeStyles(theme => ({
-    appBar: {
-        top: 'auto',
-        bottom: 0,
-      },
-      grow: {
-        flexGrow: 1,
-      },
-      fabButton: {
-        position: 'absolute',
-        zIndex: 1,
-        top: -30,
-        left: 0,
-        right: 0,
-        margin: '0 auto',
-    },
-    fullList: {
-        width: 'auto',
-    },
+  appBar: {
+      top: 'auto',
+      bottom: 0,
+  },
+  grow: {
+    flexGrow: 1,
+  },
+  fabButton: {
+    position: 'absolute',
+    zIndex: 1,
+    top: -30,
+    left: 0,
+    right: 0,
+    margin: '0 auto',
+  },
+  fullList: {
+      width: 'auto',
+  },
 }))
 
 const Nav = (props) => {
     const { auth, profile, modeControl } = props;
     const classes = useStyles();
     const history = useHistory();
-
     const [selectedIndex, setSelectedIndex] = React.useState(0);
     const handleListItemClick = (event, index) => {
       setSelectedIndex(index);
