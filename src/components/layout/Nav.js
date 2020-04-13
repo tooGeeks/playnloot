@@ -5,7 +5,7 @@ import SignedIn, { SignedInMenu } from './SignedIn'
 import SignedOut, { SignedOutMenu } from './SignedOut'
 //UI
 import AppBar from '@material-ui/core/AppBar';
-import { makeStyles, Typography, List } from '@material-ui/core';
+import { makeStyles, Typography } from '@material-ui/core';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -46,9 +46,6 @@ const Nav = (props) => {
       setSelectedIndex(index);
     };
 
-    //React.forwardRef((props, ref) => <div role="button" {...props} ref={ref} />);
-    const links = auth.uid ? <SignedIn profile={profile} sIndex={selectedIndex} func={handleListItemClick}/> : <SignedOut sIndex={selectedIndex} func={handleListItemClick}/>;
-    
     const [state, setState] = React.useState({ bottom: false });
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -64,9 +61,6 @@ const Nav = (props) => {
       history.goBack();
     }
 
-    // eslint-disable-next-line no-unused-vars
-    const menuLinks = auth.uid ? <SignedInMenu modeControl={modeControl} anch={anchorEl} func1={mhandleClick} func2={mhandleClose} /> : <SignedOutMenu modeControl={modeControl} anch={anchorEl} func1={mhandleClick} func2={mhandleClose}/>
-
     const toggleDrawer = (side, open) => event => {
       if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
         return;
@@ -75,18 +69,23 @@ const Nav = (props) => {
       setState({ ...state, [side]: open });
     };
 
+    //React.forwardRef((props, ref) => <div role="button" {...props} ref={ref} />);
+    //const links = auth.uid ? <SignedIn profile={profile} sIndex={selectedIndex} func={handleListItemClick}/> : <SignedOut sIndex={selectedIndex} func={handleListItemClick}/>;
+    const links = auth.uid ? <SignedIn user={profile.pubgid} func={toggleDrawer}/> : <SignedOut func={handleListItemClick}/>
+   
+
+    // eslint-disable-next-line no-unused-vars
+    const menuLinks = auth.uid ? <SignedInMenu modeControl={modeControl} anch={anchorEl} func1={mhandleClick} func2={mhandleClose} /> : <SignedOutMenu modeControl={modeControl} anch={anchorEl} func1={mhandleClick} func2={mhandleClose}/>
 
     const fullList = side => (
       <div
         className={classes.fullList}
         role="presentation"
-        onClick={toggleDrawer(side, false)}
+        onClick={auth.uid ? null : toggleDrawer(side, false)}
         onKeyDown={toggleDrawer(side, false)}
       >
       {/* <div align="center" style={{margin: 0, padding: 0}}><MoreHorizIcon/></div> */}
-      <List>
         {links}
-      </List>
       </div>
     );
 

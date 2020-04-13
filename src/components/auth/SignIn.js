@@ -154,7 +154,7 @@ const SignIn = (props) => {
           </Button>
           <Grid container>
             <Grid item xs>
-              <MUILink onClick={resetHandle} variant="body2">
+              <MUILink component="button" onClick={resetHandle} variant="body2">
                 Forgot password?
               </MUILink>
               {/* <Button variant="text"  onClick={() => props.resetPassword()}>Forgot password?</Button> */}

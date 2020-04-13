@@ -106,7 +106,7 @@ export default function Wallet(props) {
                     
                     <Grid item xs={12} id="buyCoins">
                     <form key={1} noValidate onSubmit={handleSubmit(onSubmitAddCoin)}>
-                        <Card variant="outlined">
+                        <Card variant="outlined" id="buy-coins">
                             <CardHeader title="Buy Coins"
                             subheader="Refill your Wallet"
                             action={
@@ -168,7 +168,7 @@ export default function Wallet(props) {
                     </Grid>
                     <Grid item xs={12} id="requestWithdraw">
                         <form key={2} noValidate onSubmit={handleSubmit2(onSubmitRequest)}>
-                            <Card varient="outlined">
+                            <Card varient="outlined" id="get-money">
                                 <CardHeader title="Request Withdrawal"
                                     subheader="Withdraw your Money"
                                     action={
