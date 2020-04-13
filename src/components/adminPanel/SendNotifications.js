@@ -1,7 +1,9 @@
 import React from "react";
-import {sendNewNot} from '../../Store/Actions/MatchActions'
+import {sendNewNot} from '../../store/actions/MatchActions'
 import {connect} from 'react-redux';
 import Nav from './AdminNav'
+import {useSelector} from 'react-redux'
+import {useFirestoreConnect} from 'react-redux-firebase'
 
 /*
   This Component is used to Send Notifications to users! *UNDER MASSIVE CONSTRUCTION* 

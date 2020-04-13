@@ -9,7 +9,7 @@ import { AccountBox, TrackChanges, Event, AccessAlarm } from '@material-ui/icons
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import {firestoreConnect} from 'react-redux-firebase';
+import {firestoreConnect, useFirestoreConnect} from 'react-redux-firebase';
 import {isinDocs,getCurrentDate} from '../../Functions'
 import {compose} from 'redux';
 import MatchSummary from '../matches/MatchSummary';
@@ -94,7 +94,13 @@ function Dashboard(props) {
   const { profile } = useSelector(
     state => state.firebase
   )
-  
+
+  const {Matches, Users} = useSelector(
+    state => state.firestore.ordered
+  )
+
+  useFirestoreConnect([{collection:'Matches'},{collection:'Users',orderBy:['kills','desc'],limit:5,where:['kills','>',0]}])
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -104,9 +110,9 @@ function Dashboard(props) {
     }else dispatch(backDrop());
   }, [profile, props, dispatch]);
 
-  const { matches, users } = props;
+  //const { matches, users } = props;
   
-  console.table(matches);
+  console.table(Matches);
   console.table(profile.matches);
 
   const [expanded, setExpanded] = React.useState('panel2');
@@ -114,9 +120,9 @@ function Dashboard(props) {
     setExpanded(isExpanded ? panel : false);
   };
 
-  console.log(users)
+  console.log(Users)
 
-  const leaderDiv = users ? 
+  const leaderDiv = Users ? 
     <TableContainer component={Paper} style={{maxHeight: 350,}}>
       <Table stickyHeader aria-label="sticky table">
         <TableHead>
@@ -127,7 +133,7 @@ function Dashboard(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {users && users.map((player, index) => {
+          {Users && Users.map((player, index) => {
             return(
               <TableRow key={player.id}>
                 <TableCell align="center" component="th" scope="row">#{index + 1}</TableCell>
@@ -142,8 +148,8 @@ function Dashboard(props) {
   : null
   
   const matchdiv = profile.isLoaded
-    ? matches 
-      ? matches && matches.map(match =>{//Used to Generate MatchList using ternary operator
+    ? Matches 
+      ? Matches && Matches.map(match =>{//Used to Generate MatchList using ternary operator
         
         if(match.lrdate<getCurrentDate()){//Hides a Match if its Last Enrollment Date has Passed
           return null;
@@ -151,10 +157,10 @@ function Dashboard(props) {
         let isEnr =  isinDocs(profile.matches, match.id);//Checks if User has already ENrolled in the match
         
         console.log((match));
-        console.log(matches.indexOf(match));
+        console.log(Matches.indexOf(match));
         return(
           
-            isEnr ? null : <MatchSummary match={match} indexPos={matches.indexOf(match)} loc={"/entermatch/"} isEnr={isEnr}  bttnname={"Enroll"} key={match.id}/>
+            isEnr ? null : <MatchSummary match={match} indexPos={Matches.indexOf(match)} loc={"/entermatch/"} isEnr={isEnr}  bttnname={"Enroll"} key={match.id}/>
           
         )
       }) 
@@ -163,8 +169,8 @@ function Dashboard(props) {
 
     console.log(profile.matches);
     console.log(profile);
-    const enMatchDiv = profile.isLoaded && (profile.matches) ? matches !== undefined ? (profile.matches.length !== 0) ? profile.matches && profile.matches.map((match, index) =>{
-      for (const i of matches)  if(match === i.id) match = i;
+    const enMatchDiv = profile.isLoaded && (profile.matches) ? Matches !== undefined ? (profile.matches.length !== 0) ? profile.matches && profile.matches.map((match, index) =>{
+      for (const i of Matches)  if(match === i.id) match = i;
       if(match.lrdate<getCurrentDate()){
         return(
           <Paper key={index}> 
@@ -303,12 +309,8 @@ function Dashboard(props) {
   );
 }
 
-const mapStatetoProps = (state)=>{
-  return{
-      matches:state.firestore.ordered.Matches,
-      users:state.firestore.ordered.Users
-  }
-}
+export default Dashboard
+/** 
 
 export default compose(
   connect(mapStatetoProps),
@@ -316,3 +318,4 @@ export default compose(
       {collection:'Matches'},
       {collection:'Users',orderBy:['kills','desc'],limit:5,where:['kills','>',0]}
   ]))(Dashboard)
+  */

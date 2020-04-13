@@ -4,6 +4,9 @@ import MatchSummary from "./adminMatchSummary";
 import {firestoreConnect} from 'react-redux-firebase';
 import {compose} from 'redux';
 import {isinDocs,getCurrentDate} from '../../Functions'
+import {useSelector} from 'react-redux'
+import {useFirestoreConnect} from 'react-redux-firebase'
+import { user } from 'firebase-functions/lib/providers/auth';
 
 
 /*
@@ -12,8 +15,10 @@ import {isinDocs,getCurrentDate} from '../../Functions'
 
 
 const EnterMatch = (props) =>{
-    const {matches,umatches} = props;
-    const matchdiv = matches ? matches && matches.map(match =>{//Used to Generate MatchList using ternary operator
+    useFirestoreConnect({collection:'Matches',where:['lrdate','<',getCurrentDate()]})
+    const Matches = useSelector(state => state.firestore.ordered.Matches)
+    const {umatches} = props;
+    const matchdiv = Matches ? Matches && Matches.map(match =>{//Used to Generate MatchList using ternary operator
        if(match.lrdate<getCurrentDate()){//Hides a Match if its Last Enrollment Date has Passed
          return null;
        }
@@ -46,10 +51,12 @@ const mapStatetoProps = (state)=>{
         umatches:state.firebase.profile.matches
     }
 }
-
+export default EnterMatch
+/** 
 export default compose(
     connect(mapStatetoProps),
     firestoreConnect([
         {collection:'Matches'}
     ])
 )(EnterMatch);
+*/
