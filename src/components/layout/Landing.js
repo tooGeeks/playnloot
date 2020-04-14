@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Image from '../imgs/bg_100_202329.jpg'
 import { makeStyles } from '@material-ui/styles'
 import Typist from 'react-typist';
-import { useHistory, useParams } from 'react-router-dom'
-import { useMediaQuery, useTheme , Typography, Box, Grid, Avatar, Button, Hidden, Collapse, Container } from '@material-ui/core';
+import { useHistory} from 'react-router-dom'
+import { Typography, Box, Grid, Button, Container, Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
 import { ReactComponent as Loading } from '../../imgs/loading.svg'
 
 const useStyles = makeStyles(theme => ({
@@ -28,44 +28,10 @@ const useStyles = makeStyles(theme => ({
   GetStartBtn: {
     backgroundColor: theme.palette.background.paper,
   },
-  HDivider: {
-    width: '2px', backgroundColor: theme.palette.primary.main,
-    display: 'inline-block',
-    marginLeft: theme.spacing(5),
-  },
-  stepHeading: {
-    display: 'flex',
-    minWidth: '100wh',
-    backgroundColor: theme.palette.main,
-    padding: theme.spacing(2),
-  },
-  stepNo : {
-    borderRadius: '50%',
-    width: '3rem', height: '3rem',
-    color: theme.palette.getContrastText(theme.palette.primary.main),
-    backgroundColor: theme.palette.primary.main,
-  },
-  stepTitle: {
-    paddingLeft: theme.spacing(2),
-    display: 'inline',
-  },
-  stepImage: {
-    margin: 'auto',
-  },
-  stepBody: {
-    margin: 'auto',
-    marginLeft: theme.spacing(3),
-    marginRight: theme.spacing(3),
-  },
   stepContent: {
-    backgroundColor: theme.palette.background.paper,
-    display: 'inline-block',
-    padding: theme.spacing(2),
-    borderRadius: 5,
-    boxShadow: 3,
+    paddingBottom: theme.spacing(2),
   },
-  stepAction: {
-    marginTop: theme.spacing(2),
+  actionsContainer: {
     textAlign: 'right'
   },
 }));
@@ -75,12 +41,8 @@ const unit = 5;
 
 const Landing = () => {
   const classes = useStyles();
-  const theme = useTheme();
-  const { gti } = useParams();
   const history = useHistory();
-  const mDevice = useMediaQuery(theme.breakpoints.up('sm'));
-  const [typist, settypist] = useState(1);
-  const [activeStep, setActiveStep] = useState(gti || parseInt(0));
+  const [activeStep, setActiveStep] = useState(parseInt(0));
   const [getStart, setgetStart] = useState(localStorage.getItem('getting_Started') || {gt: false});
   const steps = getSteps();
 
@@ -105,23 +67,20 @@ const Landing = () => {
   function getStepContent(step) {
     switch (step) {
       case 0:
-        return <Box className={classes.stepContent}>
-                  First, you`ve to register on our app using your correct credentials!<br/>
-                  <Button m="auto" color="primary" variant="outlined" style={{marginTop: '5px'}} onClick={() => history.push('/signup')}>REGISTER</Button>
-                </Box>;
+        return <>
+                  First, you`ve to register on our app using your correct credentials!
+                </>;
       case 1:
-        return <Box className={classes.stepContent}>
+        return <>
                   Now, for earning money, we always have to invest some first!<br/>
-                  We count money in terms of "Coins", you buy coins by paying us.<br/>
-                  So, now you need to buy COINS (atleast one) worth ₹{unit}.<br/>
-                  <Button m="auto" color="primary" variant="outlined" style={{marginTop: '5px'}} onClick={() => history.push('/wallet/view/coins')}>Buy</Button>
-                </Box>;
+                  We count money in terms of "Coins", you buy coins by paying us.<br/><br/>
+                  So, now you need to buy COINS (atleast one) worth ₹{unit}.
+                </>;
       case 2:
-        return <Box className={classes.stepContent}>
+        return <>
                   Wow, You`re almost close; we`ve created a Dashboard for you XP, go check it!<br/>
-                  There, you`ll get a list of new matches and Enroll in a Match!<br/>
-                  <Button m="auto" color="primary" variant="outlined" style={{marginTop: '5px'}} onClick={() => history.push('/dashboard')}>Check & Enroll</Button>
-                </Box>;
+                  There, you`ll get a list of new matches and Enroll in a Match!
+                </>;
       
       default:
         return 'Kaand! Contact Admin';
@@ -135,7 +94,7 @@ const Landing = () => {
         <Grid container direction="row">
         <Grid item xs={12}>
           <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" textAlign="center" style={{height: '95vh'}}>
-            <Typist avgTypingDelay={40} className={classes.TypistWrap} cursor={{show: false, hideWhenDone: false}} onTypingDone={() => settypist(2)}>
+            <Typist avgTypingDelay={40} className={classes.TypistWrap} cursor={{show: false, hideWhenDone: false}}>
               <Box fontSize="h4.fontSize" letterSpacing={6} fontFamily="Monospace" style={{color: '#f6734a'}}>PLAY N LOOT</Box><br />
               {/* <Typist.Backspace count={22} delay={200} /> */}
               <Box fontSize="h6.fontSize" fontWeight="fontWeightLight"> Want to loot real money? <br /> 
@@ -153,24 +112,36 @@ const Landing = () => {
         </Grid>
         <Container>
         <Grid container direction="row" justify="center" alignItems="center" id="getstarted" style={{minHeight: '100vh'}}>
-          {steps.map((label, index) => (
-            <React.Fragment key={label}>
-              <Grid item xs={12} id={index}>
-                <Box className={classes.stepHeading} alignItems="center"><Box><Avatar edge="start" className={classes.stepNo}>{index + 1}</Avatar></Box>&nbsp;<Typography variant="h6" className={classes.stepTitle} onClick={() => handleClicks('handleReset')}>{label}</Typography></Box>
-              </Grid>
-              <Grid item xs={12}>
-                <Collapse in={index === activeStep} {...(activeStep ? { timeout: 1000 } : {})}>
-                  <Box display="flex">
-                    <Hidden xsUp={index === steps.length -1  ? true : false}><Box className={classes.HDivider} /></Hidden>
-                    <Box className={classes.stepBody}  display="flex" flexDirection="column" justifyContent="center">
-                      {getStepContent(index)}
-                      <Box className={classes.stepAction}><Button color="primary" disabled={index === 0} onClick={() => handleClicks('handleBack')}>Back</Button><Button color="primary" variant="contained" onClick={() => handleClicks('handleNext')}>{index>=2 ? "Finish" : "Next"}</Button></Box>
-                    </Box>
-                  </Box>
-                </Collapse>
-              </Grid>
-            </React.Fragment>
+        <Stepper activeStep={activeStep} orientation="vertical">
+        {steps.map((label, index) => (
+          <Step key={label}>
+            <StepLabel>{label}</StepLabel>
+            <StepContent>
+              <Box className={classes.stepContent}>{getStepContent(index)}</Box>
+              <div className={classes.actionsContainer}>
+                <div>
+                  <Button
+                    disabled={activeStep === 0}
+                    onClick={() => handleClicks('handleBack')}
+                    className={classes.button}
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    align="right"
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleClicks('handleNext')}
+                    className={classes.button}
+                  >
+                    {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                  </Button>
+                  </div>
+                </div>
+              </StepContent>
+            </Step>
           ))}
+        </Stepper>
         </Grid>
         </Container>
         <Grid item xs={12} sm={6}>
