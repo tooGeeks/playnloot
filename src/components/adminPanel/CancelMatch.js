@@ -1,25 +1,21 @@
-import React,{useEffect} from 'react';
+import React from 'react';
 import MatchSummary from "../matches/adminMatchSummary";
 import { compose } from 'redux';
 import {cancelMatch} from '../../store/actions/MatchActions';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
-import {findinMatches} from '../../Functions';
 import Nav from './AdminNav'
 
 const CancelMatch = (props)=>{
+    const dispatch = useDispatch();
     const mid = props.match.params.mid;
-    const bln = (props.match.params.bln === 'true');
     const {matches} = props;
-    const match = matches && findinMatches(matches,mid);
-    console.log(match);
-    useEffect(()=>{
-        if(bln && matches && match.isActive){
-            console.log("Deleting Match");
-            props.cancelMatch(mid)
-        }
-    })
-    const matchdiv = match ? <MatchSummary match={matches && match} bttnname="Cancel Match" loc={"/admin/cancelmatch/true/"} maxp='101' isEnr={false}/> : <div className="center"><p>Loading Match Details...</p><div className="preloader-wrapper small active center">
+    const match = matches && matches[0]
+    const handleClick = ()=>{
+        let cnf = window.confirm("Are You Sure?")
+        if(cnf) dispatch(cancelMatch(mid))
+    }
+    const matchdiv = match ? <MatchSummary match={matches && match} bttnname="Cancel Match" handleClick={handleClick} maxp='101' isEnr={false}/> : <div className="center"><p>Loading Match Details...</p><div className="preloader-wrapper small active center">
     <div className="spinner-layer spinner-blue-only">
       <div className="circle-clipper left">
         <div className="circle"></div>
@@ -54,7 +50,7 @@ const mapStatetoProps = (state)=>{
 
 export default compose(
     connect(mapStatetoProps,mapDispatchtoProps),
-    firestoreConnect([
-        {collection:'Matches'}
+    firestoreConnect(props => [
+        {collection:'Matches',doc:props.match.params.mid}
     ])
 )(CancelMatch);

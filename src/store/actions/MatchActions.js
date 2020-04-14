@@ -1,7 +1,6 @@
 import {isinDocs,findinMatches,isPlayerinMatch} from '../../Functions'
 import 'firebase/functions'
 import { isEmpty } from 'react-redux-firebase';
-const unit = 5;
 
 /*
   This File Contains All Match Actions such as Create Match, Update Match, Enter Match, etc. 
@@ -181,12 +180,11 @@ const getPlayers = (mid,st)=>{
     return new Promise((resolve,reject)=>{
         const matches = st.firestore.ordered.Matches;
         const match = matches ? findinMatches(matches,mid) : null;
+        console.log(match)
         const players = match && match.players;
         let parr = []
         for(let x in players){
-            for(let y in players[x]){
-                parr.push(y)
-            }
+            parr.push(x)
         }
         resolve(parr)
     })

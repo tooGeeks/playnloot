@@ -11,9 +11,12 @@ import Nav from './AdminNav'
 
 const AdminHome = (props)=>{
   const {matches} = props;
+  const handleClick = (mid)=>{
+    props.history.push("/admin/matchdetails/"+mid)
+  }
   const matchdiv = matches ? matches && matches.map(match =>{//Used to Generate MatchList using ternary operator
      return(
-         <MatchSummary maxp='101' isCan={!match.isActive} match={match} loc={"/admin/matchdetails/"} isEnr={false}  bttnname={"View Details  "} key={match.id}/>
+         <MatchSummary maxp='101' isCan={!match.isActive} match={match} handleClick={handleClick} isEnr={false}  bttnname={"View Details  "} key={match.id}/>
      )
   }) : <div className="center"><p>Loading Matches...</p><div className="preloader-wrapper big active center">
         <div className="spinner-layer spinner-blue-only">
@@ -31,7 +34,7 @@ const AdminHome = (props)=>{
   <React.Fragment>
     <Nav/>
     <div className="container white-text">
-      <h3>Welcom Back, Admin</h3>
+      <h3>Welcome Back, Admin</h3>
       {matchdiv}
     </div>
   </React.Fragment>
