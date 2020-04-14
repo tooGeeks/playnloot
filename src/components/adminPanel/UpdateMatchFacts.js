@@ -91,7 +91,7 @@ const UpdateMatchFacts = (props)=>{
     tableMetadata['count'] = uinm && uinm.length
     let players = uinm.slice(tableMetadata.psi,tableMetadata.pei)
     players.sort((a,b)=>{
-      return a.ukills<b.ukills ? 1 : -1;
+      return a.ukills>b.ukills ? -1 : 1;
     })
     for(let x in players){
       players[x].rank = parseInt(x) + 1
@@ -144,7 +144,7 @@ const UpdateMatchFacts = (props)=>{
                   <label htmlFor="winner_kills">Winner Kills</label>
                 </div><br/>
                 <div className="col s4">
-                  <button className='waves-effect waves-light btn hoverable' onClick={updateWinner}>Update Winner</button>
+                  <button className='waves-effect waves-light btn hoverable' disabled={!state.winner_id || !state.winner_kills} onClick={updateWinner}>Update Winner</button>
                 </div>
               </div> : null }<br/><br/>
               {playerDetails}

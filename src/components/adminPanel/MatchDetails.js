@@ -27,6 +27,11 @@ const MatchDetails = (props)=>{
     })
     tableMetadata['count'] = uinm && uinm.length
     let players = uinm && uinm.slice(tableMetadata.psi,tableMetadata.pei)
+    if(players && players[0].rank===undefined){
+      for(let x in players){
+        players[x].rank = 0
+      }
+    }
 
     const handlePageChange = (nPage)=>{
       return new Promise((resolve,reject)=>{

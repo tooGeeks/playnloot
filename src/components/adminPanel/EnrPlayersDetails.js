@@ -66,6 +66,7 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
             })
             for(let x in data){
                 data[x].rank = parseInt(x)+1
+                data[x].srno = parseInt(x)+1
             }
             console.log(data)
             setState({data})
