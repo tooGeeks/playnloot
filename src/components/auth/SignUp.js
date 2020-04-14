@@ -18,13 +18,11 @@ import Container from '@material-ui/core/Container';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: "100%",
     minHeight: "100vh",
     paddingBottom: theme.spacing(4),
   },
   paper: {
-    marginTop: theme.spacing(8),
-    
+    marginTop: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -54,8 +52,8 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <MUILink color="inherit" href="https://material-ui.com/">
-        Your Website
+      <MUILink color="inherit" component={Link} to={'/'}>
+        PLAY N LOOT
       </MUILink>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -106,7 +104,7 @@ const SignUp = (props) => {
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={6} sm={6}>
               <TextField
                 autoComplete="fname"
                 name="firstName"
@@ -126,7 +124,7 @@ const SignUp = (props) => {
                 helperText={(errors.firstName ? "Enter your First Name!" : "eg. Ajey")}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={6} sm={6}>
               <TextField
                 variant="outlined"
                 required

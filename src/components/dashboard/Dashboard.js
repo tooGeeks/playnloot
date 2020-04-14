@@ -9,7 +9,7 @@ import { AccountBox, TrackChanges, Event, AccessAlarm } from '@material-ui/icons
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import {firestoreConnect, useFirestoreConnect} from 'react-redux-firebase';
+import {firestoreConnect} from 'react-redux-firebase';
 import {isinDocs,getCurrentDate} from '../../Functions'
 import {compose} from 'redux';
 import MatchSummary from '../matches/MatchSummary';
