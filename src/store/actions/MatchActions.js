@@ -181,12 +181,11 @@ const getPlayers = (mid,st)=>{
     return new Promise((resolve,reject)=>{
         const matches = st.firestore.ordered.Matches;
         const match = matches ? findinMatches(matches,mid) : null;
+        console.log(match)
         const players = match && match.players;
         let parr = []
         for(let x in players){
-            for(let y in players[x]){
-                parr.push(y)
-            }
+            parr.push(x)
         }
         resolve(parr)
     })

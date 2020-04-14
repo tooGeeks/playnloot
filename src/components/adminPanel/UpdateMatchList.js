@@ -7,13 +7,16 @@ import Nav from './AdminNav'
 
 const UpdateMatchList = (props)=>{
     const {matches} = props;
+    const handleClick = (mid)=>{
+        props.history.push("/admin/updatematch/"+mid)
+    }
         return(
             <React.Fragment>
                 <Nav/>
                 <div className="container">
                     {matches && matches.map(match =>{
                             return(
-                                <MatchSummary maxp='101' isCan={!match.isActive} match={match} loc={"/admin/updatematch/"} bttnname={"Select"} key={match.id}/>
+                                <MatchSummary maxp='101' isCan={!match.isActive} match={match} handleClick={handleClick}  bttnname={"Select"} key={match.id}/>
                             )
                         })}
                 </div>

@@ -10,7 +10,6 @@ const MatchDetails = (props)=>{
   const mid = props.match.params.mid;
   useFirestoreConnect([{collection:"Matches",doc:mid},{collection:"Users",where:['matches','array-contains',mid]}])
   const {Matches,Users} = useSelector(state =>state.firestore.ordered)
-  console.log(Matches)
     const match = Matches && findinMatches(Matches,mid);
     const cols = ['srno','pubgid','mno','ukills','rank'] 
     let tableMetadata = {pages:0,psi:0,page:0,count:0 //psi - Player Starting Index, pei - Player Ending Index
@@ -70,7 +69,11 @@ const MatchDetails = (props)=>{
     </div>
   </div></div>;
 
-    const msum = match ? <MatchSummary match={Matches && match} maxp={101} bttnname="Update Facts" loc="/admin/updatematchfacts/" /> 
+    const handleMClick = ()=>{
+      props.history.push("/admin/updatematchfacts/"+mid)
+    }
+
+    const msum = match ? <MatchSummary match={Matches && match} handleClick={handleMClick} maxp={101} bttnname="Update Facts"/> 
     : loadCircle
   const stl = {
     paddingBottom : 120
@@ -88,14 +91,16 @@ const MatchDetails = (props)=>{
     ) 
 }
 
+
+export default MatchDetails
+
+/**
 const mapStatetoProps = (state)=>{
     return{
         matches:state.firestore.ordered.Matches,
         users:state.firestore.ordered.Users
     }
 }
-export default MatchDetails
-/**
 export default compose(
     connect(mapStatetoProps),
     firestoreConnect(props => [

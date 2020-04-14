@@ -7,6 +7,9 @@ import {getCurrentDate} from '../../Functions'
 import Nav from './AdminNav'
 
 const CancelMatchList = (props)=>{
+    const handleClick = (mid)=>{
+        props.history.push("/admin/cancelmatch/"+mid)
+    }
     const {matches} = props;
         return(
             <React.Fragment>
@@ -17,7 +20,7 @@ const CancelMatchList = (props)=>{
                             return null;
                         }
                             return(
-                                <MatchSummary maxp='101' isCan={!match.isActive} match={match} loc={"/admin/cancelmatch/false/"} bttnname={"Select"} key={match.id}/>
+                                <MatchSummary maxp='101' isCan={!match.isActive} match={match} handleClick={handleClick}  bttnname={"Select"} key={match.id}/>
                             )
                         })}
                 </div>

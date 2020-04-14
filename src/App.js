@@ -112,8 +112,8 @@ const App = () => {
                 <ProtectedRoutes path="/admin/manualpayment" component={ManualPayment}/>
                 <ProtectedRoutes path="/admin/matchdetails/:mid" component={MatchDetails}/>
                 <ProtectedRoutes path="/admin/updatematchfacts/:mid" component={UpdateMatchFacts}/>
-                <ProtectedRoutes path="/admin/cancelmatch/:bln/:mid" component={CancelMatch}/>
-                <ProtectedRoutes path="/admin/cancelmatch" component={CancelMatchList}/>
+                <ProtectedRoutes path="/admin/cancelmatch/:mid" component={CancelMatch}/>
+                <ProtectedRoutes path="/admin/cancelmatchlist" component={CancelMatchList}/>
                 <ProtectedRoutes path="/admin/withdrawalreqlist/" component={WithdrawalList}/>
                 <ProtectedRoutes path="/admin/sendnotifications/" component={SendNotifications}/>
                 <ProtectedRoutes exact path="/admin" component={AdminHome}/>

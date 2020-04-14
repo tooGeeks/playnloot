@@ -1,16 +1,15 @@
 import React from 'react';
 import {Fragment} from 'react'
 import {convt} from '../../Functions';
-import { Link } from 'react-router-dom';
 /*
   This Component is used to Display the Details of a Match.
   It is like a template which can be used for any list of matches with details
 */
 
 const MatchSummary = (props)=>{
-    const {match,loc,bttnname,isEnr,isCan,maxp} = props;//Passed By Calling Component
+    const {match,bttnname,isEnr,isCan,maxp,handleClick} = props;//Passed By Calling Component
     const canEnroll = match.plno<parseInt(maxp) ? true : false;//Checks if match is full?
-    const link = canEnroll && !isCan && !isEnr ? loc+match.id : window.location.pathname ;// Sets the button link to be the match if cannot enroll sets to current path
+    const link = canEnroll && !isCan && !isEnr && handleClick ? handleClick : ()=>{} ;// Sets the button link to be the match if cannot enroll sets to current path
     const canEnrollmsg = canEnroll ? null : <div><span className='red-text'><b>Match is Full</b></span><br/></div> ; //Displays a message if Match is Full
     const isEnrolledmsg = isEnr ? <div><span className='green-text'><b>Already Enrolled</b></span><br/></div> : null ;  // Displays a Message if Already Enrolled
     const fmsg = isEnr ? isEnrolledmsg : canEnrollmsg; //Final message depending upon enrollment status
@@ -29,7 +28,7 @@ const MatchSummary = (props)=>{
                 {canmsg}
                 </div>
                 <div hidden={!bttnname} className="card-action">
-                    <Link className="white-text" to={link}><button className="waves-effect waves-light btn-small" id={match.id} disabled={!canEnroll || isEnr || !match.isActive}>{bttnname}</button></Link>
+                    <button className="waves-effect waves-light btn-small" id={match.id} onClick={()=>{link(match.id)}} disabled={!canEnroll || isEnr || !match.isActive}>{bttnname}</button>
                 </div>
             </div>
             </div>

@@ -17,7 +17,7 @@ const AdminNav = (props)=>{
         <li className="tab"><Link to="/admin/creatematch/">Create Match</Link></li>
         <li className="tab"><Link to="/admin/withdrawalreqlist/">withdrawal Requests</Link></li>
         <li className="tab"><Link to="/admin/updatematch">Update Match</Link></li>
-        <li className="tab"><Link to="/admin/cancelmatch">Cancel Match</Link></li>
+        <li className="tab"><Link to="/admin/cancelmatchlist">Cancel Match</Link></li>
         <li className="tab"><Link to="/admin/manualpayment">Manual Payment</Link></li>
         <li className="tab"><Link to="/admin/sendnotifications">Send Notifications</Link></li>
     </ul>)
