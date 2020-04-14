@@ -19,7 +19,7 @@ const MatchSummary = (props)=>{
             <div className="col s12 m6 offset-m3">
             <div className="card black">
                 <div className="card-content white-text">
-                <span className='card-title'>Match Name : {match.id}&emsp;</span><br/>
+                <span className='card-title'>Match Name : {match.name}&emsp;</span><br/>
                 <span className='white-text'>Match Date : {match.mdate}&emsp;</span><br/>
                 <span className='white-text'>L.Reg Date : {match.lrdate}&emsp;</span><br/>
                 <span className='white-text'>Match Time : {convt(1,match.mtime)}&emsp;</span><br/>{/* Converts Time */}

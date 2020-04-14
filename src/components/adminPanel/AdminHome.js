@@ -34,7 +34,7 @@ const AdminHome = (props)=>{
   <React.Fragment>
     <Nav/>
     <div className="container white-text">
-      <h3>Welcom Back, Admin</h3>
+      <h3>Welcome Back, Admin</h3>
       {matchdiv}
     </div>
   </React.Fragment>

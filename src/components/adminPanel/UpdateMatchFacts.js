@@ -1,7 +1,7 @@
 import React from 'react';
 import EnrPlayersDetails from './EnrPlayersDetails'
 import { connect } from 'react-redux';
-import {findinMatches,getPlayerfromMatch,matchStr} from '../../Functions'
+import {findinMatches,getPlayerfromMatch} from '../../Functions'
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import MatchSummary from '../matches/adminMatchSummary';

@@ -1,42 +1,56 @@
-import React,{Component} from "react";
+import React from "react";
 import { createMatch } from '../../store/actions/MatchActions';
 import {connect} from 'react-redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import {compose} from 'redux';
 import {compdate,getCurrentDate} from '../../Functions';
 import Nav from './AdminNav'
+import { Select, MenuItem } from "@material-ui/core";
 
 /*
   This Component is used to Create a New Match
 */
 
-class CreateMatch extends Component{
-    state = {
+const CreateMatch = (props)=>{
+    const [state,setState] = React.useState({
+        name:'',
         mdate:'',
         mtime:'',
-        lrdate:''
-    }
-    handleChange = (e)=>{
-        this.setState({[e.target.id]:e.target.value});
+        lrdate:'',
+        matchmode: 'cao'
+    })
+    const handleChange = (e)=>{
+        if(e.target.id!==undefined) setState({...state,[e.target.id]:e.target.value});
+        else setState({...state,[e.target.name]:e.target.value});
     }
     
-    chkexistmatch = ()=>{//checks if already a match is scheduled on specified date
-        const {matches} = this.props;
+    const chkexistmatch = ()=>{//checks if already a match is scheduled on specified date
+        const {matches} = props;
         return matches.map(match =>{
-            return(match.mdate===this.state.mdate)
+            return(match.mdate===state.mdate)
         })
     }
-    handleSubmit = (e)=>{
+    const handleSubmit = (e)=>{
         e.preventDefault();
         const cds = getCurrentDate();
-        const mdt = this.state.mdate;
-        const ldt = this.state.lrdate;
+        const mdt = state.mdate;
+        const ldt = state.lrdate;
+        const mti = state.mtime
+        const matchmode = state.matchmode
+        if(mti===undefined){
+            alert("Please Specify the Match Time")
+            return;
+        }
+        if(matchmode==='cao'){
+            alert("Please Specify the Match Mode")
+            return;
+        }
         if(compdate(cds,mdt) && compdate(ldt,mdt) && compdate(cds,ldt)){//checks that match date, last enrollment date and today's date are in order
-            if(this.chkexistmatch().includes(true)){
+            if(chkexistmatch().includes(true)){
                 alert("Already A Match on Specified Date");
                 return;
             }
-            this.props.createMatch(this.state);
+            props.createMatch(state);
         }
         else{
             if(!compdate(cds,mdt)){
@@ -50,24 +64,50 @@ class CreateMatch extends Component{
             }
         }
     }
-    render(){
-        return(
-            <React.Fragment>
-                <Nav/>
-                <div className="container">
-                    <form onSubmit={this.handleSubmit}>
-                        <label ><b>Date of Match :</b></label>
-                        <input type="date" className="white-text" id="mdate" onChange={this.handleChange}/><br/>
-                        <label ><b>Time of Match :</b></label>
-                        <input type="time" className="white-text" id="mtime" onChange={this.handleChange}/><br/>
-                        <label ><b>Last Day of Registration :</b></label>
-                        <input type="date" className="white-text" id="lrdate"onChange={this.handleChange}/><br/>
-                        <button id="crnmbttn" disabled={!this.state.mdate && !this.state.mtime && !this.state.lrdate} ref={this.reff} className="waves-effect waves-light btn hoverable">Create Match</button>
-                    </form>
-                </div>
-            </React.Fragment>
-        )
-    }
+    return(
+        <React.Fragment>
+            <Nav/>
+            <div className="container">
+                <form onSubmit={handleSubmit}>
+                    <div className="row"><br/>
+                        <div className="input-field">
+                            <input type="text" id="name" className="white-text" onChange={handleChange} />
+                            <label>Match Name</label>
+                        </div>
+                        <div>
+                            <label ><b>Date of Match :</b></label>
+                            <input type="date" className="white-text" id="mdate" onChange={handleChange}/><br/>
+                        </div>
+                        <div>
+                            <label ><b>Time of Match :</b></label>
+                            <input type="time" className="white-text" id="mtime" onChange={handleChange}/>
+                        </div>
+                        <div>
+                            <label ><b>Last Day of Registration :</b></label>
+                            <input type="date" className="white-text" id="lrdate"onChange={handleChange}/><br/>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="input-field col s5 white-text">
+                                {state && <Select
+                                    id="matchmode"
+                                    name="matchmode"
+                                    value={state.matchmode}
+                                    onChange={handleChange}
+                                    style={{width:'100px',color:"#ffffff"}}
+                                >
+                                    <MenuItem key={""} value={'cao'} disabled>Choose an Option</MenuItem>
+                                    {['Solo','Duo','Squad'].map(mode=>(<MenuItem key={mode} value={mode}>{mode}</MenuItem>))}
+                                </Select>}
+                        </div>
+                        <div className="input-field col s2">
+                            <button id="crnmbttn" disabled={!state.name || !state.mdate || !state.mtime || !state.lrdate || state.matchmode==="cao"} className="waves-effect waves-light btn hoverable">Create Match</button> 
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </React.Fragment>
+    )
 }
 
 const mapDispatchtoProps = (dispatch) =>{
