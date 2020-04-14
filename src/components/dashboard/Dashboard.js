@@ -10,7 +10,7 @@ import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import {firestoreConnect} from 'react-redux-firebase';
-import {isinDocs,getCurrentDate} from '../../Functions'
+import {isinDocs,getCurrentDate, dateString, convt} from '../../Functions'
 import {compose} from 'redux';
 import MatchSummary from '../matches/MatchSummary';
 import { backDrop, clearBackDrop } from '../../store/actions/uiActions'
@@ -182,10 +182,10 @@ function Dashboard(props) {
         <Grid className={classes.enPaper} key={index}>
           <Grid item>
             <Box padding={1.5}>
-              <Typography variant="body2"><Event className={classes.icons}/>&nbsp;{match.mdate}&nbsp;</Typography>
-              <Typography variant="body2"><AccessAlarm className={classes.icons}/>&nbsp;{match.mtime}</Typography>
+              <Typography variant="body2"><Event className={classes.icons}/>&nbsp;{dateString(match.mdate)}&nbsp;</Typography>
+              <Typography variant="body2"><AccessAlarm className={classes.icons}/>&nbsp;{convt(1,match.mtime)}</Typography>
             </Box>
-              <Typography align="right" className={classes.primryColor} style={{fontWeight: 500, paddingRight: 7, paddingBottom: 2}}>{match.id}</Typography>
+              <Typography align="right" className={classes.primryColor} style={{fontWeight: 500, paddingRight: 7, paddingBottom: 2}}>{match.name}</Typography>
           </Grid>
         </Grid>
           //<li className="" key={match}><div><span>Match Name : {match}</span><Link className="secondary-item" to={"/entermatch/"+match}><button className="waves-effect waves-light hoverable btn-small">Details</button></Link></div></li>

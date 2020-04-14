@@ -68,9 +68,9 @@ const MatchSummary = (props) => {
     return(
     <>
         <ListItem className={classes.Item}>
-            <ListItemText primary={match.id} secondary={
+            <ListItemText primary={match.name} secondary={
                 <><Typography variant="caption">Match Date: {dateString(match.mdate)}</Typography></>} />
-            <Button disabled={isEnr} size="small" align="right" variant="outlined" color="primary"  edge="end" onClick={() => dispatch(showDialog({title: ("Enroll in " + (match.id)), content: <Details id={match.id} match={match} canEnroll={canEnroll}/>, actions: <Actions mid={match.id} canEnroll={canEnroll}/>}))}>Details</Button>
+            <Button disabled={isEnr} size="small" align="right" variant="outlined" color="primary"  edge="end" onClick={() => dispatch(showDialog({title: ("Enroll in " + (match.name)), content: <Details id={match.id} match={match} canEnroll={canEnroll}/>, actions: <Actions mid={match.id} canEnroll={canEnroll}/>}))}>Details</Button>
         </ListItem>
     </>
     )
