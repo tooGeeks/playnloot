@@ -79,8 +79,8 @@ const App = () => {
     const themeConfig = createMuiTheme(theme)
     console.log(themeConfig);
     
-    let Navbottom = matchStr(window.location.pathname, "/") ? null : <Nav modeControl={toggleDarkMode} />;
-    //let Navbottom = <Nav modeControl={toggleDarkMode}/>
+    //let Navbottom = matchStr(window.location.pathname, "/") ? null : <Nav modeControl={toggleDarkMode} />;
+    let Navbottom = <Nav modeControl={toggleDarkMode}/>
     return (
       <BrowserRouter>
         <AuthIsLoaded>

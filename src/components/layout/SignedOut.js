@@ -27,14 +27,6 @@ const SignedOut = (props) => {
         <ListItemIcon><SentimentVerySatisfiedIcon/></ListItemIcon>
         <ListItemText primary="Sign Up"></ListItemText>
       </ListItem>
-      <ListItem color="secondary" button 
-          onClick={(event) => {props.func(event, 3)}}
-          selected={(props.sIndex) === 3}
-          component={Link} to={'/kand'} 
-          rel="noopener">
-        <ListItemIcon><SentimentVerySatisfiedIcon/></ListItemIcon>
-        <ListItemText primary="Landing"></ListItemText>
-      </ListItem>
     </div>
   )
 }

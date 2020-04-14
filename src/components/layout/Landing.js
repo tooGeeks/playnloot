@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Image from '../imgs/bg-9.jpg'
+import Image from '../imgs/bg_100_202329.jpg'
 import { makeStyles } from '@material-ui/styles'
 import Typist from 'react-typist';
 import { useHistory, useParams } from 'react-router-dom'
@@ -7,78 +7,67 @@ import { useMediaQuery, useTheme , Typography, Box, Grid, Avatar, Button, Hidden
 import { ReactComponent as Loading } from '../../imgs/loading.svg'
 
 const useStyles = makeStyles(theme => ({
-  main: {
+  root: {
+    flexGrow: 1,
     display: 'flex',
-    backgroundColor: '#0f0909',
-    },
-    mobileback: {
-      backgroundImage: `url(${Image})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      minHeight: '100vh',
-    },
-    otherback: {
-      backgroundImage: `url(${Image})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      minHeight: '100vh',
-    },
-    TypistWrap: {
-      paddingTop: 50,
-    },
-    enroll: {
-      paddingTop: '65vh',
-      color: '#f55c2d'
-    },
-    root: {
-      flexGrow: 1,
-      backgroundColor: '#0f0909',
-    },
-    HDivider: {
-      //minHeight: theme.spacing(15),
-      //minHeight: '100%',
-      width: '2px', backgroundColor: theme.palette.primary.main,
-      display: 'inline-block',
-      marginLeft: theme.spacing(5),
-    },
-    stepHeading: {
-      display: 'flex',
-      minWidth: '100wh',
-      backgroundColor: theme.palette.main,
-      padding: theme.spacing(2),
-      //border: '1px solid #FFFFFF',
-    },
-    stepNo : {
-      borderRadius: '50%',
-      width: '3rem', height: '3rem',
-      color: theme.palette.getContrastText(theme.palette.primary.main),
-      backgroundColor: theme.palette.primary.main,
-      //backgroundColor: 'linear-gradient(to bottom, #231f20, #110f10)'
-    },
-    stepTitle: {
-      paddingLeft: theme.spacing(2),
-      display: 'inline',
-    },
-    stepImage: {
-      margin: 'auto',
-    },
-    stepBody: {
-      margin: 'auto',
-      marginLeft: theme.spacing(3),
-      marginRight: theme.spacing(3),
-    },
-    stepContent: {
-      backgroundColor: theme.palette.background.paper,
-      //backgroundColor: '#110f10',
-      display: 'inline-block',
-      padding: theme.spacing(2),
-      borderRadius: 5,
-      boxShadow: 3,
-    },
-    stepAction: {
-      marginTop: theme.spacing(2),
-      textAlign: 'right'
-    },
+    minHeight: '100vh',
+    marginBottom: theme.spacing(8),
+  },
+  bgImg: {
+    //width: '80vw',
+    height: '50vh'
+  },
+  TypistWrap: {
+    //paddingTop: 50,
+    minHeight: '105px',
+    //border: '1px solid #121212'
+  },
+  enroll: {
+    color: '#f6734a'
+  },
+  GetStartBtn: {
+    backgroundColor: theme.palette.background.paper,
+  },
+  HDivider: {
+    width: '2px', backgroundColor: theme.palette.primary.main,
+    display: 'inline-block',
+    marginLeft: theme.spacing(5),
+  },
+  stepHeading: {
+    display: 'flex',
+    minWidth: '100wh',
+    backgroundColor: theme.palette.main,
+    padding: theme.spacing(2),
+  },
+  stepNo : {
+    borderRadius: '50%',
+    width: '3rem', height: '3rem',
+    color: theme.palette.getContrastText(theme.palette.primary.main),
+    backgroundColor: theme.palette.primary.main,
+  },
+  stepTitle: {
+    paddingLeft: theme.spacing(2),
+    display: 'inline',
+  },
+  stepImage: {
+    margin: 'auto',
+  },
+  stepBody: {
+    margin: 'auto',
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+  },
+  stepContent: {
+    backgroundColor: theme.palette.background.paper,
+    display: 'inline-block',
+    padding: theme.spacing(2),
+    borderRadius: 5,
+    boxShadow: 3,
+  },
+  stepAction: {
+    marginTop: theme.spacing(2),
+    textAlign: 'right'
+  },
 }));
 
 //unit for one coin (PaymentActions, Landing.js)
@@ -90,7 +79,7 @@ const Landing = () => {
   const { gti } = useParams();
   const history = useHistory();
   const mDevice = useMediaQuery(theme.breakpoints.up('sm'));
-  console.log(gti)
+  const [typist, settypist] = useState(1);
   const [activeStep, setActiveStep] = useState(gti || parseInt(0));
   const [getStart, setgetStart] = useState(localStorage.getItem('getting_Started') || {gt: false});
   const steps = getSteps();
@@ -118,7 +107,7 @@ const Landing = () => {
       case 0:
         return <Box className={classes.stepContent}>
                   First, you`ve to register on our app using your correct credentials!<br/>
-                  <Button m="auto" color="primary" variant="outlined" style={{marginTop: '5px'}} onClick={() => {window.location.pathname = '/signup'}}>REGISTER</Button>
+                  <Button m="auto" color="primary" variant="outlined" style={{marginTop: '5px'}} onClick={() => history.push('/signup')}>REGISTER</Button>
                 </Box>;
       case 1:
         return <Box className={classes.stepContent}>
@@ -144,29 +133,26 @@ const Landing = () => {
     <div className={classes.root}>
       <Grid container direction="column">
         <Grid container direction="row">
-        <Grid item xs={12} sm={6} className={mDevice ? `${classes.mobileback}` : `${classes.otherback}`}>
-          <Box textAlign="center">
-            <Typist avgTypingDelay={40} className={classes.TypistWrap} cursor={{hideWhenDone: true}}>
-              <Typography variant="h5"> Welcome Pro Players! </Typography>
-              <Typist.Backspace count={22} delay={200} />
-              <Typography variant="subtitle1"> Want to loot real money? </Typography>
-              <Typography component="span" variant="body1">Earn money on your every kill</Typography>
+        <Grid item xs={12}>
+          <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" textAlign="center" style={{height: '95vh'}}>
+            <Typist avgTypingDelay={40} className={classes.TypistWrap} cursor={{show: false, hideWhenDone: false}} onTypingDone={() => settypist(2)}>
+              <Box fontSize="h4.fontSize" letterSpacing={6} fontFamily="Monospace" style={{color: '#f6734a'}}>PLAY N LOOT</Box><br />
+              {/* <Typist.Backspace count={22} delay={200} /> */}
+              <Box fontSize="h6.fontSize" fontWeight="fontWeightLight"> Want to loot real money? <br /> 
+              Earn money on your every kill!</Box>
             </Typist>
-            <Typist cursor={{hideWhenDone: true}}>
+            <img src={Image} className={classes.bgImg} alt="Get Enrolled"/>
+            <Box className={classes.TypistWrap}>
               <Typography className={classes.enroll} variant="h6" >ENROLL IN A MATCH NOW!</Typography>
               <br/>
-              <Button variant="outlined" size="large" id="gt" onClick={() => {setgetStart({...getStart, gt: true}); document.querySelector('#getstarted').scrollIntoView({ behavior: 'smooth', block: 'center'})}}>Get Started</Button>
-            </Typist>
+              <Button className={classes.GetStartBtn} variant="outlined" size="large" onClick={() => history.push('/signup')}>Get Started</Button>
+              <Box fontSize={13} fontWeight="fontWeightLight" style={{marginTop: 2, textDecoration: 'underline', cursor: 'help'}} id="gt" onClick={() => {setgetStart({...getStart, gt: true}); document.querySelector('#getstarted').scrollIntoView({ behavior: 'smooth', block: 'center'})}}>Know More</Box>
+            </Box>
           </Box>
         </Grid>
-        <Hidden xsDown>
-          <Grid item xs={12} sm={6} style={{minHeight: '100vh', background: 'linear-gradient(to bottom, #231f20, #110f10)', backgroundColor: '#201c1d'}}>
-            Good!
-          </Grid>
-        </Hidden>
         </Grid>
         <Container>
-        <Grid container direction="row" justify="center" alignItems="center" id="getstarted">
+        <Grid container direction="row" justify="center" alignItems="center" id="getstarted" style={{minHeight: '100vh'}}>
           {steps.map((label, index) => (
             <React.Fragment key={label}>
               <Grid item xs={12} id={index}>

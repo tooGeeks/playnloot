@@ -100,12 +100,11 @@ const Nav = (props) => {
     }
     return(
       <div>
-        {console.info(history)}
           <AppBar position="fixed" color="primary" className={classes.appBar}>
               <Toolbar>
-                  <IconButton edge="start" color="inherit" aria-label="back" onClick={mhandleBack}>
+                  {/* <IconButton edge="start" color="inherit" aria-label="back" onClick={mhandleBack}>
                     <ArrowBackIcon />   
-                  </IconButton>
+                  </IconButton> */}
                   {/*
                   <Fab color="secondary" aria-label="add" className={classes.fabButton}>
                       { profile.pubgid ? profile.pubgid : <AddIcon />}
