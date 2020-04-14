@@ -99,8 +99,7 @@ function Dashboard(props) {
     state => state.firestore.ordered
   )
 
-  useFirestoreConnect([{collection:'Matches'},{collection:'Users',orderBy:['kills','desc'],limit:5,where:['kills','>',0]}])
-
+  
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -309,8 +308,14 @@ function Dashboard(props) {
   );
 }
 
-export default Dashboard
-/** 
+
+ const mapStatetoProps = (state)=>{
+   return({
+     Matches:state.firestore.ordered.Matches,
+     Users:state.firestore.ordered.Users
+   })
+ }
+
 
 export default compose(
   connect(mapStatetoProps),
@@ -318,4 +323,3 @@ export default compose(
       {collection:'Matches'},
       {collection:'Users',orderBy:['kills','desc'],limit:5,where:['kills','>',0]}
   ]))(Dashboard)
-  */
