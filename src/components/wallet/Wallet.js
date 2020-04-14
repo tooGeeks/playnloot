@@ -6,12 +6,13 @@ import { makeStyles, Container, Grid, Paper, IconButton, TextField, CardHeader, 
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import { showSnackbar } from '../../store/actions/uiActions'
+import Copyright from '../layout/Copyright'
 
 
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
-        paddingBottom: 60,
+        marginBottom: theme.spacing(8),
     },
     paper: {
         padding: theme.spacing(2),
@@ -295,6 +296,7 @@ export default function Wallet(props) {
                         </form>
                     </Grid>
                 </Grid>
+                <Copyright />
             </Container>
         </React.Fragment>
     );

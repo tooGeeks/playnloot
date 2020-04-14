@@ -5,6 +5,7 @@ import Typist from 'react-typist';
 import { useHistory} from 'react-router-dom'
 import { Typography, Box, Grid, Button, Container, Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
 import { ReactComponent as Loading } from '../../imgs/loading.svg'
+import Copyright from './Copyright';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -34,6 +35,9 @@ const useStyles = makeStyles(theme => ({
   actionsContainer: {
     textAlign: 'right'
   },
+  Description: {
+    marginTop: theme.spacing(4),
+  }
 }));
 
 //unit for one coin (PaymentActions, Landing.js)
@@ -111,43 +115,56 @@ const Landing = () => {
         </Grid>
         </Grid>
         <Container>
-        <Grid container direction="row" justify="center" alignItems="center" id="getstarted" style={{minHeight: '100vh'}}>
-        <Stepper activeStep={activeStep} orientation="vertical">
-        {steps.map((label, index) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-            <StepContent>
-              <Box className={classes.stepContent}>{getStepContent(index)}</Box>
-              <div className={classes.actionsContainer}>
-                <div>
-                  <Button
-                    disabled={activeStep === 0}
-                    onClick={() => handleClicks('handleBack')}
-                    className={classes.button}
-                  >
-                    Back
-                  </Button>
-                  <Button
-                    align="right"
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleClicks('handleNext')}
-                    className={classes.button}
-                  >
-                    {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                  </Button>
-                  </div>
-                </div>
-              </StepContent>
-            </Step>
-          ))}
-        </Stepper>
+        <Grid container direction="row" id="getstarted">
+          <Grid item xs={12} className={classes.Description}>
+            <Typography variant="subtitle1" align="left" gutterBottom>
+              Play N Loot
+            </Typography>
+            <Typography
+              variant="body2"
+              align="justify"
+              color="textSecondary"
+              component="p"
+            >
+              A user-friendly platform to participate in PUBG Mobile Tournaments and earn real loot!<br/><br/>
+              Earn coins on per kills and convert them into real money in your PayTM account! Register in a tournament now!
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Stepper activeStep={activeStep} orientation="vertical">
+              {steps.map((label, index) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                  <StepContent>
+                    <Box className={classes.stepContent}>{getStepContent(index)}</Box>
+                    <div className={classes.actionsContainer}>
+                      <div>
+                        <Button
+                          disabled={activeStep === 0}
+                          onClick={() => handleClicks('handleBack')}
+                          className={classes.button}
+                        >
+                          Back
+                        </Button>
+                        <Button
+                          align="right"
+                          variant="contained"
+                          color="primary"
+                          onClick={() => handleClicks('handleNext')}
+                          className={classes.button}
+                        >
+                          {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                        </Button>
+                      </div>
+                    </div>
+                  </StepContent>
+                </Step>
+              ))}
+            </Stepper>
+          </Grid>
         </Grid>
+        <Copyright />
         </Container>
-        <Grid item xs={12} sm={6}>
-          
-        </Grid>
-        
       </Grid>
     </div>
   );

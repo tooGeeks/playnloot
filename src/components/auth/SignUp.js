@@ -4,22 +4,14 @@ import { connect } from 'react-redux'
 import { signUp } from '../../store/actions/authActions'
 import useForm from "react-hook-form";
 //UI
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import { Link as MUILink} from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
+import { Avatar, Button, CssBaseline, TextField, Grid, Typography, Container, Link as MUILink } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import Copyright from '../layout/Copyright';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    minHeight: "100vh",
-    paddingBottom: theme.spacing(4),
+    marginBottom: theme.spacing(8),
   },
   paper: {
     marginTop: theme.spacing(2),
@@ -47,19 +39,6 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2),
   },
 }));
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <MUILink color="inherit" component={Link} to={'/'}>
-        PLAY N LOOT
-      </MUILink>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 const SignUp = (props) => {
   const classes = useStyles();
@@ -195,6 +174,7 @@ const SignUp = (props) => {
                 }}
                 fullWidth
                 id="mno"
+                type="tel"
                 label="Mobile No."
                 name="mno"
                 autoComplete="mno"
@@ -202,7 +182,9 @@ const SignUp = (props) => {
                   required: true,
                   minLength: {
                     value: 10
-                  }
+                  },
+                  maxLength: 10,
+                  pattern: /(7|8|9)\d{9}/
                 })}
                 error={!!errors.mno}
                 helperText={(errors.mno ? (errors.mno.type === 'required' ? "Mobile No is must!" : "Missed a digit! Check again") : "eg. 9850000000")}
@@ -272,9 +254,7 @@ const SignUp = (props) => {
         { authError ? <p>{authError}</p> : null }
 
       </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
+      <Copyright />
     </Container>
   );
 }
