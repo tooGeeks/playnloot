@@ -39,7 +39,7 @@ export const updateMatch = (mid,match)=>{
     }
 }
 
-export const enterMatch = (mid,uid)=>{
+export const enterMatch = (match,userData)=>{
     return(dispatch,getState,{getFirebase,getFirestore}) => {
         const st = getState();
         const {profile} = st.firebase;
@@ -52,12 +52,10 @@ export const enterMatch = (mid,uid)=>{
         }
         const cp = st.firebase.profile.pubgid;
         const db = getFirestore();
-        const matches = st.firestore.ordered.Matches;
-        const match = matches && findinMatches(matches,mid)
         switch(match.mode){
             case "Solo":
                 let cpmatches = st.firebase.profile.matches;
-                const isAlRegU = isinDocs(cpmatches,mid);
+                const isAlRegU = isinDocs(cpmatches,match.id);
                 let players = match.players;
                 const isAlRegM = isPlayerinMatch(players,cp);
                 console.log("isAlRegM : "+isAlRegM+" isAlRegU : "+isAlRegU);
@@ -65,16 +63,16 @@ export const enterMatch = (mid,uid)=>{
                 plno+=1;
                 if(!isAlRegM && !isAlRegU){
                     wallet-=2;
-                    cpmatches.push(mid);
+                    cpmatches.push(match.id);
                     players[cp] = 0;
-                    db.collection('Matches').doc(mid).set({
+                    db.collection('Matches').doc(match.id).set({
                         players:players,
                         plno:plno
                     },{merge:true}).then(()=>{
-                        db.collection('Users').doc(uid).set({matches:cpmatches,wallet},{merge:true})
+                        db.collection('Users').where('pubgid','==',cp).set({matches:cpmatches,wallet},{merge:true})
                         dispatch({ type: 'DIALOG_CLEAR' });
                         dispatch({ type: 'SNACKBAR', variant: 'success', message: "Success! You`ve enrolled in the match. Happy Looting!"});
-                        dispatch({type:"EN_MATCH",mid,uid})
+                        dispatch({type:"EN_MATCH",cp,'mid':match.id})
                     })
                 }else {
                     dispatch({type:"EN_MATCH_ALR"})

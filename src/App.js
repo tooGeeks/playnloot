@@ -13,6 +13,7 @@ import { ProtectedRoutes } from './components/auth/ProtectedRoutes'
 // Other
 import EnterMatch from './components/matches/EnterMatch'
 import EnrolledMatches from './components/matches/EnrolledMatches'
+import PlayerEnroll from './components/matches/PlayerEnroll'
 //import HandleCallbackPaytm from './components/wallet/HandleCallbackPaytm'
 //import HandleCallbackPaytmErr from './components/wallet/HandleCallbackPaytmErr'
 
@@ -101,6 +102,7 @@ const App = () => {
                 <ProtectedRoutes exact path='/wallet/:use/:mny' component={Wallet}/>
                 <ProtectedRoutes path="/entermatch/:mid" component={EnterMatch}/>
                 <ProtectedRoutes path="/enrolledmatches/" component={EnrolledMatches}/>
+                <ProtectedRoutes path="/playerEnroll/:mid" component={PlayerEnroll}/>
 
                 {/* <Route path="/p_callback/:mny" component={HandleCallbackPaytm}/>
                 <Route path="/p_callbackerr/" component={HandleCallbackPaytmErr}/> */}
