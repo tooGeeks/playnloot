@@ -188,7 +188,7 @@ function Dashboard(props) {
     }
 
     const enrolledMatches = profile.isLoaded && (profile.matches) ? Matches !== undefined ? (profile.matches.length !== 0) ? profile.matches && profile.matches.map((match, index) =>{
-      for (const i of Matches)  if(match === i.id) match = i;
+      for (const i of Matches) if(match === i.id) match = i;
       if(match.lrdate<getCurrentDate()){
         return(
           <Paper key={index}> 
@@ -197,15 +197,15 @@ function Dashboard(props) {
           </Paper>
         )
       }
-      return(
+      return( match.mtime &&
         <Grid className={classes.enPaper} key={index}>
-          <Grid item>
-            <Box padding={1.5}>
-              <Typography variant="body2"><Event className={classes.icons}/>&nbsp;{dateString(match.mdate)}&nbsp;</Typography>
-              <Typography variant="body2"><AccessAlarm className={classes.icons}/>&nbsp;{convt(1,match.mtime)}</Typography>
-            </Box>
-              <Typography align="right" className={classes.primryColor} style={{fontWeight: 500, paddingRight: 7, paddingBottom: 2}}>{match.name}</Typography>
-          </Grid>
+        <Grid item>
+          <Box padding={1.5}>
+            <Typography variant="body2"><Event className={classes.icons}/>&nbsp;{match && dateString(match.mdate)}&nbsp;</Typography>
+            <Typography variant="body2"><AccessAlarm className={classes.icons}/>&nbsp;{convt(1,match.mtime)}</Typography>
+          </Box>
+            <Typography align="right" className={classes.primryColor} style={{fontWeight: 500, paddingRight: 7, paddingBottom: 2}}>{match.name}</Typography>
+        </Grid>
         </Grid>
           //<li className="" key={match}><div><span>Match Name : {match}</span><Link className="secondary-item" to={"/entermatch/"+match}><button className="waves-effect waves-light hoverable btn-small">Details</button></Link></div></li>
       )
