@@ -62,15 +62,15 @@ const MatchSummary = (props) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     
-    const {match,isEnr} = props;//Passed By Calling Component
+    const {match} = props;//Passed By Calling Component
     const canEnroll = match.plno<100 ? true : false;//Checks if match is full?
     
     return(
     <>
         <ListItem className={classes.Item}>
-            <ListItemText primary={match.name} secondary={
+            <ListItemText style={{marginRight: 3}} primary={match.name} secondary={
                 <><Typography variant="caption">Match Date: {dateString(match.mdate)}</Typography></>} />
-            <Button disabled={isEnr} size="small" align="right" variant="outlined" color="primary"  edge="end" onClick={() => dispatch(showDialog({title: ("Enroll in " + (match.name)), content: <Details id={match.id} match={match} canEnroll={canEnroll}/>, actions: <Actions mid={match.id} canEnroll={canEnroll}/>}))}>Details</Button>
+            <Button size="small" align="right" variant="outlined" color="primary"  edge="end" onClick={() => dispatch(showDialog({title: ("Enroll in " + (match.name)), content: <Details id={match.id} match={match} canEnroll={canEnroll}/>, actions: <Actions mid={match.id} canEnroll={canEnroll}/>}))}>Details</Button>
         </ListItem>
     </>
     )
