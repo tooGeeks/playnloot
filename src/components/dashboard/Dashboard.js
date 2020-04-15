@@ -83,6 +83,21 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 12,
   },
   primryColor: { color: theme.palette.primary.main },
+  newMatchesBoxes: {
+    border: 3,
+    borderStyle: 'solid',
+    borderColor: theme.palette.background.default,
+    borderRadius: 4,
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  onBorderText: {
+    marginTop: -10,
+    marginLeft: 10,
+    paddingLeft: 4,
+    paddingRight: 4,
+    backgroundColor: theme.palette.background.paper,
+  },
 }));
 
 //unit for one coin (PaymentActions, Landing.js)
@@ -90,36 +105,42 @@ const unit = 5;
 
 function Dashboard(props) {
   const classes = useStyles();
-
   const { profile } = useSelector(
     state => state.firebase
   )
-
   const {Matches, Users} = useSelector(
     state => state.firestore.ordered
   )
-
-  
   const dispatch = useDispatch();
 
   useEffect(() => {
     if(profile.isLoaded ){
       dispatch(clearBackDrop())
-      
     }else dispatch(backDrop());
   }, [profile, props, dispatch]);
 
-  //const { matches, users } = props;
-  
-  console.table(Matches);
-  console.table(profile.matches);
+  if(profile.isLoaded && Matches){
+    var newSolo = [];
+    var newDuo = [];
+    var newSquad = [];
+    Matches.forEach((x) => { 
+      if(x.lrdate<getCurrentDate()) return null;
+      let isEnr =  isinDocs(profile.matches, x.id);
+      if(!isEnr){
+        switch (x.mode) {
+          case 'Solo': newSolo.push(x); break;
+          case 'Duo': newDuo.push(x); break;
+          case 'Squad': newSquad.push(x); break;
+          default: break;
+        }
+      }
+    });
+  }
 
   const [expanded, setExpanded] = React.useState('panel2');
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-
-  console.log(Users)
 
   const leaderDiv = Users ? 
     <TableContainer component={Paper} style={{maxHeight: 350,}}>
@@ -145,30 +166,27 @@ function Dashboard(props) {
       </Table>
     </TableContainer>
   : null
-  
-  const matchdiv = profile.isLoaded
-    ? Matches 
-      ? Matches && Matches.map(match =>{//Used to Generate MatchList using ternary operator
-        
-        if(match.lrdate<getCurrentDate()){//Hides a Match if its Last Enrollment Date has Passed
-          return null;
-        }
-        let isEnr =  isinDocs(profile.matches, match.id);//Checks if User has already ENrolled in the match
-        
-        console.log((match));
-        console.log(Matches.indexOf(match));
-        return(
-          
-            isEnr ? null : <MatchSummary match={match} indexPos={Matches.indexOf(match)} loc={"/entermatch/"} isEnr={isEnr}  bttnname={"Enroll"} key={match.id}/>
-          
-        )
-      }) 
-    : <React.Fragment>{/*Loading*/}</React.Fragment> 
-    : <React.Fragment>{/*Loading*/}</React.Fragment>
 
-    console.log(profile.matches);
-    console.log(profile);
-    const enMatchDiv = profile.isLoaded && (profile.matches) ? Matches !== undefined ? (profile.matches.length !== 0) ? profile.matches && profile.matches.map((match, index) =>{
+    const NewMatchesBox = (props) => {
+      return (
+        <Grid item xs={12} sm={4}>
+            <Box className={classes.newMatchesBoxes}>
+              <Box display="flex" flexDirection="row">
+                <Box fontSize={13} fontWeight="fontWeightMedium" letterSpacing={1} className={classes.onBorderText}>{props.type}</Box>
+              </Box>
+              <Box>
+                <List >
+                  {props.matchArr && props.matchArr.map((match) => {
+                    return <MatchSummary match={match} indexPos={Matches.indexOf(match)} bttnname={"Enroll"} key={match.id}/>
+                  })}
+                </List>
+              </Box>
+            </Box>
+          </Grid>
+      )
+    }
+
+    const enrolledMatches = profile.isLoaded && (profile.matches) ? Matches !== undefined ? (profile.matches.length !== 0) ? profile.matches && profile.matches.map((match, index) =>{
       for (const i of Matches)  if(match === i.id) match = i;
       if(match.lrdate<getCurrentDate()){
         return(
@@ -278,7 +296,7 @@ function Dashboard(props) {
                 direction="row"
                 justify="center"
                 spacing={1}>
-                {enMatchDiv}
+                {enrolledMatches}
               </Grid>
             </ExpansionPanelDetails>
           </ExpansionPanel>
@@ -287,9 +305,20 @@ function Dashboard(props) {
               <Typography className={expanded === 'panel3' ? classes.expanelHeading : classes.panelHeading}><b>NEW MATCHES</b></Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <List style={{minWidth: '100%'}}>
-                {matchdiv}
-              </List>
+              <Grid container spacing={2}>
+                {
+                  newSolo || newDuo || newSquad
+                  ? (<>
+                    
+                      {newSolo ? <NewMatchesBox type="Solo" matchArr={newSolo} /> : null}
+                      {newDuo ? <NewMatchesBox type="Duo" matchArr={newDuo} /> : null}
+                      {newSquad ? <NewMatchesBox type="Squad" matchArr={newSquad} /> : null}
+                    
+                    </>)
+                  :
+                    <Grid item xs={12}><Box fontSize={14} textAlign="center">Matches Comming Soon!</Box></Grid>
+                }
+              </Grid>
             </ExpansionPanelDetails>
           </ExpansionPanel>
         </Grid>
