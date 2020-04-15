@@ -116,52 +116,48 @@ const Landing = () => {
         </Grid>
         <Container>
         <Grid container direction="row" id="getstarted">
-          <Grid item xs={12} className={classes.Description}>
-            <Typography variant="subtitle1" align="left" gutterBottom>
-              Play N Loot
-            </Typography>
-            <Typography
-              variant="body2"
-              align="justify"
-              color="textSecondary"
-              component="p"
-            >
-              A user-friendly platform to participate in PUBG Mobile Tournaments and earn real loot!<br/><br/>
-              Earn coins on per kills and convert them into real money in your PayTM account! Register in a tournament now!
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Stepper activeStep={activeStep} orientation="vertical">
-              {steps.map((label, index) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                  <StepContent>
-                    <Box className={classes.stepContent}>{getStepContent(index)}</Box>
-                    <div className={classes.actionsContainer}>
-                      <div>
-                        <Button
-                          disabled={activeStep === 0}
-                          onClick={() => handleClicks('handleBack')}
-                          className={classes.button}
-                        >
-                          Back
-                        </Button>
-                        <Button
-                          align="right"
-                          variant="contained"
-                          color="primary"
-                          onClick={() => handleClicks('handleNext')}
-                          className={classes.button}
-                        >
-                          {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                        </Button>
+          <Grid item xs={12} sm={6}>
+            <Box fontSize="h6.fontSize" letterSpacing={1} textAlign="center" padding={2}>
+              Steps to Participate
+            </Box>
+            <Box display="flex" justifyContent="center">
+              <Stepper activeStep={activeStep} orientation="vertical" style={{maxWidth: '600px'}}>
+                {steps.map((label, index) => (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                    <StepContent>
+                      <Box className={classes.stepContent}>{getStepContent(index)}</Box>
+                      <div className={classes.actionsContainer}>
+                        <div>
+                          <Button
+                            disabled={activeStep === 0}
+                            onClick={() => handleClicks('handleBack')}
+                            className={classes.button}
+                          >
+                            Back
+                          </Button>
+                          <Button
+                            align="right"
+                            variant="contained"
+                            color="primary"
+                            onClick={() => handleClicks('handleNext')}
+                            className={classes.button}
+                          >
+                            {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  </StepContent>
-                </Step>
-              ))}
-            </Stepper>
-          </Grid>
+                    </StepContent>
+                  </Step>
+                ))}
+              </Stepper>
+            </Box>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Box fontSize="h6.fontSize" letterSpacing={1} textAlign="center" padding={2}>
+            Rules to follow
+          </Box>
+        </Grid>
         </Grid>
         <Copyright />
         </Container>

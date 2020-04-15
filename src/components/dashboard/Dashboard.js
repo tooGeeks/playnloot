@@ -40,8 +40,8 @@ const useStyles = makeStyles(theme => ({
     width: '1.2em',
   },
   killWallet: {
-    minHeight: theme.spacing(10),
-    minWidth: theme.spacing(10),
+    height: theme.spacing(10),
+    width: theme.spacing(10),
     textAlign: 'center',
     padding: theme.spacing(2),
     backgroundColor: theme.palette.background.paper,
