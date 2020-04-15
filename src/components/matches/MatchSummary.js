@@ -1,5 +1,6 @@
 import React from 'react';
 import {convt,dateString} from '../../Functions';
+import { useHistory } from 'react-router-dom';
 
 //Updates
 import { makeStyles, Typography, Button } from '@material-ui/core';
@@ -8,7 +9,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { deepOrange } from '@material-ui/core/colors';
 import {useDispatch, useSelector} from 'react-redux'
 import {showDialog} from '../../store/actions/uiActions'
-import {enterMatch} from '../../store/actions/MatchActions'
 
 /*
   This Component is used to Display the Details of a Match.
@@ -35,7 +35,7 @@ const Details = (props) => {
             <Typography>
                 Match Date: <b>{dateString(mdate)}</b><br/>
                 Match Time: <b>{convt(1,mtime)}</b><br/>
-                Last Registration Date: <b>{dateString(lrdate)}</b><br/>
+                Last Date: <b>{dateString(lrdate)}</b><br/>
                 Pros Enrolled: <b>{plno}</b><br/>
                 {props.canEnroll ? null : <Typography variant="caption" color="error">Match Full! Enroll in any another Match :)</Typography>}
             </Typography>
@@ -45,12 +45,13 @@ const Details = (props) => {
 
 const Actions = (props) => {
     const dispatch = useDispatch();
+    const history = useHistory();
     const { auth } = useSelector(
         state => state.firebase
     )
     return(
         <>
-            <Button disabled={!props.canEnroll} color="primary" onClick={() => dispatch(enterMatch(props.mid, auth.uid))}>
+            <Button disabled={!props.canEnroll} color="primary" onClick={() => history.push('/playerEnroll/' +(props.mid))}>
                 Enroll
             </Button>
         </>
