@@ -17,7 +17,7 @@ const CreateMatch = (props)=>{
         mdate:'',
         mtime:'',
         lrdate:'',
-        matchmode: 'cao'
+        mode: 'cao'
     })
     const handleChange = (e)=>{
         if(e.target.id!==undefined) setState({...state,[e.target.id]:e.target.value});
@@ -36,12 +36,12 @@ const CreateMatch = (props)=>{
         const mdt = state.mdate;
         const ldt = state.lrdate;
         const mti = state.mtime
-        const matchmode = state.matchmode
+        const mode = state.mode
         if(mti===undefined){
             alert("Please Specify the Match Time")
             return;
         }
-        if(matchmode==='cao'){
+        if(mode==='cao'){
             alert("Please Specify the Match Mode")
             return;
         }
@@ -90,9 +90,9 @@ const CreateMatch = (props)=>{
                     <div className="row">
                         <div className="input-field col s5 white-text">
                                 {state && <Select
-                                    id="matchmode"
-                                    name="matchmode"
-                                    value={state.matchmode}
+                                    id="mode"
+                                    name="mode"
+                                    value={state.mode}
                                     onChange={handleChange}
                                     style={{width:'100px',color:"#ffffff"}}
                                 >
@@ -101,7 +101,7 @@ const CreateMatch = (props)=>{
                                 </Select>}
                         </div>
                         <div className="input-field col s2">
-                            <button id="crnmbttn" disabled={!state.name || !state.mdate || !state.mtime || !state.lrdate || state.matchmode==="cao"} className="waves-effect waves-light btn hoverable">Create Match</button> 
+                            <button id="crnmbttn" disabled={!state.name || !state.mdate || !state.mtime || !state.lrdate || state.mode==="cao"} className="waves-effect waves-light btn hoverable">Create Match</button> 
                         </div>
                     </div>
                 </form>

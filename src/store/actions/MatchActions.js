@@ -53,34 +53,45 @@ export const enterMatch = (mid,uid)=>{
         const cp = st.firebase.profile.pubgid;
         const db = getFirestore();
         const matches = st.firestore.ordered.Matches;
-        const match = matches ? matches.find((match)=>{
-            return(match.id===mid)
-        }) : null;
-        let cpmatches = st.firebase.profile.matches;
-        const isAlRegU = isinDocs(cpmatches,mid);
-        let players = match.players;
-        const isAlRegM = isPlayerinMatch(players,cp);
-        console.log("isAlRegM : "+isAlRegM+" isAlRegU : "+isAlRegU);
-        let plno = match.plno;
-        plno+=1;
-        if(!isAlRegM && !isAlRegU){
-            wallet-=2;
-            cpmatches.push(mid);
-            players[cp] = 0;
-            db.collection('Matches').doc(mid).set({
-                players:players,
-                plno:plno
-            },{merge:true}).then(()=>{
-                db.collection('Users').doc(uid).set({matches:cpmatches,wallet},{merge:true})
-                dispatch({ type: 'DIALOG_CLEAR' });
-                dispatch({ type: 'SNACKBAR', variant: 'success', message: "Success! You`ve enrolled in the match. Happy Looting!"});
-                dispatch({type:"EN_MATCH",mid,uid})
-            })
-        }else {
-            dispatch({type:"EN_MATCH_ALR"})
-            dispatch({ type: 'DIALOG_CLEAR' });
-            dispatch({ type: 'SNACKBAR', variant: 'success', message: "Woaah! You`ve already Enrolled in this Match!"});
+        const match = matches && findinMatches(matches,mid)
+        switch(match.mode){
+            case "Solo":
+                let cpmatches = st.firebase.profile.matches;
+                const isAlRegU = isinDocs(cpmatches,mid);
+                let players = match.players;
+                const isAlRegM = isPlayerinMatch(players,cp);
+                console.log("isAlRegM : "+isAlRegM+" isAlRegU : "+isAlRegU);
+                let plno = match.plno;
+                plno+=1;
+                if(!isAlRegM && !isAlRegU){
+                    wallet-=2;
+                    cpmatches.push(mid);
+                    players[cp] = 0;
+                    db.collection('Matches').doc(mid).set({
+                        players:players,
+                        plno:plno
+                    },{merge:true}).then(()=>{
+                        db.collection('Users').doc(uid).set({matches:cpmatches,wallet},{merge:true})
+                        dispatch({ type: 'DIALOG_CLEAR' });
+                        dispatch({ type: 'SNACKBAR', variant: 'success', message: "Success! You`ve enrolled in the match. Happy Looting!"});
+                        dispatch({type:"EN_MATCH",mid,uid})
+                    })
+                }else {
+                    dispatch({type:"EN_MATCH_ALR"})
+                    dispatch({ type: 'DIALOG_CLEAR' });
+                    dispatch({ type: 'SNACKBAR', variant: 'success', message: "Woaah! You`ve already Enrolled in this Match!"});
+                }
+                break;
+            case "Duo":
+                console.log("Duo")
+                break;
+            case "Squad":
+                console.log("Squad")
+                break;
+            default:
+                break;
         }
+        
         
     }
 }
