@@ -12,15 +12,11 @@ import { Link as MUILink} from '@material-ui/core';
 import { withStyles } from "@material-ui/core/styles";
 import { Container, Typography, CssBaseline, Avatar, TextField, Button, Grid, Box } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Copyright from '../layout/Copyright'
 
 const styles = theme => ({
   root: {
-    width: "100%",
-    minHeight: "100vh",
-    paddingBottom: 80
-  },
-  hero: {
-    
+    marginBottom: theme.spacing(8),
   },
   paper: {
     marginTop: theme.spacing(8),
@@ -43,19 +39,6 @@ const styles = theme => ({
     padding: theme.spacing(3)
   },
 })
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <MUILink color="inherit" to={'/'}>
-        Play N Loot
-      </MUILink>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 const PassReset = () => {
   const dispatch = useDispatch();
@@ -173,16 +156,15 @@ const SignIn = (props) => {
           </Typography>
           <Typography
             variant="body2"
-            align="center"
+            align="justify"
             color="textSecondary"
             component="p"
           >
-            Something here to give the footer a purpose!
+            A user-friendly platform to participate in PUBG Mobile Tournaments and earn real loot!<br/><br/>
+            Earn coins on per kills and convert them into real money in your PayTM account! Register in a tournament now!
           </Typography>
-          <Box mt={8}>
-            <Copyright />
-          </Box>
-        </footer>
+          <Copyright />
+      </footer>
     </Container>
     </div>
   );

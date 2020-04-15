@@ -14,12 +14,12 @@ import {isinDocs,getCurrentDate, dateString, convt} from '../../Functions'
 import {compose} from 'redux';
 import MatchSummary from '../matches/MatchSummary';
 import { backDrop, clearBackDrop } from '../../store/actions/uiActions'
+import Copyright from '../layout/Copyright'
 
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    minHeight: '100vh',
-    paddingBottom: 65,
+    marginBottom: theme.spacing(8),
     paddingTop: 10,
   },
   paper: {
@@ -304,6 +304,7 @@ function Dashboard(props) {
           </Paper>
         </Grid> */}
       </Grid>
+      <Copyright />
     </Container>
   );
 }
