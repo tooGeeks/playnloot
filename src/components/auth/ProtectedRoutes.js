@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { showSnackbar } from '../../store/actions/uiActions'
 
 export const ProtectedRoutes = ({ component: Component, ...rest }) => {
-    const dispacth = useDispatch();
+    const dispatch = useDispatch();
     const { auth } = useSelector(
         state => state.firebase
     )
@@ -14,7 +14,7 @@ export const ProtectedRoutes = ({ component: Component, ...rest }) => {
             (props) => {
                 if(auth.uid) return <Component {...props}/>
                 else {
-                    dispacth(showSnackbar({variant: 'info', message: "Sign-in to continue!"}))
+                    dispatch(showSnackbar({variant: 'info', message: "Sign-in to continue!"}))
                     return <Redirect to={
                         {
                             pathname: '/signin',
