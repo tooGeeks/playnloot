@@ -38,10 +38,24 @@ export const dateString = (date)=>{//Returs 'date' in Readable Format Ex. 26 Dec
 export const isinDocs = (docs,id)=>{//Used to Check if a certain doc exists in a given list.
     return docs.find((doc)=>id===doc) ? true : false;
 }
-export const isPlayerinMatch = (docs,id)=>{//Used to Check if a certain doc exists in a given list.
-    return Object.keys(docs).find((doc)=>{
-        return id===doc
-    }) ? true : false;
+export const isPlayerinMatch = (docs,id, mode="Solo")=>{//Used to Check if a certain doc exists in a given list.
+    if(mode==="Solo"){
+        console.log(mode)
+            return Object.keys(docs).find((doc)=>{
+                return id===doc
+                }) ? true : false;
+    }
+    else{
+        let barr = []
+        Object.keys(docs).forEach((doc)=>{
+            Object.keys(docs[doc]).forEach((doc1)=>{
+                console.log(id)
+                barr.push(doc1===id)
+            })
+        })
+        console.log(barr)
+        return barr.length===0 ? false : (barr.includes(true))
+    }
 }
 export const findinMatches = (docs,id)=>{//Used to Find and return a match using its name Ex. MTH2001
     return docs.find((doc)=>id===doc.id);

@@ -83,47 +83,52 @@ export const enterMatch = (match,userData)=>{
             case "Duo":
                 //let parr = [userData.mate1]
                 const {mate1} = userData
-                /**
+                if(wallet<4){
+                    dispatch({ type: 'SNACKBAR', variant: 'error', message: "Insufficient Coins! Please, buy required Coins and try again!"});
+                    return;
+                }
                 db.collection("Users").where('pubgid','==',mate1).get().then(snaps=>{
                     if(snaps.empty) {
                         dispatch({ type: 'SNACKBAR', variant: 'error', message: "Your friend wasn't found. Check Your Mate's PUBGID!"});
                         return;
                     }
                     let players = match.players;
-                    let cp2 = snaps.docs[0].data()
+                    let profile2 = snaps.docs[0].data()
+                    let cp2 = mate1
                     let cp1matches = st.firebase.profile.matches;
-                    let cp2matches = cp2.matches;
+                    let cp2matches = profile2.matches;
                     let parr = [cp,mate1]
                     const isAlRegU1 = isinDocs(cp1matches,match.id);
-                    const isAlRegM1 = isPlayerinMatch(players,cp);
+                    const isAlRegM1 = isPlayerinMatch(players,cp,"Duo");
                     const isAlRegU2 = isinDocs(cp2matches,match.id);
-                    const isAlRegM2 = isPlayerinMatch(players,cp2);
+                    const isAlRegM2 = isPlayerinMatch(players,cp2,"Duo");
                     console.log("U1 : "+isAlRegU1+" M1 : "+isAlRegM1+" U2 : "+isAlRegU2+" M2 : "+isAlRegM2)
                     if(!isAlRegM1 && !isAlRegU1 && !isAlRegM2 && !isAlRegU2){
                         cp1matches.push(match.id)
                         cp2matches.push(match.id)
                         players[cp] = {[cp]:0,[mate1]:0}
                         let plno = parseInt(match.plno)+2
-                        let wallet = profile.wallet-4
-                        
+                        wallet -= 4
                         db.collection("Matches").doc(match.id).set({players,plno},{merge:true}).then(()=>{
-                            db.collection("Users").where('pubgid','==',cp).update({matches:cp1matches,wallet},{merge:true}).then(()=>{
-                                db.collection("Users").where('pubgid','in',parr).get().then((snaps)=>{
-                                    snaps.docs.forEach(doc=>{
-                                        if(doc.data().pubgid===cp)
-                                            db.collection("Users").doc(doc.id).set({wallet,matches:cp1matches},{merge:true})
-                                        else
-                                            db.collection("Users").doc(doc.id).set({matches:cp2matches},{merge:true})
-                                            dispatch({ type: 'SNACKBAR', variant: 'success', message: "Success! You`ve enrolled in the match. Happy Looting!"});
-
-                                    })
+                            db.collection("Users").where('pubgid','in',parr).get().then((snaps)=>{
+                                snaps.docs.forEach(doc=>{
+                                    if(doc.data().pubgid===cp)
+                                        db.collection("Users").doc(doc.id).set({wallet,matches:cp1matches},{merge:true})
+                                    else
+                                        db.collection("Users").doc(doc.id).set({matches:cp2matches},{merge:true})
+                                        dispatch({ type: 'SNACKBAR', variant: 'success', message: "Success! You`ve enrolled in the match. Happy Looting!"})
                                 })
                             })
                         })
                         
                     }else{
+                        if(isAlRegM1 && isAlRegU1 && isAlRegM2 && isAlRegU2){
+                            dispatch({ type: 'SNACKBAR', variant: 'success', message: "Woaah! You`ve already Enrolled in this Match with your friend!"});
+                            return;
+                        }
                         if(isAlRegM1 && isAlRegU1){
                             dispatch({ type: 'SNACKBAR', variant: 'error', message: "You've already enrolled in this match!"});
+                            
                         }
                         if(isAlRegM2 && isAlRegU2){
                             dispatch({ type: 'SNACKBAR', variant: 'error', message: "Your friend has already enrolled in this match!"});
@@ -131,7 +136,6 @@ export const enterMatch = (match,userData)=>{
                         }
                     }
                 })
-                */
                 console.log("Duo",userData)
                 break;
             case "Squad":
