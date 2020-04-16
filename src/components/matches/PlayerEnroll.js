@@ -5,6 +5,7 @@ import { compose } from 'redux';
 import { connect, useDispatch } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { enterMatch } from '../../store/actions/MatchActions';
+import { clearDialog } from '../../store/actions/uiActions'
 
 
 const useStyles = makeStyles(theme=>({
@@ -17,7 +18,7 @@ const useStyles = makeStyles(theme=>({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
-    back: {
+    paper: {
         textAlign: 'center',
         padding: theme.spacing(2),
         paddingTop : theme.spacing(2),
@@ -27,12 +28,11 @@ const useStyles = makeStyles(theme=>({
 
 const PlayerEnroll = (props) => {
     const classes = useStyles()
-    const mid = props.match.params.mid
     const dispatch = useDispatch();
-    const {Matches, Users} = props
+    dispatch(clearDialog()); //Clear Dialog
+    const {Matches} = props
     const match = Matches && Matches[0]
-    const {register,reset,errors,handleSubmit} = useForm()
-    //console.log(match)
+    const {register,errors,handleSubmit} = useForm()
     let enpdiv; 
     const enroll = (data, e)=>{
         e.preventDefault();
@@ -81,7 +81,7 @@ const PlayerEnroll = (props) => {
     return (
         <React.Fragment>
             <Container className={classes.root}>
-                <Paper className={classes.back}>
+                <Paper className={classes.paper}>
                     <Typography component="h1" variant="h5">Enroll in {match && match.name}</Typography><br/><br/>
                     <form noValidate onSubmit={handleSubmit(enroll)}>
                         {enpdiv}<br/>

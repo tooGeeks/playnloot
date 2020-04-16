@@ -19,7 +19,8 @@ const useStyles = makeStyles(theme => ({
         display: 'inline',
       },
     Item: {
-        
+        paddingTop: 0,
+        paddingBottom: 0,
     },
     orange: {
         color: theme.palette.getContrastText(deepOrange[500]),
@@ -44,14 +45,10 @@ const Details = (props) => {
 }
 
 const Actions = (props) => {
-    const dispatch = useDispatch();
     const history = useHistory();
-    const { auth } = useSelector(
-        state => state.firebase
-    )
     return(
         <>
-            <Button disabled={!props.canEnroll} color="primary" onClick={() => history.push('/playerEnroll/' +(props.mid))}>
+            <Button disabled={!props.canEnroll} color="primary" onClick={() => history.push('/playerEnroll/' + (props.mid))}>
                 Enroll
             </Button>
         </>
@@ -70,7 +67,7 @@ const MatchSummary = (props) => {
     <>
         <ListItem className={classes.Item}>
             <ListItemText style={{marginRight: 3}} primary={match.name} secondary={
-                <><Typography variant="caption">Match Date: {dateString(match.mdate)}</Typography></>} />
+                <><Typography variant="caption">On: {dateString(match.mdate)}<br/>At: {match.mtime}</Typography></>} />
             <Button size="small" align="right" variant="outlined" color="primary"  edge="end" onClick={() => dispatch(showDialog({title: ("Enroll in " + (match.name)), content: <Details id={match.id} match={match} canEnroll={canEnroll}/>, actions: <Actions mid={match.id} canEnroll={canEnroll}/>}))}>Details</Button>
         </ListItem>
     </>
