@@ -38,7 +38,7 @@ import Landing from './components/layout/Landing';
 import Nav from "./components/layout/Nav";
 import SnackSnackbar from './components/SnackSnackbar'
 import AlertDialog from './components/AlertDialog'
-import BackDrop from './components/BackDrop';
+import BackDrop from './components/BackDrop/BackDrop';
 import { ReactComponent as Loading } from './imgs/loading.svg';
 import { dark } from '@material-ui/core/styles/createPalette';
 

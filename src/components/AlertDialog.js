@@ -5,7 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 //import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Slide from '@material-ui/core/Slide';
+import Grow from '@material-ui/core/Grow';
 
 import { useDispatch, useSelector } from "react-redux";
 import { clearDialog } from "../store/actions/uiActions";
@@ -13,7 +13,7 @@ import { Divider } from '@material-ui/core';
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <Grow ref={ref} {...props} />;
 });
 
 export default function AlertDialog() {

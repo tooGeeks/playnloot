@@ -308,12 +308,12 @@ function Dashboard(props) {
             <ExpansionPanelDetails>
               <Grid container spacing={2}>
                 {
-                  newSolo || newDuo || newSquad
+                  newSolo && newDuo  && newSquad
                   ? (<>
                     
-                      {newSolo ? <NewMatchesBox type="Solo" matchArr={newSolo} /> : null}
-                      {newDuo ? <NewMatchesBox type="Duo" matchArr={newDuo} /> : null}
-                      {newSquad ? <NewMatchesBox type="Squad" matchArr={newSquad} /> : null}
+                      {newSolo.length !== 0 ? <NewMatchesBox type="Solo" matchArr={newSolo} /> : null}
+                      {newDuo.length !== 0 ? <NewMatchesBox type="Duo" matchArr={newDuo} /> : null}
+                      {newSquad.length !== 0 ? <NewMatchesBox type="Squad" matchArr={newSquad} /> : null}
                     
                     </>)
                   :

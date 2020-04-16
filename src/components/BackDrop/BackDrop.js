@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { clearBackDrop } from "../store/actions/uiActions";
+import { clearBackDrop } from "../../store/actions/uiActions";
+import styles from './BackDrop.module.css'
 
 //UI
 import { Backdrop, CircularProgress } from '@material-ui/core'
@@ -33,7 +34,12 @@ export default function BackDrop(props) {
         open={backDropOpen}
         //onClick={handleClose}
       >
-        <CircularProgress color="inherit" />
+        {/* <CircularProgress color="inherit" /> */}
+        <div className={styles.spinner}>
+          <div className={styles.bounce1}></div>
+          <div className={styles.bounce2}></div>
+          <div className={styles.bounce3}></div>
+        </div>
       </Backdrop>
     );
 }

@@ -70,13 +70,11 @@ export const enterMatch = (match,userData)=>{
                         plno:plno
                     },{merge:true}).then(()=>{
                         db.collection('Users').doc(auth.uid).set({matches:cpmatches,wallet},{merge:true})
-                            dispatch({ type: 'DIALOG_CLEAR' })
                             dispatch({ type: 'SNACKBAR', variant: 'success', message: "Success! You`ve enrolled in the match. Happy Looting!"});
                             dispatch({type:"EN_MATCH",cp,'mid':match.id})
                     })
                 }else {
                     dispatch({type:"EN_MATCH_ALR"})
-                    dispatch({ type: 'DIALOG_CLEAR' });
                     dispatch({ type: 'SNACKBAR', variant: 'success', message: "Woaah! You`ve already Enrolled in this Match!"});
                 }
                 break;
