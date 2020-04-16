@@ -69,16 +69,9 @@ export const enterMatch = (match,userData)=>{
                         players:players,
                         plno:plno
                     },{merge:true}).then(()=>{
-<<<<<<< HEAD
-                        db.collection('Users').where('pubgid','==',cp).set({matches:cpmatches,wallet},{merge:true})
-                        dispatch({ type: 'SNACKBAR', variant: 'success', message: "Success! You`ve enrolled in the match. Happy Looting!"});
-                        dispatch({type:"EN_MATCH",cp,'mid':match.id})
-=======
                         db.collection('Users').doc(auth.uid).set({matches:cpmatches,wallet},{merge:true})
-                            dispatch({ type: 'DIALOG_CLEAR' })
                             dispatch({ type: 'SNACKBAR', variant: 'success', message: "Success! You`ve enrolled in the match. Happy Looting!"});
                             dispatch({type:"EN_MATCH",cp,'mid':match.id})
->>>>>>> 0824694924931de953d33956f56229ef978cdd5c
                     })
                 }else {
                     dispatch({type:"EN_MATCH_ALR"})
