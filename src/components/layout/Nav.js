@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
-import SignedIn, { SignedInMenu } from './SignedIn'
-import SignedOut, { SignedOutMenu } from './SignedOut'
+import SignedIn, { SignedInMenu } from '../auth/SignedIn'
+import SignedOut, { SignedOutMenu } from '../auth/SignedOut'
 //UI
 import AppBar from '@material-ui/core/AppBar';
 import { makeStyles, Typography } from '@material-ui/core';

@@ -6,7 +6,7 @@ import ProjectDetails from './components/projects/ProjectDetails'
 import SignIn from './components/auth/SignIn'
 import SignUp from './components/auth/SignUp'
 import CreateProject from './components/projects/CreateProject'
-import Wallet from './components/wallet/Wallet'
+import Wallet from './components/pages/wallet/Wallet'
 import { isLoaded } from 'react-redux-firebase'
 import {useSelector} from "react-redux"
 import { ProtectedRoutes } from './components/auth/ProtectedRoutes'
@@ -34,11 +34,11 @@ import SendNotifications from './components/adminPanel/SendNotifications'
 import { MuiThemeProvider, createMuiTheme  } from '@material-ui/core/styles';
 import themeObject from './themeObject.json'
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Landing from './components/layout/Landing';
+import Landing from './components/pages/Landing';
 import Nav from "./components/layout/Nav";
 import SnackSnackbar from './components/SnackSnackbar'
 import AlertDialog from './components/AlertDialog'
-import BackDrop from './components/BackDrop/BackDrop';
+import BackDrop from './components/BackDrop';
 import { ReactComponent as Loading } from './imgs/loading.svg';
 import { dark } from '@material-ui/core/styles/createPalette';
 
@@ -103,9 +103,6 @@ const App = () => {
                 <ProtectedRoutes path="/entermatch/:mid" component={EnterMatch}/>
                 <ProtectedRoutes path="/enrolledmatches/" component={EnrolledMatches}/>
                 <ProtectedRoutes path="/playerEnroll/:mid" component={PlayerEnroll}/>
-
-                {/* <Route path="/p_callback/:mny" component={HandleCallbackPaytm}/>
-                <Route path="/p_callbackerr/" component={HandleCallbackPaytmErr}/> */}
 
                 {/* Admin  Paths */}
                 <ProtectedRoutes path="/admin/creatematch" component={CreateMatch}/>

@@ -8,7 +8,7 @@ const Copyright = () => {
             <Box fontSize={12}></Box>
             <Typography variant="body2" color="textSecondary" align="center">
                 {'Copyright © '}
-                <MUILink color="inherit" component={Link} to={'/'}>
+                <MUILink color="inherit" component={Link} to={'/#welcome'}>
                   Play N Loot
                 </MUILink>{' '}
                 {new Date().getFullYear()}
