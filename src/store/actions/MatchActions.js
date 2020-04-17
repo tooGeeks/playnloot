@@ -65,16 +65,15 @@ export const enterMatch = (match,userData)=>{
                     let players = match.players;
                     const isAlRegM = isPlayerinMatch(players,cp);
                     console.log("isAlRegM : "+isAlRegM+" isAlRegU : "+isAlRegU);
-                    let plno = match.plno;
-                    plno+=1;
+                    let plno = match.plno+1
                     if(!isAlRegM && !isAlRegU){
-                        wallet-=2;
-                        cpmatches.push(match.id);
                         players[cp] = 0;
                         db.collection('Matches').doc(match.id).set({
                             players:players,
                             plno:plno
                         },{merge:true}).then(()=>{
+                            cpmatches.push(match.id);
+                            wallet-=2;
                             db.collection('Users').doc(auth.uid).set({matches:cpmatches,wallet},{merge:true})
                                 dispatch({ type: 'SNACKBAR', variant: 'success', message: "Success! You`ve enrolled in the match. Happy Looting!"});
                                 dispatch({type:"EN_MATCH",cp,'mid':match.id})
@@ -124,7 +123,7 @@ export const enterMatch = (match,userData)=>{
                                     })
                                 })
                             })
-                            
+
                         }else{
                             if(isAlRegM1 && isAlRegU1 && isAlRegM2 && isAlRegU2){
                                 dispatch({ type: 'SNACKBAR', variant: 'success', message: "Woaah! You`ve already Enrolled in this Match with your friend!"});
@@ -132,7 +131,7 @@ export const enterMatch = (match,userData)=>{
                             }
                             if(isAlRegM1 && isAlRegU1){
                                 dispatch({ type: 'SNACKBAR', variant: 'error', message: "You've already enrolled in this match!"});
-                                
+
                             }
                             if(isAlRegM2 && isAlRegU2){
                                 dispatch({ type: 'SNACKBAR', variant: 'error', message: "Your friend has already enrolled in this match!"});
