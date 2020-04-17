@@ -44,19 +44,22 @@ export const enterMatch = (match,userData)=>{
         const st = getState();
         const {profile, auth} = st.firebase;
         let wallet = profile.wallet;
+        const db = getFirestore();
         if(wallet<2){
             dispatch({type:"EN_MATCH_ERR"})
             //dispatch({ type: 'SNACKBAR', variant: 'error', message: "An Error Occured\nTry Again!\n or Contact Admin"});
             dispatch({ type: 'SNACKBAR', variant: 'error', message: "Insufficient Coins! Please, buy required Coins and try again!"});
             return;
         }
-        if(match.plno>=100){
-            dispatch({type:"EN_MATCH_ERR"})
-            dispatch({ type: 'SNACKBAR', variant: 'error', message: "Match is Full!"});
-            return
-        }
+        db.collection('Matches').doc(match.id).get().then((doc)=>{
+            if(doc.data().plno>=100){
+                dispatch({type:"EN_MATCH_ERR"})
+                dispatch({ type: 'SNACKBAR', variant: 'error', message: "Match is Full!"});
+                return
+            }
+        })
+        
         const cp = profile.pubgid;
-        const db = getFirestore();
         switch(match.mode){
             case "Solo":
                 let cpmatches = st.firebase.profile.matches;
