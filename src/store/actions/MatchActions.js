@@ -50,6 +50,11 @@ export const enterMatch = (match,userData)=>{
             dispatch({ type: 'SNACKBAR', variant: 'error', message: "Insufficient Coins! Please, buy required Coins and try again!"});
             return;
         }
+        if(match.plno>=100){
+            dispatch({type:"EN_MATCH_ERR"})
+            dispatch({ type: 'SNACKBAR', variant: 'error', message: "Match is Full!"});
+            return
+        }
         const cp = profile.pubgid;
         const db = getFirestore();
         switch(match.mode){
