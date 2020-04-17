@@ -7,6 +7,7 @@ import SignIn from './components/auth/SignIn'
 import SignUp from './components/auth/SignUp'
 import CreateProject from './components/projects/CreateProject'
 import Wallet from './components/pages/wallet/Wallet'
+import RequestWithDraw from './components/pages/wallet/RequestWithDraw'
 import { isLoaded } from 'react-redux-firebase'
 import {useSelector} from "react-redux"
 import { ProtectedRoutes } from './components/auth/ProtectedRoutes'
@@ -100,6 +101,7 @@ const App = () => {
                 <Route exact path='/' component={Landing}/>
                 {/* <Route exact path='/:gti' component={Landing}/> This is intended for Getting-Started Tour*/}
                 <ProtectedRoutes exact path='/wallet/:use/:mny' component={Wallet}/>
+                <ProtectedRoutes path="/reqwithdrawal" component={RequestWithDraw} />
                 <ProtectedRoutes path="/entermatch/:mid" component={EnterMatch}/>
                 <ProtectedRoutes path="/enrolledmatches/" component={EnrolledMatches}/>
                 <ProtectedRoutes path="/playerEnroll/:mid" component={PlayerEnroll}/>

@@ -152,8 +152,6 @@ export default function Wallet(props) {
                                     Total: [{coins.coins}] x {unit} = ₹{(coins.coins)*unit}
                                 </Typography>
                             </Paper>
-                                    
-
                             </CardContent>
                             <CardActions>
                                     <Button type="submit" className={classes.buy} style={{width: 120}} 

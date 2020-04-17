@@ -234,7 +234,7 @@ function Dashboard(props) {
               </Grid>
             </Grid>
         </Grid>
-        <Grid xs={12} sm={6} container alignItems='flex-end' justify='space-around' style={{marginBottom: 20}}>
+        <Grid container item xs={12} sm={6} alignItems='flex-end' justify='space-around' style={{marginBottom: 20}}>
           <Grid item align="center">
             <Paper className={classes.killWallet}>
               <Typography>
