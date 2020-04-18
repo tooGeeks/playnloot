@@ -6,8 +6,8 @@ import { findinMatches } from '../../../Functions'
 import { cancelWithdrawal, requestWithdrawal } from '../../../store/actions/PaymentActions';
 import useForm from "react-hook-form";
 
-import { makeStyles, Grid, Container, Card, CardHeader, IconButton, CardContent, Typography, TextField, CardActions, Button, Box } from '@material-ui/core'
-import { AttachMoney } from '@material-ui/icons'
+import { makeStyles, Grid, Container, Card, CardHeader, IconButton, CardContent, Typography, TextField, CardActions, Button, Box, Divider } from '@material-ui/core'
+import { AttachMoney, AccountBalanceWallet } from '@material-ui/icons'
 import Copyright from '../../layout/Copyright';
 
 const useStyles = makeStyles(theme => ({
@@ -31,12 +31,15 @@ const useStyles = makeStyles(theme => ({
         width: '10rem', 
         height: '10rem', 
         backgroundColor: theme.palette.background.paper,
+        border: 2,
+        borderStyle: 'solid',
         borderRadius: 4,
         boxShadow: 2,
         display: 'flex',
         flexDirection: 'column',
-        padding: 10,
     },
+    pendingBox:{ borderColor: '#64b5f6', },
+    successBox: { borderColor: '#81c784', },
     footer: {
         marginTop: 'auto',
         marginBottom: theme.spacing(10)
@@ -54,8 +57,7 @@ const RequestWithDraw = () => {
     
     const { register, handleSubmit, errors, reset } = useForm();
     const [ data, setData ] = useState({coins: 0, mno: 0, pmode: ''});
-    const handleChange2 = (e) => {
-        console.log((e.target.id));
+    const handleChange = (e) => {
         setData({...data,[e.target.id]:e.target.value})
     }
 
@@ -104,7 +106,7 @@ const RequestWithDraw = () => {
                                         <Grid container item xs={12} sm={6} spacing={1}>
                                             <Grid item xs={6}>
                                                 <TextField variant="filled" fullWidth size="small" required name="coins" id="coins" label="No of Coins" type="number"
-                                                    onChange={handleChange2}
+                                                    onChange={handleChange}
                                                     helperText={errors.coins ? errors.coins.type ==="required" ? "You forgot this!" : errors.coins.type==="withinAvail" ? `You can only deduct ${profile.wallet - 1} coins` : null : "eg. 2 coins ie. ₹10"}
                                                     InputLabelProps={{ shrink: true, }}
                                                     inputRef={ register({
@@ -117,7 +119,7 @@ const RequestWithDraw = () => {
                                                 />
                                             </Grid>
                                             <Grid item xs={6}>
-                                                <TextField id="pmode" name="pmode" fullWidth select label="Payment Mode" onChange={handleChange2}
+                                                <TextField id="pmode" name="pmode" fullWidth select label="Payment Mode" onChange={handleChange}
                                                   value={data.pmode} SelectProps={{ native: true, }}
                                                   inputRef={ register({ required: true, }) } variant="filled" size="small"
                                                   helperText={`Payment Option`}
@@ -131,7 +133,7 @@ const RequestWithDraw = () => {
                                             </Grid>
                                             <Grid item xs={12}>
                                                 <TextField variant="filled" fullWidth size="small" required name="mno" id="mno" label="Confirm Mobile No."
-                                                    type="number" onChange={handleChange2} InputLabelProps={{ shrink: true, }}
+                                                    type="number" onChange={handleChange} InputLabelProps={{ shrink: true, }}
                                                     inputRef={
                                                         register({ required: true, minLength: { value: 10 },
                                                             validate: {  matchNos: value => parseInt(value) === profile.mno || "" },
@@ -157,20 +159,28 @@ const RequestWithDraw = () => {
                 </Grid>
                 <Grid item xs={12}><Box fontSize="h6.fontSize" letterSpacing={1} textAlign="left" padding={2}>Previous Requests</Box></Grid>
                 <Grid container item xs={12} spacing={1} id="PrevRequests" justify="center" alignItems="flex-start">
-                    <Grid item xs={6} sm={4}><Box boxShadow={2} className={classes.prevBox}>
-                        <Box textAlign="center">Cash</Box>
+                    <Grid item xs={6} sm={4}><Box boxShadow={2} className={`${classes.prevBox} ${classes.successBox}`}>
+                        <Box textAlign="center" fontSize={17} fontWeight="fontWeightMedium" style={{ color:'#121212', backgroundColor: '#81c784', padding: 2}}>Paid</Box>
                         <Box display="flex" flexDirection="row">
-                            <Box>40</Box>
+                            <Box>40</Box>&nbsp;
                             <Box>200</Box>
                         </Box>
                         <Box>On: 2020-02-29</Box>
-                        <Box>Status: Pending</Box>
-                        <Box textAlign="center"><Button variant="outlined" size="small">Cancel</Button></Box>
+                        {/* <Box textAlign="center"><Button variant="outlined" size="small" color="primary">Cancel</Button></Box> */}
                     </Box></Grid>
-                    <Grid item xs={6} sm={4}><Box boxShadow={2} className={classes.prevBox}></Box></Grid>
-                    <Grid item xs={6} sm={4}><Box boxShadow={2} className={classes.prevBox}></Box></Grid>
-                    <Grid item xs={6} sm={4}><Box boxShadow={2} className={classes.prevBox}></Box></Grid>
-                    <Grid item xs={6} sm={4}><Box boxShadow={2} className={classes.prevBox}></Box></Grid>
+                    <Grid item xs={6} sm={4}><Box boxShadow={2} className={`${classes.prevBox} ${classes.pendingBox}`}>
+                            <Box textAlign="center" fontSize={17} fontWeight="fontWeightMedium" style={{color:'#121212', backgroundColor: '#64b5f6', padding: 2}}>Pending</Box>
+                            <Box m={0.5} display="flex" flexDirection="column">
+                                <Box fontSize={15}>Coins: 40, ₹: 200</Box>
+                                <Box>Mode: Bank Transfer</Box>
+                                <Box>On: 2020-02-29</Box>
+                            </Box>
+                            <Divider />
+                            <Box pt={0.5} textAlign="center"><Button variant="outlined" size="small" style={{color: "#64b5f6"}}>Cancel</Button></Box>
+                    </Box></Grid>
+                    <Grid item xs={6} sm={4}><Box boxShadow={2} className={`${classes.prevBox} ${classes.successBox}`}></Box></Grid>
+                    <Grid item xs={6} sm={4}><Box boxShadow={2} className={`${classes.prevBox} ${classes.successBox}`}></Box></Grid>
+                    <Grid item xs={6} sm={4}><Box boxShadow={2} className={`${classes.prevBox} ${classes.successBox}`}></Box></Grid>
                 </Grid>
             </Container>
             <footer className={classes.footer}>
