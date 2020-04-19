@@ -7,7 +7,7 @@ import { makeStyles, Typography, Button } from '@material-ui/core';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { deepOrange } from '@material-ui/core/colors';
-import {useDispatch, useSelector} from 'react-redux'
+import {useDispatch} from 'react-redux'
 import {showDialog} from '../../store/actions/uiActions'
 
 /*

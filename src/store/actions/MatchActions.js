@@ -58,7 +58,6 @@ export const enterMatch = (match,userData)=>{
                 return
             }
             const cp = profile.pubgid;
-            let players = doc.data().players;
             const {mate1} = userData
             switch(match.mode){
                 case "Solo":
@@ -186,7 +185,7 @@ export const enterMatch = (match,userData)=>{
                                 snaps.docs.forEach((docx,ind)=>{
                                     db.collection("Users").doc(docx.id).set({matches:cpsmatches[ind+1]},{merge:true})
                                 })
-                                db.collection("Users").doc(auth.uid).set({matches:cpsmatches[0]},{merge:true}).then(()=>{
+                                db.collection("Users").doc(auth.uid).set({matches:cpsmatches[0],wallet},{merge:true}).then(()=>{
                                     dispatch({ type: 'SNACKBAR', variant: 'success', message: "Success! You`ve enrolled in the match. Happy Looting!"})
                                 })
                             })
