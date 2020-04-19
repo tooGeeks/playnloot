@@ -5,7 +5,7 @@ import Typist from 'react-typist';
 import { useHistory} from 'react-router-dom'
 import { Typography, Box, Grid, Button, Container, Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
 import { ReactComponent as Loading } from '../../imgs/loading.svg'
-import Copyright from './Copyright';
+import Copyright from '../layout/Copyright';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -93,7 +93,7 @@ const Landing = () => {
 
   return (
 
-    <div className={classes.root}>
+    <div className={classes.root} id="welcome">
       <Grid container direction="column">
         <Grid container direction="row">
         <Grid item xs={12}>

@@ -219,64 +219,61 @@ function Dashboard(props) {
     
   return (
     <Container className={classes.root}>
-      <Grid
-        container
+      <Grid container
+        direction="row"
         justify="center"
         spacing={1}
       >
-        <Grid container item xs={12}
-          direction="row"
-          alignItems="flex-start"
-          border={1}>
-            <Grid container alignItems="flex-end">
+        <Grid item xs={12} sm={6}>
+            <Grid container item alignItems="flex-end">
               <Grid item>
                 <AccountBox color="primary" style={{fontSize: 140}} className={classes.icons}/>
               </Grid>
               <Grid item>
-                <Typography gutterBottom variant="h5" style={{paddingBottom: 20}}>Hola, <br /><b>{profile.pubgid}!</b></Typography>
+                <Typography gutterBottom variant="h5" style={{marginBottom: 20}}>Hola, <br /><b>{profile.pubgid}!</b></Typography>
               </Grid>
             </Grid>
-            <Grid item xs={12} container alignItems='center' justify='space-around'>
-            <Grid item align="center">
-              <Paper className={classes.killWallet}>
-                <Typography>
-                <CssBaseline><TrackChanges className={classes.icons}/>{profile.kills}
-                </CssBaseline>
-                <br/>
-                Kills
+        </Grid>
+        <Grid container item xs={12} sm={6} alignItems='flex-end' justify='space-around' style={{marginBottom: 20}}>
+          <Grid item align="center">
+            <Paper className={classes.killWallet}>
+              <Typography>
+              <CssBaseline><TrackChanges className={classes.icons}/>{profile.kills}
+              </CssBaseline>
+              <br/>
+              Kills
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item align="center">
+            <Paper className={classes.killWallet}>
+              <Typography>
+              <AccountBalanceWalletIcon className={classes.icons}/> {profile.wallet}
+              <br/>
+              Coins
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item align="center">
+            <Paper className={classes.killWallet}>
+              <Tooltip title="Coins in Ruppes(₹)" TransitionComponent={Zoom}>
+                <Typography component="div">
+                  {/* <MonetizationOn className={classes.icons}/> <br/> */}
+                  <center><Avatar variant="circle" className={classes.ruppeIcon}>₹</Avatar></center>
+                  ₹{profile.isLoaded ? profile.wallet*unit : 0}
                 </Typography>
-              </Paper>
-            </Grid>
-            <Grid item align="center">
-              <Paper className={classes.killWallet}>
-                <Typography>
-                <AccountBalanceWalletIcon className={classes.icons}/> {profile.wallet}
-                <br/>
-                Coins
-                </Typography>
-              </Paper>
-            </Grid>
-            <Grid item align="center">
-              <Paper className={classes.killWallet}>
-                <Tooltip title="Coins in Ruppes(₹)" TransitionComponent={Zoom}>
-                  <Typography component="div">
-                    {/* <MonetizationOn className={classes.icons}/> <br/> */}
-                    <center><Avatar variant="circle" className={classes.ruppeIcon}>₹</Avatar></center>
-                    ₹{profile.isLoaded ? profile.wallet*unit : 0}
-                  </Typography>
-                </Tooltip>
-              </Paper>
-            </Grid>
-            <Grid item align="center">
-              <Paper className={classes.killWallet}>
-                <Typography>
-                <AccountBalanceWalletIcon className={classes.icons}/> {profile.wallet}
-                <br/>
-                Coins
-                </Typography>
-              </Paper>
-            </Grid>
-            </Grid>
+              </Tooltip>
+            </Paper>
+          </Grid>
+          <Grid item align="center">
+            <Paper className={classes.killWallet}>
+              <Typography>
+              <AccountBalanceWalletIcon className={classes.icons}/> {profile.wallet}
+              <br/>
+              Coins
+              </Typography>
+            </Paper>
+          </Grid>
         </Grid>
         <Grid item xs={12} sm={12}>
           <ExpansionPanel expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
@@ -306,7 +303,7 @@ function Dashboard(props) {
               <Typography className={expanded === 'panel3' ? classes.expanelHeading : classes.panelHeading}><b>NEW MATCHES</b></Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <Grid container spacing={2}>
+              <Grid container spacing={2} justify="center">
                 {
                   newSolo && newDuo  && newSquad
                   ? (<>

@@ -1,26 +1,24 @@
 import React, {useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { creditWallet, requestWithdrawal } from '../../store/actions/PaymentActions';
+import { creditWallet, requestWithdrawal } from '../../../store/actions/PaymentActions';
 import useForm from "react-hook-form";
 import { makeStyles, Container, Grid, Paper, IconButton, TextField, CardHeader, Typography, Card, CardContent, CardActions, Button } from '@material-ui/core';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-import { showSnackbar } from '../../store/actions/uiActions'
-import Copyright from '../layout/Copyright'
+import { showSnackbar } from '../../../store/actions/uiActions'
+import Copyright from '../../layout/Copyright'
 
 
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
         marginBottom: theme.spacing(8),
+        marginTop: theme.spacing(4),
     },
     paper: {
         padding: theme.spacing(2),
         //textAlign: 'center',
         //color: theme.palette.text.secondary,
-    },
-    grid: {
-        minHeight: '100vh'
     },
     cardContent: {
         textAlign: "center"
@@ -103,9 +101,9 @@ export default function Wallet(props) {
         <React.Fragment>
             <Container className={classes.root}>
                 <Grid container
-                    direction="column" justify="center" alignItems="stretch" spacing={2} className={classes.grid}>
+                    direction="row" justify="center" alignItems="stretch" spacing={2} className={classes.grid}>
                     
-                    <Grid item xs={12} id="buyCoins">
+                    <Grid item xs={12} sm={6} id="buyCoins">
                     <form key={1} noValidate onSubmit={handleSubmit(onSubmitAddCoin)}>
                         <Card variant="outlined" id="buy-coins">
                             <CardHeader title="Buy Coins"
@@ -154,8 +152,6 @@ export default function Wallet(props) {
                                     Total: [{coins.coins}] x {unit} = ₹{(coins.coins)*unit}
                                 </Typography>
                             </Paper>
-                                    
-
                             </CardContent>
                             <CardActions>
                                     <Button type="submit" className={classes.buy} style={{width: 120}} 
@@ -167,7 +163,7 @@ export default function Wallet(props) {
                         </Card>
                         </form>
                     </Grid>
-                    <Grid item xs={12} id="requestWithdraw">
+                    <Grid item xs={12} sm={6} id="requestWithdraw">
                         <form key={2} noValidate onSubmit={handleSubmit2(onSubmitRequest)}>
                             <Card varient="outlined" id="get-money">
                                 <CardHeader title="Request Withdrawal"
