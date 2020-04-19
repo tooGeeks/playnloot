@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, connect, useDispatch, } from 'react-redux'
 
 //UI
-import { makeStyles, Grid, Container, Paper, List, Button, Typography, CssBaseline, Box, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Avatar, Tooltip, Zoom } from "@material-ui/core";
+import { makeStyles, Grid, Container, Paper, List, Button, Typography, CssBaseline, Box, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Avatar, Tooltip, Zoom, CircularProgress } from "@material-ui/core";
 import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core'
 //import { ReactComponent as Solid } from '../../imgs/soldier2.svg'
 import { AccountBox, TrackChanges, Event, AccessAlarm } from '@material-ui/icons';
@@ -206,7 +206,6 @@ function Dashboard(props) {
             <Typography align="right" className={classes.primryColor} style={{fontWeight: 500, paddingRight: 7, paddingBottom: 2}}>{match.name}</Typography>
         </Grid>
         </Grid>
-          //<li className="" key={match}><div><span>Match Name : {match}</span><Link className="secondary-item" to={"/entermatch/"+match}><button className="waves-effect waves-light hoverable btn-small">Details</button></Link></div></li>
       )
    }) 
    : <div>

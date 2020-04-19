@@ -6,8 +6,8 @@ import { findinMatches } from '../../../Functions'
 import { cancelWithdrawal, requestWithdrawal } from '../../../store/actions/PaymentActions';
 import useForm from "react-hook-form";
 
-import { makeStyles, Grid, Container, Card, CardHeader, IconButton, CardContent, Typography, TextField, CardActions, Button, Box, Divider } from '@material-ui/core'
-import { AttachMoney, AccountBalanceWallet, CheckCircle, CheckCircleOutlineOutlined, CheckCircleOutlined, HourglassEmptyOutlined } from '@material-ui/icons'
+import { makeStyles, Grid, Container, Card, CardHeader, IconButton, CardContent, Typography, TextField, CardActions, Button, Box } from '@material-ui/core'
+import { AttachMoney, CheckCircleOutlined, HourglassEmptyOutlined } from '@material-ui/icons'
 import Copyright from '../../layout/Copyright';
 
 const useStyles = makeStyles(theme => ({
@@ -67,7 +67,6 @@ const RequestWithDraw = () => {
 
     const usr = auth && users && findinMatches(users, auth.uid);
     const requests = usr && usr.requests.map(req => {
-        console.log(req)
         return (
             <Grid item xs={12} sm={6}><Box boxShadow={2} justifyContent="center" alignItems="center" className={req.isComplete ? `${classes.prevBox} ${classes.successBox}` : `${classes.prevBox} ${classes.pendingBox}`}>
                 <Box display="flex" flexDirection="column" justifyContent="center" style={{width: '20%', textAlign: "center",}}><Box style={{ fontSize: 25, fontWeight: 'fontWeightBold'}}>₹{req.coins*unit}</Box><Box fontSize={12}>{req.isComplete ? `Paid` : `Pending`}</Box></Box>
