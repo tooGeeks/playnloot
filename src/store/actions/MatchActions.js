@@ -1,4 +1,4 @@
-import {isinDocs,findinMatches,isPlayerinMatch} from '../../Functions'
+import {isinDocs,findinMatches,isPlayerinMatch, arePlayersinMatch} from '../../Functions'
 import 'firebase/functions'
 import { isEmpty } from 'react-redux-firebase';
 
@@ -58,6 +58,8 @@ export const enterMatch = (match,userData)=>{
                 return
             }
             const cp = profile.pubgid;
+            let players = doc.data().players;
+            const {mate1} = userData
             switch(match.mode){
                 case "Solo":
                     let cpmatches = st.firebase.profile.matches;
@@ -84,8 +86,10 @@ export const enterMatch = (match,userData)=>{
                     }
                     break;
                 case "Duo":
-                    //let parr = [userData.mate1]
-                    const {mate1} = userData
+                    if(cp===mate1){
+                        dispatch({ type: 'SNACKBAR', variant: 'error', message: "Same ID detected! Please, provide proper ID of your mate!"});
+                        return
+                    }
                     if(wallet<4){
                         dispatch({ type: 'SNACKBAR', variant: 'error', message: "Insufficient Coins! Please, buy required Coins and try again!"});
                         return;
@@ -95,18 +99,14 @@ export const enterMatch = (match,userData)=>{
                             dispatch({ type: 'SNACKBAR', variant: 'error', message: "Your friend wasn't found. Check Your Mate's PUBGID!"});
                             return;
                         }
-                        let players = match.players;
                         let profile2 = snaps.docs[0].data()
-                        let cp2 = mate1
                         let cp1matches = st.firebase.profile.matches;
                         let cp2matches = profile2.matches;
                         let parr = [cp,mate1]
-                        const isAlRegU1 = isinDocs(cp1matches,match.id);
-                        const isAlRegM1 = isPlayerinMatch(players,cp,"Duo");
-                        const isAlRegU2 = isinDocs(cp2matches,match.id);
-                        const isAlRegM2 = isPlayerinMatch(players,cp2,"Duo");
-                        console.log("U1 : "+isAlRegU1+" M1 : "+isAlRegM1+" U2 : "+isAlRegU2+" M2 : "+isAlRegM2)
-                        if(!isAlRegM1 && !isAlRegU1 && !isAlRegM2 && !isAlRegU2){
+                        let isAlRegU = [isinDocs(cp1matches,match.id),isinDocs(cp2matches,match.id)]
+                        let isAlRegM = arePlayersinMatch(players,parr);
+                        console.log("U : ",isAlRegU," M : ",isAlRegM)
+                        if(!isAlRegM[0] && !isAlRegU[0] && !isAlRegM[1] && !isAlRegU[1]){
                             cp1matches.push(match.id)
                             cp2matches.push(match.id)
                             players[cp] = {[cp]:0,[mate1]:0}
@@ -125,24 +125,75 @@ export const enterMatch = (match,userData)=>{
                             })
 
                         }else{
-                            if(isAlRegM1 && isAlRegU1 && isAlRegM2 && isAlRegU2){
+                            if(isAlRegM[0] && isAlRegU[0] && isAlRegM[1] && isAlRegU[1]){
                                 dispatch({ type: 'SNACKBAR', variant: 'success', message: "Woaah! You`ve already Enrolled in this Match with your friend!"});
                                 return;
                             }
-                            if(isAlRegM1 && isAlRegU1){
+                            if(isAlRegM[0] && isAlRegU[0]){
                                 dispatch({ type: 'SNACKBAR', variant: 'error', message: "You've already enrolled in this match!"});
 
                             }
-                            if(isAlRegM2 && isAlRegU2){
+                            if(isAlRegM[1] && isAlRegU[1]){
                                 dispatch({ type: 'SNACKBAR', variant: 'error', message: "Your friend has already enrolled in this match!"});
                                 return;
                             }
                         }
                     })
-                    console.log("Duo",userData)
                     break;
                 case "Squad":
+                    const {mate2,mate3} = userData
                     console.log("Squad")
+                    if([mate1,mate2,mate3].includes(cp) 
+                    || [mate2,mate3].includes(mate1) 
+                    || [mate3].includes(mate2)){
+                        dispatch({ type: 'SNACKBAR', variant: 'error', message: "Same ID(s) detected! Please, provide proper ID of your mate!"});
+                        return
+                    }
+                    let parr = [mate1,mate2,mate3]
+                    if(wallet<8){
+                        dispatch({ type: 'SNACKBAR', variant: 'error', message: "Insufficient Coins! Please, buy required Coins and try again!"});
+                        return;
+                    }
+                    db.collection("Users").where('pubgid','in',parr).get().then(snaps=>{
+                        let players = doc.data().players
+                        let plno = doc.data().plno + 4
+                        let profiles = []
+                        let wallet = profile.wallet - 8
+                        profiles.push(profile)
+                        profiles.push(snaps.docs[0].data())
+                        profiles.push(snaps.docs[1].data())
+                        profiles.push(snaps.docs[2].data())
+                        console.log(profiles)
+                        let cpsmatches = []
+                        cpsmatches.push(profiles[0].matches)
+                        cpsmatches.push(profiles[1].matches)
+                        cpsmatches.push(profiles[2].matches)
+                        cpsmatches.push(profiles[3].matches)
+                        parr = [cp,...parr]
+                        let isAlRegU = cpsmatches.map(cm=>isinDocs(cm,match.id))
+                        let isAlRegM = arePlayersinMatch(players,parr);
+                        console.log("U : ",isAlRegU," M : ",isAlRegM)
+                        if(!isAlRegU.includes(true) && !isAlRegM.includes(true)){
+                            cpsmatches.forEach((cpm)=>{
+                                cpm.push(match.id)
+                            })
+                            let pjs = {}
+                            parr.forEach(pl=>{
+                                pjs[pl]=0
+                            })
+                            players[cp]=pjs
+                            db.collection("Matches").doc(match.id).set({players,plno},{merge:true}).then(()=>{
+                                snaps.docs.forEach((docx,ind)=>{
+                                    db.collection("Users").doc(docx.id).set({matches:cpsmatches[ind+1]},{merge:true})
+                                })
+                                db.collection("Users").doc(auth.uid).set({matches:cpsmatches[0]},{merge:true}).then(()=>{
+                                    dispatch({ type: 'SNACKBAR', variant: 'success', message: "Success! You`ve enrolled in the match. Happy Looting!"})
+                                })
+                            })
+                        }else{
+
+                        }
+                    })
                     break;
                 default:
                     break;

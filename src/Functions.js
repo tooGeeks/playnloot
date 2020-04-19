@@ -57,6 +57,22 @@ export const isPlayerinMatch = (docs,id, mode="Solo")=>{//Used to Check if a cer
         return barr.length===0 ? false : (barr.includes(true))
     }
 }
+
+export const arePlayersinMatch= (docs,ids)=>{
+    if(!docs || docs.length===0 || !ids || ids.length===0) return false;
+    if(ids.length===1){
+        return Object.keys(docs).find((doc)=>{
+            return ids[0]===doc
+            }) ? true : false;
+    }else{
+            let ljs = docs[ids[0]]
+            let larr = ljs===undefined ? null : Object.keys(ljs)
+            return ljs===undefined 
+            ? ids.map(x=>{return false})
+            : (ids.map(k=>{return larr.includes(k)}))
+    }
+}
+
 export const findinMatches = (docs,id)=>{//Used to Find and return a match using its name Ex. MTH2001
     return docs.find((doc)=>id===doc.id);
 }
