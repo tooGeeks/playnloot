@@ -13,7 +13,6 @@ import {firestoreConnect} from 'react-redux-firebase';
 import {isinDocs,getCurrentDate, dateString, convt} from '../../Functions'
 import {compose} from 'redux';
 import MatchSummary from '../matches/MatchSummary';
-import playerEnroll from '../matches/PlayerEnroll';
 import { backDrop, clearBackDrop } from '../../store/actions/uiActions'
 import Copyright from '../layout/Copyright'
 

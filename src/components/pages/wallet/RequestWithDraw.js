@@ -7,7 +7,7 @@ import { cancelWithdrawal, requestWithdrawal } from '../../../store/actions/Paym
 import useForm from "react-hook-form";
 
 import { makeStyles, Grid, Container, Card, CardHeader, IconButton, CardContent, Typography, TextField, CardActions, Button, Box, Divider } from '@material-ui/core'
-import { AttachMoney, AccountBalanceWallet } from '@material-ui/icons'
+import { AttachMoney, AccountBalanceWallet, CheckCircle, CheckCircleOutlineOutlined, CheckCircleOutlined, HourglassEmptyOutlined } from '@material-ui/icons'
 import Copyright from '../../layout/Copyright';
 
 const useStyles = makeStyles(theme => ({
@@ -28,18 +28,15 @@ const useStyles = makeStyles(theme => ({
         marginRight: 'auto',
     },
     prevBox: {
-        width: '10rem', 
-        height: '10rem', 
-        backgroundColor: theme.palette.background.paper,
-        border: 2,
-        borderStyle: 'solid',
-        borderRadius: 4,
+        minHeight: '5rem',
+        borderRadius: 3,
         boxShadow: 2,
         display: 'flex',
-        flexDirection: 'column',
+        color: '#000',
+        padding: 10,
     },
-    pendingBox:{ borderColor: '#64b5f6', },
-    successBox: { borderColor: '#81c784', },
+    pendingBox: { backgroundColor: '#fff176' },
+    successBox: { backgroundColor: '#81c784' },
     footer: {
         marginTop: 'auto',
         marginBottom: theme.spacing(10)
@@ -72,7 +69,15 @@ const RequestWithDraw = () => {
     const requests = usr && usr.requests.map(req => {
         console.log(req)
         return (
-            null
+            <Grid item xs={12} sm={6}><Box boxShadow={2} justifyContent="center" alignItems="center" className={req.isComplete ? `${classes.prevBox} ${classes.successBox}` : `${classes.prevBox} ${classes.pendingBox}`}>
+                <Box display="flex" flexDirection="column" justifyContent="center" style={{width: '20%', textAlign: "center",}}><Box style={{ fontSize: 25, fontWeight: 'fontWeightBold'}}>₹{req.coins*unit}</Box><Box fontSize={12}>{req.isComplete ? `Paid` : `Pending`}</Box></Box>
+                <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '60%'}}>
+                    <Box>{req.pmode}</Box>
+                    <Box>{req.reqdate}</Box>
+                    {(!req.isComplete) ? <Button variant="contained" style={{ fontSize: 10, backgroundColor: '#121212', color: '#FFF'}} onClick={() => dispatch(cancelWithdrawal(usr.id+'-'+usr.requests.indexOf(req)))}>Cancel</Button> : null}
+                </Box>
+                <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '20%'}}>{req.isComplete ? <CheckCircleOutlined style={{ fontSize: 35 }} /> : <HourglassEmptyOutlined style={{ fontSize: 35 }} />}</Box>
+            </Box></Grid>
         )
     })
     return (
@@ -159,28 +164,7 @@ const RequestWithDraw = () => {
                 </Grid>
                 <Grid item xs={12}><Box fontSize="h6.fontSize" letterSpacing={1} textAlign="left" padding={2}>Previous Requests</Box></Grid>
                 <Grid container item xs={12} spacing={1} id="PrevRequests" justify="center" alignItems="flex-start">
-                    <Grid item xs={6} sm={4}><Box boxShadow={2} className={`${classes.prevBox} ${classes.successBox}`}>
-                        <Box textAlign="center" fontSize={17} fontWeight="fontWeightMedium" style={{ color:'#121212', backgroundColor: '#81c784', padding: 2}}>Paid</Box>
-                        <Box display="flex" flexDirection="row">
-                            <Box>40</Box>&nbsp;
-                            <Box>200</Box>
-                        </Box>
-                        <Box>On: 2020-02-29</Box>
-                        {/* <Box textAlign="center"><Button variant="outlined" size="small" color="primary">Cancel</Button></Box> */}
-                    </Box></Grid>
-                    <Grid item xs={6} sm={4}><Box boxShadow={2} className={`${classes.prevBox} ${classes.pendingBox}`}>
-                            <Box textAlign="center" fontSize={17} fontWeight="fontWeightMedium" style={{color:'#121212', backgroundColor: '#64b5f6', padding: 2}}>Pending</Box>
-                            <Box m={0.5} display="flex" flexDirection="column">
-                                <Box fontSize={15}>Coins: 40, ₹: 200</Box>
-                                <Box>Mode: Bank Transfer</Box>
-                                <Box>On: 2020-02-29</Box>
-                            </Box>
-                            <Divider />
-                            <Box pt={0.5} textAlign="center"><Button variant="outlined" size="small" style={{color: "#64b5f6"}}>Cancel</Button></Box>
-                    </Box></Grid>
-                    <Grid item xs={6} sm={4}><Box boxShadow={2} className={`${classes.prevBox} ${classes.successBox}`}></Box></Grid>
-                    <Grid item xs={6} sm={4}><Box boxShadow={2} className={`${classes.prevBox} ${classes.successBox}`}></Box></Grid>
-                    <Grid item xs={6} sm={4}><Box boxShadow={2} className={`${classes.prevBox} ${classes.successBox}`}></Box></Grid>
+                    {requests}
                 </Grid>
             </Container>
             <footer className={classes.footer}>

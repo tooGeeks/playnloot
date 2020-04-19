@@ -55,7 +55,7 @@ const SignedIn = (props) => {
             </ListItemIcon>
             <ListItemText primary="Buy Coins" />
           </ListItem>
-          <ListItem button className={classes.nested} component={Link} to={'/wallet/view/coins#get-money'} onClick={props.func('bottom', false)}>
+          <ListItem button className={classes.nested} component={Link} to={'/reqwithdrawal'} onClick={props.func('bottom', false)}>
             <ListItemIcon>
               <AttachMoney />
             </ListItemIcon>
