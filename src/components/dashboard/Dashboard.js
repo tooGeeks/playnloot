@@ -18,9 +18,10 @@ import Copyright from '../layout/Copyright'
 
 const useStyles = makeStyles(theme => ({
   root: {
+    display: 'flex',
     flexGrow: 1,
-    marginBottom: theme.spacing(8),
-    paddingTop: 10,
+    flexDirection: 'column',
+    minHeight: '100vh'
   },
   paper: {
     padding: theme.spacing(2),
@@ -84,9 +85,9 @@ const useStyles = makeStyles(theme => ({
   },
   primryColor: { color: theme.palette.primary.main },
   newMatchesBoxes: {
-    border: 3,
+    border: 2,
     borderStyle: 'solid',
-    borderColor: theme.palette.background.default,
+    borderColor: theme.palette.primary.dark,
     borderRadius: 4,
     display: 'flex',
     flexDirection: 'column'
@@ -97,6 +98,10 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 4,
     paddingRight: 4,
     backgroundColor: theme.palette.background.paper,
+  },
+  footer: {
+    marginTop: 'auto',
+    marginBottom: theme.spacing(10)
   },
 }));
 
@@ -216,7 +221,8 @@ function Dashboard(props) {
    : null
     
   return (
-    <Container className={classes.root}>
+    <div className={classes.root}>
+    <Container>
       <Grid container
         direction="row"
         justify="center"
@@ -329,8 +335,11 @@ function Dashboard(props) {
           </Paper>
         </Grid> */}
       </Grid>
-      <Copyright />
     </Container>
+    <footer className={classes.footer}>
+      <Copyright />
+    </footer>
+    </div>
   );
 }
 

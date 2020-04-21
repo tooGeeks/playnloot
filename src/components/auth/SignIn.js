@@ -16,7 +16,10 @@ import Copyright from '../layout/Copyright'
 
 const styles = theme => ({
   root: {
-    marginBottom: theme.spacing(8),
+    display: 'flex',
+    flexGrow: 1,
+    flexDirection: 'column',
+    minHeight: '100vh'
   },
   paper: {
     marginTop: theme.spacing(8),
@@ -36,7 +39,8 @@ const styles = theme => ({
     margin: theme.spacing(3, 0, 2),
   },
   footer: {
-    padding: theme.spacing(3)
+    marginTop: 'auto',
+    marginBottom: theme.spacing(10)
   },
 })
 
@@ -51,11 +55,7 @@ const PassReset = () => {
     <React.Fragment>
       <Box display="flex" alignContent="center" justifyItems="center" textAlign="center">
         <TextField autoFocus required variant="outlined" size="small" margin="dense" label="Enter Email Address" id="email" type="email"
-          autoComplete="email"
-          InputLabelProps={{
-            shrink: true,
-          }} 
-          onChange={handleChange}/>
+          autoComplete="email" onChange={handleChange}/>
         <Button disabled={!email} onClick={() => dispatch(resetPassword(email))}>Reset</Button>
       </Box>
     </React.Fragment>
@@ -150,7 +150,9 @@ const SignIn = (props) => {
           </Grid>
         </form>
       </div>
+      </Container>
       <footer className={classes.footer}>
+        <Container maxWidth="sm">
           <Typography variant="subtitle1" align="left" gutterBottom>
             Play N Loot
           </Typography>
@@ -160,12 +162,12 @@ const SignIn = (props) => {
             color="textSecondary"
             component="p"
           >
-            A user-friendly platform to participate in PUBG Mobile Tournaments and earn real loot!<br/><br/>
+            A user-friendly platform to participate in PUBG Mobile Tournaments and earn real loot! 
             Earn coins on per kills and convert them into real money in your PayTM account! Register in a tournament now!
           </Typography>
-          <Copyright />
+        </Container>
+        <Copyright />
       </footer>
-    </Container>
     </div>
   );
 }

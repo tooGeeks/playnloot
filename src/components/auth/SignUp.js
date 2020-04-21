@@ -11,7 +11,10 @@ import Copyright from '../layout/Copyright';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    marginBottom: theme.spacing(8),
+    display: 'flex',
+    flexGrow: 1,
+    flexDirection: 'column',
+    minHeight: '100vh'
   },
   paper: {
     marginTop: theme.spacing(2),
@@ -37,6 +40,10 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+  },
+  footer: {
+    marginTop: 'auto',
+    marginBottom: theme.spacing(10)
   },
 }));
 
@@ -72,7 +79,8 @@ const SignUp = (props) => {
   };
 
   return (
-    <Container pb={45} className={classes.root} component="main" maxWidth="xs">
+    <div className={classes.root} >
+    <Container pb={45} component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -230,7 +238,7 @@ const SignUp = (props) => {
                   }
                 })}
                 error={!!errors.password}
-                helperText={(errors.password ? (errors.password.type === 'required' ? "Set a Password!" : "Use alteast 6 characters/Numbers!") : "Set a Level 3 Password! :P")}
+                helperText={(errors.password ? (errors.password.type === 'required' ? "Set a Password!" : "Use alteast 6 characters/Numbers!") : "Set a Level 3 Password! Crush ka nam chalega :P")}
               />
             </Grid>
           </Grid>
@@ -252,10 +260,12 @@ const SignUp = (props) => {
           </Grid>
         </form>
         { authError ? <p>{authError}</p> : null }
-
-      </div>
-      <Copyright />
-    </Container>
+        </div>
+        </Container>
+      <footer className={classes.footer}>
+        <Copyright />
+      </footer>
+    </div>
   );
 }
 
