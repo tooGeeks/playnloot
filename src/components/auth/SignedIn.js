@@ -49,7 +49,7 @@ const SignedIn = (props) => {
       </ListItem>
       <Collapse in={openList === 1} timeout="auto">
         <List component="div" disablePadding>
-          <ListItem button className={classes.nested} component={Link} to={'/wallet/view/coins#buy-coins'} onClick={props.func('bottom', false)}>
+          <ListItem button className={classes.nested} component={Link} to={'/wallet/view/coins'} onClick={props.func('bottom', false)}>
             <ListItemIcon>
               <Add />
             </ListItemIcon>

@@ -51,7 +51,7 @@ const RequestWithDraw = () => {
     const { auth, profile } = useSelector(state => state.firebase)
     const users = useSelector(state => state.firestore.ordered.WithdrawalRequests)
     const dispatch = useDispatch();
-    
+
     const { register, handleSubmit, errors, reset } = useForm();
     const [ data, setData ] = useState({coins: 0, mno: 0, pmode: ''});
     const handleChange = (e) => {
@@ -64,11 +64,10 @@ const RequestWithDraw = () => {
         reset();
         setData({coins: 0, mno: 0, pmode: ''});
     }; 
-
     const usr = auth && users && findinMatches(users, auth.uid);
-    const requests = usr && usr.requests.map(req => {
+    const requests = usr && usr.requests.map((req, index) => {
         return (
-            <Grid item xs={12} sm={6}><Box boxShadow={2} justifyContent="center" alignItems="center" className={req.isComplete ? `${classes.prevBox} ${classes.successBox}` : `${classes.prevBox} ${classes.pendingBox}`}>
+            <Grid item xs={12} sm={6} key={index}><Box boxShadow={2} justifyContent="center" alignItems="center" className={req.isComplete ? `${classes.prevBox} ${classes.successBox}` : `${classes.prevBox} ${classes.pendingBox}`}>
                 <Box display="flex" flexDirection="column" justifyContent="center" style={{width: '20%', textAlign: "center",}}><Box style={{ fontSize: 25, fontWeight: 'fontWeightBold'}}>₹{req.coins*unit}</Box><Box fontSize={12}>{req.isComplete ? `Paid` : `Pending`}</Box></Box>
                 <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '60%'}}>
                     <Box>{req.pmode}</Box>

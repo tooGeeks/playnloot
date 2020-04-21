@@ -55,6 +55,13 @@ const Landing = () => {
     console.log(JSON.parse((localStorage.getItem('getting_Started'))));
   }, [getStart])
 
+  function scrollTo(div) { document.querySelector(div).scrollIntoView({ behavior: 'smooth', block: 'start'}); }
+  React.useEffect(() => {
+    if(window.location.hash){
+      scrollTo(window.location.hash);
+    }
+  }, []);
+
   const handleClicks = (opt) => {
     switch(opt){
       case 'handleNext': setActiveStep((prevActiveStep) => prevActiveStep + 1); break;
@@ -109,7 +116,7 @@ const Landing = () => {
               <Typography className={classes.enroll} variant="h6" >ENROLL IN A MATCH NOW!</Typography>
               <br/>
               <Button className={classes.GetStartBtn} variant="outlined" size="large" onClick={() => history.push('/signup')}>Get Started</Button>
-              <Box fontSize={13} fontWeight="fontWeightLight" style={{marginTop: 2, textDecoration: 'underline', cursor: 'help'}} id="gt" onClick={() => {setgetStart({...getStart, gt: true}); document.querySelector('#getstarted').scrollIntoView({ behavior: 'smooth', block: 'center'})}}>Know More</Box>
+              <Box fontSize={13} fontWeight="fontWeightLight" style={{marginTop: 2, textDecoration: 'underline', cursor: 'help'}} id="gt" onClick={() => {setgetStart({...getStart, gt: true}); scrollTo('#getstarted');}}>Know More</Box>
             </Box>
           </Box>
         </Grid>
