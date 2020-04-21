@@ -91,10 +91,9 @@ export default function Wallet(props) {
         reset();
         //props.backDrop();
     };
-
-    const prevOrders = profile.orders && profile.orders.reverse().map((order) => {
+    const prevOrders = profile.orders && profile.orders.map((order) => {
         return (
-            <Grid item xs={12} sm={6} key={order.id}><Box boxShadow={2} justifyContent="center" alignItems="center" className={order.status === 'SUCCESS' ? `${classes.prevBox} ${classes.successBox}` : `${classes.prevBox} ${classes.pendingBox}`}>
+            <Grid item xs={12} sm={6} key={order.orderid}><Box boxShadow={2} justifyContent="center" alignItems="center" className={order.status === 'SUCCESS' ? `${classes.prevBox} ${classes.successBox}` : `${classes.prevBox} ${classes.pendingBox}`}>
                 <Box display="flex" flexDirection="column" justifyContent="center" style={{width: '20%', textAlign: "center",}}><Box style={{ fontSize: 25, fontWeight: 'fontWeightBold'}}>₹{order.amt}</Box><Box fontSize={12}>{order.status === 'SUCCESS' ? `Success` : `Failure`}</Box></Box>
                 <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '60%'}}>
                     <Box>{order.mode}</Box>

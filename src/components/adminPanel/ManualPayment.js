@@ -20,7 +20,7 @@ const ManualPayment = (props)=>{
             return;
         }
         const p = window.confirm("Are You Sure?")
-        if(p) props.creditWallet({noofcns:data.noofcoins,mode:"AdminPayment",pubgid:data.pubgid});
+        if(p) props.creditWallet({noofcns:data.noofcoins, mode:"Cash", pubgid:data.pubgid});
         
     }
     return(
