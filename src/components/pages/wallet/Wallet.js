@@ -91,6 +91,7 @@ export default function Wallet(props) {
         reset();
         //props.backDrop();
     };
+    console.log(process.env.REACT_APP_title)
     const prevOrders = profile.orders && profile.orders.map((order) => {
         return (
             <Grid item xs={12} sm={6} key={order.orderid}><Box boxShadow={2} justifyContent="center" alignItems="center" className={order.status === 'SUCCESS' ? `${classes.prevBox} ${classes.successBox}` : `${classes.prevBox} ${classes.pendingBox}`}>

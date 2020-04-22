@@ -3,13 +3,13 @@ import 'firebase/firestore';
 import 'firebase/auth';
 
 const fbConfig = {
-  apiKey: "AIzaSyDiscmkrO7KwNMIVqQSGsViHCPgaA_Cty8",
-  authDomain: "playandloot.firebaseapp.com",
-  databaseURL: "https://playandloot.firebaseio.com",
-  projectId: "playandloot",
-  storageBucket: "playandloot.appspot.com",
-  messagingSenderId: "651773897271",
-  appId: "1:651773897271:web:48ba221d0f7d43a07c6db2"
+  apiKey: process.env.REACT_APP_apiKey,
+  authDomain: process.env.REACT_APP_authDomain,
+  databaseURL: process.env.REACT_APP_databaseURL,
+  projectId: process.env.REACT_APP_projectId,
+  storageBucket: process.env.REACT_APP_storageBucket,
+  messagingSenderId: process.env.REACT_APP_messagingSenderId,
+  appId: process.env.REACT_APP_appId
 };
 
 try {
