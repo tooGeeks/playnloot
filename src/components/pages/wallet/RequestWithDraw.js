@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { findinMatches } from '../../../Functions'
 import { cancelWithdrawal, requestWithdrawal } from '../../../store/actions/PaymentActions';
 import useForm from "react-hook-form";
+import { unit } from '../../../constants';
 
 import { makeStyles, Grid, Container, Card, CardHeader, IconButton, CardContent, Typography, TextField, CardActions, Button, Box } from '@material-ui/core'
 import { AttachMoney, CheckCircleOutlined, HourglassEmptyOutlined } from '@material-ui/icons'
@@ -42,9 +43,6 @@ const useStyles = makeStyles(theme => ({
         marginBottom: theme.spacing(10)
     }
 }))
-
-//unit for one coin (PaymentActions, Landing.js, Dashboard.js)
-const unit = 5;
 
 const RequestWithDraw = () => {
     const classes = useStyles();

@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, connect, useDispatch, } from 'react-redux'
+import { unit } from '../../constants'
 
 //UI
 import { makeStyles, Grid, Container, Paper, List, Button, Typography, CssBaseline, Box, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Avatar, Tooltip, Zoom, CircularProgress } from "@material-ui/core";
@@ -74,9 +75,8 @@ const useStyles = makeStyles(theme => ({
     color: theme.custom.colors.darkhead1,
   },
   enPaper: {
-    minWidth: '60%',
-    width: '60%',
-
+    width: '200px',
+    maxWidth: '200px',
     border: '2px solid',
     backgroundColor: theme.palette.background.paper,
     borderColor: theme.palette.primary.main,
@@ -104,9 +104,6 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(10)
   },
 }));
-
-//unit for one coin (PaymentActions, Landing.js)
-const unit = 5;
 
 function Dashboard(props) {
   const classes = useStyles();
@@ -202,14 +199,12 @@ function Dashboard(props) {
         )
       }
       return( match.mtime &&
-        <Grid className={classes.enPaper} key={index}>
-        <Grid item>
+        <Grid item className={classes.enPaper} key={index} xs={12} sm={4}>
           <Box padding={1.5}>
             <Typography variant="body2"><Event className={classes.icons}/>&nbsp;{match && dateString(match.mdate)}&nbsp;</Typography>
             <Typography variant="body2"><AccessAlarm className={classes.icons}/>&nbsp;{convt(1,match.mtime)}</Typography>
           </Box>
             <Typography align="right" className={classes.primryColor} style={{fontWeight: 500, paddingRight: 7, paddingBottom: 2}}>{match.name}</Typography>
-        </Grid>
         </Grid>
       )
    }) 
@@ -297,7 +292,7 @@ function Dashboard(props) {
                 container
                 direction="row"
                 justify="center"
-                spacing={1}>
+                spacing={2}>
                 {enrolledMatches}
               </Grid>
             </ExpansionPanelDetails>

@@ -6,7 +6,8 @@ import { makeStyles, Container, Grid, Paper, IconButton, TextField, CardHeader, 
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import { showSnackbar } from '../../../store/actions/uiActions'
 import Copyright from '../../layout/Copyright'
-import { CheckCircleOutlined, HourglassEmptyOutlined, HighlightOff } from '@material-ui/icons';
+import { unit } from '../../../constants'
+import { CheckCircleOutlined, HighlightOff } from '@material-ui/icons';
 
 
 const useStyles = makeStyles(theme => ({
@@ -52,9 +53,6 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-//unit for one coin (PaymentActions, Landing.js, Dashboard.js)
-const unit = 5;
-
 export default function Wallet(props) {
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -91,7 +89,6 @@ export default function Wallet(props) {
         reset();
         //props.backDrop();
     };
-    console.log(process.env.REACT_APP_title)
     const prevOrders = profile.orders && profile.orders.map((order) => {
         return (
             <Grid item xs={12} sm={6} key={order.orderid}><Box boxShadow={2} justifyContent="center" alignItems="center" className={order.status === 'SUCCESS' ? `${classes.prevBox} ${classes.successBox}` : `${classes.prevBox} ${classes.pendingBox}`}>

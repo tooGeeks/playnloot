@@ -6,6 +6,7 @@ import { useHistory} from 'react-router-dom'
 import { Typography, Box, Grid, Button, Container, Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
 import { ReactComponent as Loading } from '../../imgs/loading.svg'
 import Copyright from '../layout/Copyright';
+import { unit } from '../../constants'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -39,9 +40,6 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(4),
   }
 }));
-
-//unit for one coin (PaymentActions, Landing.js)
-const unit = 5;
 
 const Landing = () => {
   const classes = useStyles();

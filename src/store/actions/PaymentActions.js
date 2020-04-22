@@ -1,11 +1,9 @@
 import {getCurrentDate, getOS, getCDT} from '../../Functions'
+import { unit } from '../../constants'
 
 /*
   This File Contains All Payment Actions such as Credit Wallet, Manual Payment, etc. 
 */
-
-//unit for one coin (Wallet.js)
-const unit = 5;
 
 export const creditWallet = (data)=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
