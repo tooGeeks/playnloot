@@ -1,7 +1,7 @@
 import React from 'react';
 import EnrPlayersDetails from './EnrPlayersDetails'
 import { connect } from 'react-redux';
-import {findinMatches,getPlayerfromMatch} from '../../Functions'
+import {findinMatches,getPlayerfromMatch, findinUsers} from '../../Functions'
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import MatchSummary from '../matches/adminMatchSummary';
@@ -16,7 +16,6 @@ const UpdateMatchFacts = (props)=>{
     let tableMetadata = {pages:0,psi:0,page:0,count:0 //psi - Player Starting Index, pei - Player Ending Index
                           ,ppp:5} //ppp means Player Per Page 
     tableMetadata['pei']=tableMetadata['ppp']
-    let uinm = [];
 
     tableMetadata.pages = users && (users.length/tableMetadata.ppp)
     
@@ -78,23 +77,50 @@ const UpdateMatchFacts = (props)=>{
 
     const cols = ['srno','pubgid','mno','ukills','wallet','rank']
     var ind = 1;
-    users && users.map((user)=>{
-      var px = match && getPlayerfromMatch(match.players,user.pubgid)
+    let mplayers = match && match.players
+    let pljson = {}
+    let uinm = []
+    for(let x in mplayers){
+      let mpkarr = Object.keys(mplayers[x])
+      let ldr = users && findinUsers(users,x)
       var ux = {};
-      cols.map(cl=>{
-        return  cl==='srno' ? ux[cl]=ind++ : ux[cl]=user[cl]
+        // eslint-disable-next-line no-loop-func
+      ldr && users && cols.map(cl=>{
+          return  cl==='srno' ? (match.mode==="Solo" ?ux[cl]=ind++ : ux[cl]=ind ) : (cl==='pubgid' && match.mode!=="Solo" ? ux[cl]=ldr[cl]+"'s Team" : ux[cl]=ldr[cl])
       })
-      uinm.push({...ux,id:user.id,ukills:parseInt(px)})
-      return user
-    })
+      if(match.mode!=="Solo"){
+        let alp = ['a','b','c','d']
+        let mates = 
+        users && mpkarr.map(mpk=>users && findinUsers(users,mpk))
+        let matex = []
+          // eslint-disable-next-line no-loop-func
+          mates && users && mates.forEach((mate,sinx)=>{
+            let sindx = 1
+            if(mates && mate && mate.pubgid===x) {sindx++;return;}
+            let mx = {}
+            mates && mate && cols.map(cl=>{
+              return  cl==='srno' ? mx[cl]=(ind)+(match.mode==="Duo"?alp[sindx++]:alp[sinx]) : mx[cl]=mate[cl]
+            })
+            mx['ukills'] = users && x===mpkarr[1] ? mplayers[x][mpkarr[0]] : mplayers[x][mpkarr[1]]
+            mx['ldr']=x
+            matex.push(mx)
+          })
+          ind++
+        uinm.push(...matex)
+      }
+      let ldruk = match.mode==="Solo" ? mplayers[x] : mplayers[x][x]
+      uinm.push({...ux,ukills:ldruk})
+      pljson = {...pljson,[x]:mplayers[x][mpkarr[0]]+mplayers[x][mpkarr[1]]}
+    }
     let winner = match && match.winner;
     tableMetadata['count'] = uinm && uinm.length
     let players = uinm.slice(tableMetadata.psi,tableMetadata.pei)
     players.sort((a,b)=>{
       return a.ukills>b.ukills ? -1 : 1;
     })
+    let rnk = 1
     for(let x in players){
-      players[x].rank = parseInt(x) + 1
+      if(players[x].ldr===undefined) players[x].rank = rnk++
     }
     const msum = match ? <MatchSummary maxp='101' match={matches && match}/> 
     : <div className="center"><p>Loading Match Details...</p><div className="preloader-wrapper small active center">
@@ -109,7 +135,7 @@ const UpdateMatchFacts = (props)=>{
     </div>
   </div></div>
 
-  let playerDetails = users ?
+  let playerDetails = users && players ?
   <EnrPlayersDetails getUnit={getUnit} winner={winner} players={users && players} tableMetadata={tableMetadata} handleChangeRowsPerPage={handleChangeRowsPerPage} handlePageChange={handlePageChange} rstate={hdata} bttnname="Update Values" columns={cols} isEditing={true}/>
   : <div className="center"><p>Loading Player Details...</p><div className="preloader-wrapper small active center">
   <div className="spinner-layer spinner-blue-only">

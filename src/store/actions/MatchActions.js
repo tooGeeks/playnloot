@@ -98,6 +98,7 @@ export const enterMatch = (match,userData)=>{
                             dispatch({ type: 'SNACKBAR', variant: 'error', message: "Your friend wasn't found. Check Your Mate's PUBGID!"});
                             return;
                         }
+                        let players = doc.data().players;
                         let profile2 = snaps.docs[0].data()
                         let cp1matches = st.firebase.profile.matches;
                         let cp2matches = profile2.matches;
@@ -154,6 +155,10 @@ export const enterMatch = (match,userData)=>{
                         return;
                     }
                     db.collection("Users").where('pubgid','in',parr).get().then(snaps=>{
+                        if(snaps.empty || snaps.size<3) {
+                            dispatch({ type: 'SNACKBAR', variant: 'error', message: "Your friend(s) wasn't found. Check Your Mates' PUBGID(s)!"});
+                            return;
+                        }
                         let players = doc.data().players
                         let plno = doc.data().plno + 4
                         let profiles = []
@@ -190,7 +195,10 @@ export const enterMatch = (match,userData)=>{
                                 })
                             })
                         }else{
-
+                            if(!isAlRegM.includes(false) && !isAlRegU.includes(false)){
+                                dispatch({ type: 'SNACKBAR', variant: 'success', message: "Woaah! You`ve already Enrolled in this Match with your friend!"});
+                                return;
+                            }
                         }
                     })
                     break;

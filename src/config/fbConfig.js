@@ -20,4 +20,4 @@ try {
   console.error("An error occured", err);
 }
 
-export default firebase 
+export default firebase

@@ -65,17 +65,30 @@ export const arePlayersinMatch= (docs,ids)=>{
             return ids[0]===doc
             }) ? true : false;
     }else{
-            let ljs = docs[ids[0]]
+            let ljs;
+            ids.forEach(idx=>{
+                if(docs[idx]!==undefined){
+                    ljs = docs[idx]
+                    return;
+                }
+            })
+            console.log(ljs)
             let larr = ljs===undefined ? null : Object.keys(ljs)
-            return ljs===undefined 
-            ? ids.map(x=>{return false})
-            : (ids.map(k=>{return larr.includes(k)}))
+            if(ljs===undefined){
+                return ids.map(x=>{return false})
+            }
+            else return ids.map(k=>{return larr.includes(k)})
     }
 }
 
 export const findinMatches = (docs,id)=>{//Used to Find and return a match using its name Ex. MTH2001
     return docs.find((doc)=>id===doc.id);
 }
+
+export const findinUsers = (Users,pubgid)=>{
+    return Users.find((doc)=>pubgid===doc.pubgid);
+}
+
 export const compdate = (d1,d2)=>{//Used to Compare Dates d1 is before d2
     if(d1.split("-")[2].valueOf()>=d2.split("-")[2].valueOf()){
         if(d1.split("-")[1].valueOf()<d2.split("-")[1].valueOf() && d1.split("-")[0].valueOf()<=d2.split("-")[0].valueOf()){
@@ -137,8 +150,8 @@ export const getOS = ()=>{
     return os;
 }
 
-export const getPlayerfromMatch = (plist,pid)=>{
-    return plist[pid]===undefined ? null : plist[pid]
+export const getPlayerfromMatch = (plist,pid,mode)=>{
+    return plist[pid]
 }
 
 
