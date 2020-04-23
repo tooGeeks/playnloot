@@ -6,7 +6,7 @@ import { useHistory} from 'react-router-dom'
 import { Typography, Box, Grid, Button, Container, Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
 import { ReactComponent as Loading } from '../../imgs/loading.svg'
 import Copyright from '../layout/Copyright';
-import { unit } from '../../constants'
+import { unit, rules } from '../../constants'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,6 +38,9 @@ const useStyles = makeStyles(theme => ({
   },
   Description: {
     marginTop: theme.spacing(4),
+  },
+  rulesBox: {
+    backgroundColor: theme.palette.background.paper,
   }
 }));
 
@@ -161,6 +164,10 @@ const Landing = () => {
         <Grid item xs={12} sm={6}>
           <Box fontSize="h6.fontSize" letterSpacing={1} textAlign="center" padding={2}>
             Rules to follow
+          </Box>
+          <Box p={3} className={classes.rulesBox}>{rules && rules.map((rule, ind) => {
+            return (<Box key={ind} mb={(ind+1) === rule.length ? 3 : 1}>{ind+1}. {rule}</Box>)
+          })}
           </Box>
         </Grid>
         </Grid>

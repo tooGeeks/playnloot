@@ -114,7 +114,7 @@ exports.paytmpay = functions.https.onRequest((req,res) => {
               }
           });
           break;
-      case "AdminPayment":
+      case "Cash":
           let pubgid = req.body.pubgid;
           orderid= "ORDER"+"-"+pubgid+"-"+ran;
           storeOrder(pubgid,{orderid:orderid,amt:parseInt(amount),mode:req.body.mode,date:req.body.datetime,status:"SUCCESS"}).then(result=>{

@@ -190,14 +190,7 @@ function Dashboard(props) {
 
     const enrolledMatches = profile.isLoaded && (profile.matches) ? Matches !== undefined ? (profile.matches.length !== 0) ? profile.matches && profile.matches.map((match, index) =>{
       for (const i of Matches) if(match === i.id) match = i;
-      if(match.lrdate<getCurrentDate()){
-        return(
-          <Paper key={index}> 
-            <Typography>You haven`t enrolled in any new matches</Typography>
-            <br/> <span onClick={() => setExpanded('panel3')}>Enroll now!</span>
-          </Paper>
-        )
-      }
+      if(match.lrdate<getCurrentDate()) return null
       return( match.mtime &&
         <Grid item className={classes.enPaper} key={index} xs={12} sm={4}>
           <Box padding={1.5}>
@@ -212,7 +205,7 @@ function Dashboard(props) {
         <Typography>You haven`t enrolled in any new matches</Typography>
         <br/> <Button size="small" align="right" variant="outlined" color="primary" onClick={() => setExpanded('panel3')}>Enroll now!</Button>
       </div>
-  : null
+   : null
    : null
     
   return (
