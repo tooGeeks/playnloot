@@ -8,6 +8,7 @@ import { showSnackbar } from '../../../store/actions/uiActions'
 import Copyright from '../../layout/Copyright'
 import { unit } from '../../../constants'
 import { CheckCircleOutlined, HighlightOff } from '@material-ui/icons';
+import moment from 'moment'
 
 
 const useStyles = makeStyles(theme => ({
@@ -89,13 +90,18 @@ export default function Wallet(props) {
         reset();
         //props.backDrop();
     };
-    const prevOrders = profile.orders && profile.orders.map((order) => {
+    const prevOrders = profile.orders && profile.orders.sort((d1, d2) => {
+        if (d1.date < d2.date) return 1;
+        if (d1.date > d2.date) return -1;
+        return 0;
+    }).map((order) => {
+        console.log(order)
         return (
             <Grid item xs={12} sm={6} key={order.orderid}><Box boxShadow={2} justifyContent="center" alignItems="center" className={order.status === 'SUCCESS' ? `${classes.prevBox} ${classes.successBox}` : `${classes.prevBox} ${classes.pendingBox}`}>
                 <Box display="flex" flexDirection="column" justifyContent="center" style={{width: '20%', textAlign: "center",}}><Box style={{ fontSize: 25, fontWeight: 'fontWeightBold'}}>₹{order.amt}</Box><Box fontSize={12}>{order.status === 'SUCCESS' ? `Success` : `Failure`}</Box></Box>
                 <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '60%'}}>
                     <Box>{order.mode}</Box>
-                    <Box>{order.date}</Box>
+                    <Box>{moment(order.date.toDate()).calendar()}</Box>
                     {order.status === 'FAILURE' ? <Box fontSize={10}>{order.respmsg}</Box> : null}
                 </Box>
                 <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '20%'}}>{order.status === 'SUCCESS' ? <CheckCircleOutlined style={{ fontSize: 35 }} /> : <HighlightOff style={{ fontSize: 35 }} />}</Box>

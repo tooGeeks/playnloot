@@ -5,9 +5,10 @@ import { compose } from 'redux';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { enterMatch } from '../../store/actions/MatchActions';
-import { clearDialog } from '../../store/actions/uiActions'
+import { backDrop, clearDialog } from '../../store/actions/uiActions'
 import Copyright from '../layout/Copyright'
-import { unit, rules } from '../../constants'
+import { rules } from '../../constants'
+import { convt, dateString } from '../../Functions'
 
 
 const useStyles = makeStyles(theme=>({
@@ -40,12 +41,16 @@ const PlayerEnroll = (props) => {
     dispatch(clearDialog()); //Clear Dialog
     const {Matches, profile} = props
     const match = Matches && Matches[0]
-    const {register,errors,handleSubmit} = useForm()
+    console.log(profile, match)
+    //if(Matches && profile.matches && (profile.matches).includes(match.id)) props.history.push('/dashboard');
+    const {register,errors,handleSubmit, reset} = useForm()
     let enpdiv;
     const enroll = (data, e)=>{
         e.preventDefault();
         dispatch(enterMatch(match,data))
-
+        reset()
+        // dispatch(backDrop())
+        // props.history.push('/dashboard')
     }
     switch(match && match.mode){
         default:
@@ -97,10 +102,10 @@ const PlayerEnroll = (props) => {
                             <br/>
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <Box fontSize={16} textAlign="center">Match Date: {match && match.mdate}</Box>
+                            <Box fontSize={16} textAlign="center">Match Date: {match && dateString(match.mdate)}</Box>
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <Box fontSize={16} textAlign="center" mb={2}>Match Time: {match && match.mtime}</Box>
+                            <Box fontSize={16} textAlign="center" mb={2}>Match Time: {match && convt(1,match.mtime)}</Box>
                         </Grid>
                         <Grid item xs={12} sm={12}>
                             <TextField id="pubgid" variant='outlined'
