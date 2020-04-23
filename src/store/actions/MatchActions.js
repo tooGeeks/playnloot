@@ -9,6 +9,11 @@ import { isEmpty } from 'react-redux-firebase';
 export const createMatch = (match)=>{
     return (dispatch,getState,{getFirebase,getFirestore})=>{
         //Async Code
+        const taglist = match.tags ? match.deftag+","+match.tags : match.deftag 
+        delete match['tags']
+        delete match['deftag']
+        match['tags'] = taglist.split(',')
+        console.log(match['tags'])
         const db = getFirestore();
         db.collection('Matches').get().then((snap)=>{
             const size = snap.size;
@@ -233,18 +238,6 @@ export const updateFacts = (players,mid,mode)=>{
             })
         })
     } 
-}
-
-const reformPlayerData = (players,mode)=>{
-    return new Promise((resolve,reject)=>{
-        let pjs = {}
-        for(let x in players){
-            let cp = players[x]
-            let pubgid = (cp.pubgid).split("'")[0] 
-            if(!cp.ldr) pjs[pubgid] = {[pubgid]:cp.ukills}
-        }
-
-    })
 }
 
 const ufacts = (db,players,mode)=>{

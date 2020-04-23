@@ -17,7 +17,9 @@ const CreateMatch = (props)=>{
         mdate:'',
         mtime:'',
         lrdate:'',
-        mode: 'cao'
+        mode: 'cao',
+        deftag:'cao',
+        tags:''
     })
     const handleChange = (e)=>{
         if(e.target.id!==undefined) setState({...state,[e.target.id]:e.target.value});
@@ -37,12 +39,17 @@ const CreateMatch = (props)=>{
         const ldt = state.lrdate;
         const mti = state.mtime
         const mode = state.mode
+        const deftag = state.deftag
         if(mti===undefined){
             alert("Please Specify the Match Time")
             return;
         }
         if(mode==='cao'){
             alert("Please Specify the Match Mode")
+            return;
+        }
+        if(deftag==='cao'){
+            alert("Please Specify the Match Platform")
             return;
         }
         if(compdate(cds,mdt) && compdate(ldt,mdt) && compdate(cds,ldt)){//checks that match date, last enrollment date and today's date are in order
@@ -88,22 +95,44 @@ const CreateMatch = (props)=>{
                         </div>
                     </div>
                     <div className="row">
-                        <div className="input-field col s5 white-text">
+                        <div className=" col s6 white-text">
+                            <label id="modelbl">Select Mode</label>
+                                <div>
+                                    {state && <Select
+                                        id="mode"
+                                        name="mode"
+                                        value={state.mode}
+                                        onChange={handleChange}
+                                        style={{width:'150px',color:"#ffffff"}}
+                                    >
+                                        <MenuItem key={""} value={'cao'} disabled>Choose an Option</MenuItem>
+                                        {['Solo','Duo','Squad'].map(mode=>(<MenuItem key={mode} value={mode}>{mode}</MenuItem>))}
+                                    </Select>}
+                                </div>
+                        </div>
+                        <div className="col s6 white-text">
+                            <label id="tag1">Select Platform</label>
                                 {state && <Select
-                                    id="mode"
-                                    name="mode"
-                                    value={state.mode}
+                                    id="deftag"
+                                    name="deftag"
+                                    value={state.deftag}
                                     onChange={handleChange}
-                                    style={{width:'100px',color:"#ffffff"}}
+                                    style={{width:'150px',color:"#ffffff"}}
                                 >
                                     <MenuItem key={""} value={'cao'} disabled>Choose an Option</MenuItem>
-                                    {['Solo','Duo','Squad'].map(mode=>(<MenuItem key={mode} value={mode}>{mode}</MenuItem>))}
+                                    {['Mobile','Emulator'].map(mode=>(<MenuItem key={mode} value={mode}>{mode}</MenuItem>))}
                                 </Select>}
                         </div>
-                        <div className="input-field col s2">
-                            <button id="crnmbttn" disabled={!state.name || !state.mdate || !state.mtime || !state.lrdate || state.mode==="cao"} className="waves-effect waves-light btn hoverable">Create Match</button> 
-                        </div>
                     </div>
+                    <div className="row">
+                        <div className="input-field col s6 white-text">
+                                <input id="tags" className="white-text" defaultValue=""  type="text" onChange={handleChange}/>
+                                <label htmlFor="tags">Tags</label>
+                            </div>
+                            <div className="input-field col s4">
+                                <button id="crnmbttn" disabled={!state.name || !state.mdate || !state.mtime || !state.lrdate || state.mode==="cao"} className="waves-effect waves-light btn hoverable">Create Match</button> 
+                            </div>
+                        </div>
                 </form>
             </div>
         </React.Fragment>
