@@ -1,13 +1,44 @@
 import React from 'react';
 import EnrPlayersDetails from './EnrPlayersDetails'
-import {findinMatches,getPlayerfromMatch, findinUsers} from '../../Functions'
-import {useSelector} from 'react-redux'
+import {findinUsers} from '../../Functions'
+import {useSelector, useDispatch} from 'react-redux'
 import MatchSummary from '../matches/adminMatchSummary'
 import Nav from './AdminNav'
 import {useFirestoreConnect} from 'react-redux-firebase'
+import { showDialog, clearDialog } from '../../store/actions/uiActions';
+import { Button } from '@material-ui/core';
+import { setRoomDetails } from '../../store/actions/MatchActions';
+
+const RoomDetails = (props)=>{
+  const {hChange} = props
+  return (<div>
+      <div className='white-text'>
+        <div className="input-field white-text col s4">
+          <input id="roomid" type="text" className="validate white-text"
+           autoFocus={true} onChange={hChange}/>
+          <label htmlFor="roomid">Room ID</label>
+        </div>
+        <div className="input-field white-text col s4">
+          <input id="roompass" type="password" className="validate white-text"
+          onChange={hChange}/>
+          <label htmlFor="roompass">Room Password</label>
+        </div>
+      </div>
+  </div>)
+}
+
+
+
+const RoomActions = (props)=>{
+  const {hClick} = props
+  return(<>
+    <Button color="primary"  onClick={()=>hClick()}>Set</Button>
+  </>)
+}
 
 const MatchDetails = (props)=>{
   const mid = props.match.params.mid;
+  const dispatch = useDispatch()
   useFirestoreConnect([{collection:"Matches",doc:mid},{collection:"Users",where:['matches','array-contains',mid]}])
   const {Matches} = useSelector(state =>state.firestore.ordered)
   const {Users} = useSelector(state =>state.firestore.ordered)
@@ -21,7 +52,6 @@ const MatchDetails = (props)=>{
     let mplayers = match && match.players
     let pljson = {}
     let uinm = []
-    console.log(mplayers)
     for(let x in mplayers){
       let mpkarr = Object.keys(mplayers[x])
       let ldr = Users && findinUsers(Users,x)
@@ -116,8 +146,22 @@ const MatchDetails = (props)=>{
     const handleMClick = ()=>{
       props.history.push("/admin/updatematchfacts/"+mid)
     }
-
-    const msum = match ? <MatchSummary match={Matches && match} handleClick={handleMClick} maxp={101} bttnname="Update Facts"/> 
+    const handleMClick2 = (mid)=>{
+      console.log(mid)
+      let data = {}
+      const hChange = (e)=>{
+        data={...data,[e.target.id]:e.target.value}
+      }
+      const hClick = ()=>{
+        //console.log(data)
+        dispatch(clearDialog())
+        dispatch(setRoomDetails(match.id,data))
+        return;
+      }
+      dispatch(showDialog({title:"Enter Room ID & Password",content:<RoomDetails hChange={hChange}/>,actions:<RoomActions hClick={hClick}/>}))
+    
+    }
+    const msum = match ? <MatchSummary match={Matches && match} handleClick={handleMClick} handleClick2={handleMClick2} bttnname2="Assign Room ID/Pass" maxp={101} bttnname="Update Facts"/> 
     : loadCircle
   const stl = {
     paddingBottom : 120
