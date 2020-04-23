@@ -209,7 +209,7 @@ export const enterMatch = (match,userData)=>{
     }
 }
 
-export const updateFacts = (players,mid)=>{
+export const updateFacts = (players,mid,mode)=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
         for(let x in players){
             if(players[x].ukills===undefined) {
@@ -218,26 +218,47 @@ export const updateFacts = (players,mid)=>{
             }
         }
         const db = getFirestore();
-        ufacts(db,players).then((plist)=>{
+        ufacts(db,players,mode).then((plist)=>{
+            console.log(plist)
             db.collection("Matches").doc(mid).get().then((doc)=>{
                 if(!doc.exists) return;
                 let mpl = doc.data().players;
                 for(let pl in plist){
                     mpl[pl] = plist[pl]
                 }
+                console.log(mpl)
                 db.collection("Matches").doc(mid).set({players:mpl},{merge:true}).then(()=>{
                     dispatch({type:'MTHF_UPD'})
                 })
             })
         })
-    }
+    } 
 }
 
-const ufacts = (db,players)=>{
+const reformPlayerData = (players,mode)=>{
+    return new Promise((resolve,reject)=>{
+        let pjs = {}
+        for(let x in players){
+            let cp = players[x]
+            let pubgid = (cp.pubgid).split("'")[0] 
+            if(!cp.ldr) pjs[pubgid] = {[pubgid]:cp.ukills}
+        }
+
+    })
+}
+
+const ufacts = (db,players,mode)=>{
     return new Promise((resolve,reject)=>{
         let plist = {};
         players.map((pl)=>{
-            plist[pl.pubgid] = pl.ukills
+            if(mode==="Solo") plist[pl.pubgid] = pl.ukills
+            else{
+                if(pl.ldr) plist[pl.ldr] = {...plist[pl.ldr],[pl.pubgid]:pl.ukills}
+                else {
+                    let pid = pl.pubgid.split("'")[0]
+                    plist[pid] = {...plist[pid],[pid]:pl.ukills}
+                }
+            }
             db.collection("Users").doc(pl.id).set({
                 kills:(pl.kills+pl.ukills),
                 wallet:(pl.wallet)

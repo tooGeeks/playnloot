@@ -1,7 +1,7 @@
 import React from 'react';
 import EnrPlayersDetails from './EnrPlayersDetails'
 import { connect } from 'react-redux';
-import {findinMatches,getPlayerfromMatch, findinUsers} from '../../Functions'
+import {findinMatches, findinUsers} from '../../Functions'
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import MatchSummary from '../matches/adminMatchSummary';
@@ -67,7 +67,7 @@ const UpdateMatchFacts = (props)=>{
         if(pl.pubgid!==match.winner) list.push(pl)
         return null
       })
-      props.updateFacts(list,mid);
+      props.updateFacts(list,mid,match.mode);
     }
 
     const handleChange = (e)=>{
@@ -88,6 +88,10 @@ const UpdateMatchFacts = (props)=>{
       ldr && users && cols.map(cl=>{
           return  cl==='srno' ? (match.mode==="Solo" ?ux[cl]=ind++ : ux[cl]=ind ) : (cl==='pubgid' && match.mode!=="Solo" ? ux[cl]=ldr[cl]+"'s Team" : ux[cl]=ldr[cl])
       })
+      ux['id']=ldr && ldr['id']
+      let ldruk = match.mode==="Solo" ? mplayers[x] : mplayers[x][x]
+      ux['ukills'] = ldruk
+      ux['kills'] = ux['kills'] - ux['ukills']
       if(match.mode!=="Solo"){
         let alp = ['a','b','c','d']
         let mates = 
@@ -101,15 +105,16 @@ const UpdateMatchFacts = (props)=>{
             mates && mate && cols.map(cl=>{
               return  cl==='srno' ? mx[cl]=(ind)+(match.mode==="Duo"?alp[sindx++]:alp[sinx]) : mx[cl]=mate[cl]
             })
-            mx['ukills'] = users && x===mpkarr[1] ? mplayers[x][mpkarr[0]] : mplayers[x][mpkarr[1]]
+            mx['ukills'] = mate && mplayers && mplayers[x][mate.pubgid]
+            mx['kills'] = mx['kills'] - mx['ukills']
+            mx['id']= mate['id']
             mx['ldr']=x
             matex.push(mx)
           })
           ind++
         uinm.push(...matex)
       }
-      let ldruk = match.mode==="Solo" ? mplayers[x] : mplayers[x][x]
-      uinm.push({...ux,ukills:ldruk})
+      uinm.push({...ux})
       pljson = {...pljson,[x]:mplayers[x][mpkarr[0]]+mplayers[x][mpkarr[1]]}
     }
     let winner = match && match.winner;
@@ -188,7 +193,7 @@ const mapStatetoProps = (state)=>{
 
 const mapDispatchtoProps = (dispatch)=>{
     return{
-      updateFacts:(players,mid)=>dispatch(updateFacts(players,mid)),
+      updateFacts:(players,mid,mode)=>dispatch(updateFacts(players,mid,mode)),
       updateWinner:(winner)=>dispatch(updateWinner(winner))
     }
 }

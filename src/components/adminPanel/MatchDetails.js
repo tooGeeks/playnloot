@@ -43,7 +43,7 @@ const MatchDetails = (props)=>{
             mates && mate && cols.map(cl=>{
               return  cl==='srno' ? mx[cl]=(ind)+(match.mode==="Duo"?alp[sindx++]:alp[sinx]) : mx[cl]=mate[cl]
             })
-            mx['ukills'] = Users && x===mpkarr[1] ? mplayers[x][mpkarr[0]] : mplayers[x][mpkarr[1]]
+            mx['ukills'] = mate && mplayers && mplayers[x][mate.pubgid]
             mx['ldr']=x
             matex.push(mx)
           })
