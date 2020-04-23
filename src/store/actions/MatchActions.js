@@ -321,6 +321,15 @@ export const cancelMatch = (mid)=>{
     }
 }
 
+export const setRoomDetails = (mid,data)=>{
+    return(dispatch,getState,{getFirebase,getFirestore})=>{
+        console.log(data)
+        const db = getFirestore()
+        db.collection("Matches").doc(mid).set({...data},{merge:true}).then(()=>{
+        })
+    }
+}
+
 const getPlayers = (mid,st)=>{
     return new Promise((resolve,reject)=>{
         const matches = st.firestore.ordered.Matches;
