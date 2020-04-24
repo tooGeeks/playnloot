@@ -27,8 +27,9 @@ yarn-error.log*
 
 #Dev
 /src/config/fbConfig.js
-.firebase/
+/.firebase
 /NNpackage.json
 /Changes Kand
 build/
 .firebase/hosting.cHVibGlj.cache
+firebase-debug.log

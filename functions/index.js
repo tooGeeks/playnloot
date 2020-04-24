@@ -21,7 +21,7 @@ function storeOrder(email,order){
                   });
               });
               break;
-          case "AdminPayment":
+          case "Cash":
               let db = admin.firestore();
               db.collection("Users").where('pubgid','==',email).get().then((snapshot)=>{
                   if(snapshot.empty){
