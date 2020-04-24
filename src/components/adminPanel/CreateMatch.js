@@ -112,16 +112,18 @@ const CreateMatch = (props)=>{
                         </div>
                         <div className="col s6 white-text">
                             <label id="tag1">Select Platform</label>
-                                {state && <Select
-                                    id="deftag"
-                                    name="deftag"
-                                    value={state.deftag}
-                                    onChange={handleChange}
-                                    style={{width:'150px',color:"#ffffff"}}
-                                >
-                                    <MenuItem key={""} value={'cao'} disabled>Choose an Option</MenuItem>
-                                    {['Mobile','Emulator'].map(mode=>(<MenuItem key={mode} value={mode}>{mode}</MenuItem>))}
-                                </Select>}
+                                <div>
+                                    {state && <Select
+                                        id="deftag"
+                                        name="deftag"
+                                        value={state.deftag}
+                                        onChange={handleChange}
+                                        style={{width:'150px',color:"#ffffff"}}
+                                    >
+                                        <MenuItem key={""} value={'cao'} disabled>Choose an Option</MenuItem>
+                                        {['mobile','emu'].map(deftag=>(<MenuItem key={deftag} value={deftag}>{deftag}</MenuItem>))}
+                                    </Select>}
+                                </div>
                         </div>
                     </div>
                     <div className="row">

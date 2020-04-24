@@ -6,14 +6,15 @@ import { isEmpty } from 'react-redux-firebase';
   This File Contains All Match Actions such as Create Match, Update Match, Enter Match, etc. 
 */
 
-export const createMatch = (match)=>{
+export const createMatch = (rmatch)=>{
     return (dispatch,getState,{getFirebase,getFirestore})=>{
         //Async Code
+        const match = {...rmatch}
         const taglist = match.tags ? match.deftag+","+match.tags : match.deftag 
         delete match['tags']
         delete match['deftag']
         match['tags'] = taglist.split(',')
-        console.log(match['tags'])
+        console.log(match)
         const db = getFirestore();
         db.collection('Matches').get().then((snap)=>{
             const size = snap.size;
