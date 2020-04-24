@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import {dateString} from '../../Functions'
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 const WithdrawalDetails = (props)=>{
     const {details,bttnname,hClick,ukey,columns,colValues} = props
@@ -12,7 +13,7 @@ const WithdrawalDetails = (props)=>{
         )
     }) : <div>
         <span className='card-title'>By {fname}</span><br/>
-                        <span>Made on : {dateString(reqdate)}</span><br/>
+                        <span>Made on : {moment(reqdate.toDate()).calendar()}</span><br/>
                         <span>Coins : {coins}</span><br/>
                         <span>Rs. : {coins*5}</span><br/>
                         <span>WhatsApp No. : {mno}</span><br/>

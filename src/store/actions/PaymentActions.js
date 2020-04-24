@@ -64,7 +64,7 @@ export const requestWithdrawal = (data)=>{
                     mno:st.firebase.profile.mno,
                     requests:[{
                         isComplete:false,
-                        reqdate : getCurrentDate(),
+                        reqdate : db.Timestamp.fromMillis(new Date().getTime()),
                         ...data
                     }]
                 }).then(()=>{
@@ -75,7 +75,7 @@ export const requestWithdrawal = (data)=>{
                 let rarr = snap.data().requests;
                 rarr.push({
                     isComplete:false,
-                    reqdate : getCurrentDate(),
+                    reqdate : db.Timestamp.fromMillis(new Date().getTime()),
                     ...data 
                 })
                 db.collection('WithdrawalRequests').doc(st.firebase.auth.uid).set({
