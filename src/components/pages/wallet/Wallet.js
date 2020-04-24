@@ -101,8 +101,7 @@ export default function Wallet(props) {
                 <Box display="flex" flexDirection="column" justifyContent="center" style={{width: '20%', textAlign: "center",}}><Box style={{ fontSize: 25, fontWeight: 'fontWeightBold'}}>₹{order.amt}</Box><Box fontSize={12}>{order.status === 'SUCCESS' ? `Success` : `Failure`}</Box></Box>
                 <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '60%'}}>
                     <Box>{order.mode}</Box>
-                    {/* <Box>{moment(order.date.toDate()).calendar()}</Box> */}
-                    <Box>{moment(order.date.toDate())}</Box>
+                    <Box>{moment(order.date.toDate()).calendar()}</Box>
                     {order.status === 'FAILURE' ? <Box fontSize={10}>{order.respmsg}</Box> : null}
                 </Box>
                 <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '20%'}}>{order.status === 'SUCCESS' ? <CheckCircleOutlined style={{ fontSize: 35 }} /> : <HighlightOff style={{ fontSize: 35 }} />}</Box>

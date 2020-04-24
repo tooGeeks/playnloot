@@ -65,7 +65,7 @@ exports.paytmpay = functions.https.onRequest((req,res) => {
           var mobile = req.body.mno;
           orderid= "ORDER"+"-"+name+"-"+ran;
           var CHANNEL_ID = ['iOS','Android'].includes(req.body.platform)?'WAP':'WEB';
-          storeOrder(email,{orderid:orderid,amt:parseInt(amount),mode:req.body.mode,date:firebase.firestore.Timestamp.fromDate(req.body.datetime),status:"PENDING"}).then(function(result){
+          storeOrder(email,{orderid:orderid,amt:parseInt(amount),mode:req.body.mode,date:admin.firestore.Timestamp.fromMillis(new Date(req.body.datetime).getTime()),status:"PENDING"}).then(function(result){
               if(result){
                   var paramarray = {};
                   paramarray['MID'] = paytm_config.MID; //Provided by Paytm
@@ -117,7 +117,7 @@ exports.paytmpay = functions.https.onRequest((req,res) => {
       case "Cash":
           let pubgid = req.body.pubgid;
           orderid= "ORDER"+"-"+pubgid+"-"+ran;
-          storeOrder(pubgid,{orderid:orderid,amt:parseInt(amount),mode:req.body.mode,date: firebase.firestore.Timestamp.fromDate(req.body.datetime),status:"SUCCESS"}).then(result=>{
+          storeOrder(pubgid,{orderid:orderid,amt:parseInt(amount),mode:req.body.mode,date: admin.firestore.Timestamp.fromMillis(new Date(req.body.datetime).getTime()),status:"SUCCESS"}).then(result=>{
               if(result){
                   res.write('<html>');
                   res.write('<head>');

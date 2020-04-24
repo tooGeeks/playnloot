@@ -27,14 +27,14 @@ export const creditWallet = (data)=>{
                     'email':auth.email,
                     ...data,
                     'platform':getOS(),
-                    'datetime':new Date().getTime()
+                    'datetime':new Date()
                 };
                 break;
             case "Cash":
                 alert(JSON.stringify(data))
                 pdata={
                     ...data,
-                    'datetime':new Date().getTime()
+                    'datetime':new Date()
                 };
                 break;
                 default:
