@@ -10,6 +10,7 @@ import { unit } from '../../../constants';
 import { makeStyles, Grid, Container, Card, CardHeader, IconButton, CardContent, Typography, TextField, CardActions, Button, Box } from '@material-ui/core'
 import { AttachMoney, CheckCircleOutlined, HourglassEmptyOutlined } from '@material-ui/icons'
 import Copyright from '../../layout/Copyright';
+import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -63,13 +64,17 @@ const RequestWithDraw = () => {
         setData({coins: 0, mno: 0, pmode: ''});
     }; 
     const usr = auth && users && findinMatches(users, auth.uid);
-    const requests = usr && usr.requests.map((req, index) => {
+    const requests = usr && usr.requests.sort((d1, d2) => {
+        if (d1.reqdate < d2.reqdate) return 1;
+        if (d1.reqdate > d2.reqdate) return -1;
+        return 0;
+    }).map((req, index) => {
         return (
             <Grid item xs={12} sm={6} key={index}><Box boxShadow={2} justifyContent="center" alignItems="center" className={req.isComplete ? `${classes.prevBox} ${classes.successBox}` : `${classes.prevBox} ${classes.pendingBox}`}>
                 <Box display="flex" flexDirection="column" justifyContent="center" style={{width: '20%', textAlign: "center",}}><Box style={{ fontSize: 25, fontWeight: 'fontWeightBold'}}>₹{req.coins*unit}</Box><Box fontSize={12}>{req.isComplete ? `Paid` : `Pending`}</Box></Box>
                 <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '60%'}}>
                     <Box>{req.pmode}</Box>
-                    <Box>{req.reqdate}</Box>
+                    <Box>{moment(req.reqdate.toDate()).calendar()}</Box>
                     {(!req.isComplete) ? <Button variant="contained" style={{ fontSize: 10, backgroundColor: '#121212', color: '#FFF'}} onClick={() => dispatch(cancelWithdrawal(usr.id+'-'+usr.requests.indexOf(req)))}>Cancel</Button> : null}
                 </Box>
                 <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '20%'}}>{req.isComplete ? <CheckCircleOutlined style={{ fontSize: 35 }} /> : <HourglassEmptyOutlined style={{ fontSize: 35 }} />}</Box>
