@@ -57,11 +57,12 @@ export const requestWithdrawal = (data)=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
         const st = getState();
         const db = getFirestore();
+        const {auth, profile} = st.firebase
         db.collection('WithdrawalRequests').doc(st.firebase.auth.uid).get().then((snap)=>{
             if(!snap.exists){
                 db.collection('WithdrawalRequests').doc(st.firebase.auth.uid).set({
-                    fname:st.firebase.auth.displayName,
-                    mno:st.firebase.profile.mno,
+                    fname:auth.displayName,
+                    mno:profile.mno,
                     requests:[{
                         isComplete:false,
                         reqdate : getCurrentDate(),
@@ -73,11 +74,13 @@ export const requestWithdrawal = (data)=>{
                 })
             }else{
                 let rarr = snap.data().requests;
+                rarr.reverse()
                 rarr.push({
                     isComplete:false,
                     reqdate : getCurrentDate(),
-                    ...data 
+                    ...data
                 })
+                rarr.reverse()
                 db.collection('WithdrawalRequests').doc(st.firebase.auth.uid).set({
                     requests:rarr
                 },{merge:true}).then(()=>{
@@ -123,6 +126,7 @@ export const cancelWithdrawal = (reqid)=>{
         db.collection('WithdrawalRequests').doc(uid).get().then(snap=>{
             let arr = snap.data().requests;
             arr.splice(ind,1);
+            console.log(arr)
             db.collection('WithdrawalRequests').doc(uid).set({
                 requests:arr
             },{merge:true}).then(()=>{
