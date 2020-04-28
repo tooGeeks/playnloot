@@ -75,6 +75,10 @@ const UpdateMatchFacts = (props)=>{
       setState({...state,[e.target.id]:e.target.value})
     }
 
+    let tmp = ['1','2','3','4','5','6','7','8','9','10']
+    tmp.splice(0,5)
+    console.log(tmp)
+
     const cols = ['srno','pubgid','mno','ukills','coins','wallet','rank'] 
     var ind = 1;
     let mplayers = match && match.players

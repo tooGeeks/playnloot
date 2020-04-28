@@ -26,7 +26,10 @@ const rrfConfig = {
 
 const onUpdate = (reg)=>{
   console.log("Service Worker UPD Working",reg);
-  window.location.reload(true);
+  reg.update().then((upx)=>{
+    console.log("Service Worker Updated.",upx)
+    window.location.reload(true);
+  })
 }
 
 const onSuccess = (reg)=>{

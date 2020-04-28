@@ -279,17 +279,18 @@ export const cancelMatch = (mid)=>{
             dispatch({type:"MTH_CAN_ERR",err:"Match Already Canceled"})
             return;
         }
+        const fee = match.fee
         getPlayers(mid,st).then((players)=>{
             let batch = db.batch();
             if(isEmpty(players)) return;
-            if(players.length<10){
+            if(players.length>10){
                 let i,batch = db.batch();
             for(i=0;i<players.length;i+=10){
                 let nPlayers = players.splice(0,10)
                 db.collection("Users").where('pubgid','in',nPlayers).get().then((snaps)=>{
                     snaps.forEach(snap => {
                         let wallet = snap.data().wallet;
-                        wallet+=2;
+                        wallet+=fee;
                         let docRef = db.collection("Users").doc(snap.id)
                         batch.update(docRef,{wallet:wallet})
                     });
