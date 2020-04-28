@@ -1,7 +1,27 @@
-.spinner {
+.main {
   /* margin: 100px auto 0;
   width: 70px; */
+  display: block;
+  margin: auto;
+  min-height: 100vh;
   text-align: center;
+}
+
+.box {
+  background-color: rgb(20,23,29, 90%);
+  padding: 2em;
+  border-radius: 5px;
+  /* border: 0.5px solid #fff; */
+  /* position: absolute; top: 50%; transform: translate(-50%, -50%); */
+}
+
+.text {
+  margin-top: 5px;
+  text-align: center;
+  font: 500;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: large;
+  color: #ffffff;
 }
 
 .spinner > div {

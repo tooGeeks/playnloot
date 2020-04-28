@@ -44,9 +44,13 @@ const useStyles = makeStyles(theme => ({
   killWallet: {
     height: theme.spacing(10),
     width: theme.spacing(10),
+    borderRadius: '5px',
     textAlign: 'center',
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     backgroundColor: theme.palette.background.paper,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   solid: {
     minHeight: 345,
@@ -102,7 +106,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
     color: theme.palette.primary.main,
   },
-  box1: { backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText },
+  box1: { backgroundColor: theme.custom.colors.greenPaper, color: theme.palette.primary.contrastText },
   box2: { backgroundColor: theme.custom.colors.OrangeYellow },
   box3: { backgroundColor: theme.custom.colors.BlueSapphire },
   footer: {
@@ -193,8 +197,7 @@ function Dashboard(props) {
           </Grid>
       )
     }
-
-    const enrolledMatches = profile.isLoaded && (profile.matches) ? Matches !== undefined ? (profile.matches.length !== 0) ? profile.matches && profile.matches.map((match, index) =>{
+    const enrolledMatches = profile.isLoaded && Array.isArray(profile.matches) && Array.isArray(Matches) && (profile.matches.length !== 0) ? profile.matches && profile.matches.map((match, index) =>{
       for (const i of Matches) if(match === i.id) match = i;
       if(match.lrdate<getCurrentDate()) return null
       return( match.mtime &&
@@ -204,9 +207,9 @@ function Dashboard(props) {
               <Box letterSpacing={1} className={classes.onBorderText}>{match.name}</Box>
             </Box>
             <Box p={1} ml={1} mr={1} mb={1}>
-              <Box>
-                <Box fontSize={14}>{convt(1,match.mtime)}</Box>
-                <Box fontSize={14}>{match && dateString(match.mdate)}</Box>
+              <Box mb={1}>
+                <Box fontSize={14}><Event className={classes.icons}/> {convt(1,match.mtime)}</Box>
+                <Box fontSize={14}><AccessAlarm className={classes.icons}/> {match && dateString(match.mdate)}</Box>
               </Box>
               <Box display="flex" flexDirection="row" style={{width: '100%'}}>
                 <Box display="inline-flex" textAlign="left" mt={1} style={{width: '50%'}}>{match.tags && (Array.isArray(match.tags) && match.tags.length) && match.tags.map((tag, ind) => {
@@ -220,21 +223,12 @@ function Dashboard(props) {
             
           </Box>
         </Grid>
-        // <Grid item className={classes.enPaper} key={index} xs={12} sm={4}>
-        //   <Box padding={1.5}>
-        //     <Typography variant="body2"><Event className={classes.icons}/>&nbsp;{match && dateString(match.mdate)}&nbsp;</Typography>
-        //     <Typography variant="body2"><AccessAlarm className={classes.icons}/>&nbsp;{convt(1,match.mtime)}</Typography>
-        //   </Box>
-        //     <Typography align="right" className={classes.primryColor} style={{fontWeight: 500, paddingRight: 7, paddingBottom: 2}}>{match.name}</Typography>
-        // </Grid>
       )
    }) 
    : <div>
         <Typography>You haven`t enrolled in any new matches</Typography>
         <br/> <Button size="small" align="right" variant="outlined" color="primary" onClick={() => setExpanded('panel3')}>Enroll now!</Button>
       </div>
-   : null
-   : null
     
   return (
     <div className={classes.root}>
@@ -256,43 +250,43 @@ function Dashboard(props) {
         </Grid>
         <Grid container item xs={12} sm={6} alignItems='flex-end' justify='space-around' style={{marginBottom: 20}}>
           <Grid item align="center">
-            <Paper className={classes.killWallet}>
-              <Typography>
-              <CssBaseline><TrackChanges className={classes.icons}/>{profile.kills}
-              </CssBaseline>
-              <br/>
-              Kills
+            <Box boxShadow={1} className={classes.killWallet}>
+              <Typography component="span">
+                <CssBaseline><TrackChanges className={classes.icons}/>{profile.kills}
+                </CssBaseline>
+                <br/>
+                Kills
               </Typography>
-            </Paper>
+            </Box>
           </Grid>
           <Grid item align="center">
-            <Paper className={classes.killWallet}>
-              <Typography>
-              <AccountBalanceWalletIcon className={classes.icons}/> {profile.wallet}
-              <br/>
-              Coins
+            <Box boxShadow={1} className={classes.killWallet}>
+              <Typography component="span">
+                <AccountBalanceWalletIcon className={classes.icons}/>{profile.wallet}
+                <br/>
+                Coins
               </Typography>
-            </Paper>
+            </Box>
           </Grid>
           <Grid item align="center">
-            <Paper className={classes.killWallet}>
+            <Box boxShadow={1} className={classes.killWallet}>
               <Tooltip title="Coins in Ruppes(₹)" TransitionComponent={Zoom}>
-                <Typography component="div">
+                <Typography component="span">
                   {/* <MonetizationOn className={classes.icons}/> <br/> */}
                   <center><Avatar variant="circle" className={classes.ruppeIcon}>₹</Avatar></center>
                   ₹{profile.isLoaded ? profile.wallet*unit : 0}
                 </Typography>
               </Tooltip>
-            </Paper>
+            </Box>
           </Grid>
           <Grid item align="center">
-            <Paper className={classes.killWallet}>
-              <Typography>
-              <AccountBalanceWalletIcon className={classes.icons}/> {profile.wallet}
-              <br/>
-              Coins
+            <Box boxShadow={1} className={classes.killWallet}>
+              <Typography component="span">
+                <AccountBalanceWalletIcon className={classes.icons}/>{profile.wallet}
+                <br/>
+                Coins
               </Typography>
-            </Paper>
+            </Box>
           </Grid>
         </Grid>
         <Grid item xs={12} sm={12}>

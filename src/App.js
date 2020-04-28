@@ -40,6 +40,7 @@ import Nav from "./components/layout/Nav";
 import SnackSnackbar from './components/SnackSnackbar'
 import AlertDialog from './components/AlertDialog'
 import BackDrop from './components/BackDrop';
+import Loader from './components/BackDrop/Loader';
 import { ReactComponent as Loading } from './imgs/loading.svg';
 import { dark } from '@material-ui/core/styles/createPalette';
 
@@ -47,9 +48,10 @@ import { dark } from '@material-ui/core/styles/createPalette';
 const AuthIsLoaded = ({children})=>{
     const auth = useSelector(state=>state.firebase.auth);
   if(!isLoaded(auth)) return (
-    <div>
-      <Loading className="authLoad"/>
-    </div>
+    <Loader />
+    // <div>
+    //   <Loading className="authLoad"/>
+    // </div>
   )
     return (children);
 }
@@ -85,8 +87,8 @@ const App = () => {
     let Navbottom = <Nav modeControl={toggleDarkMode}/>
     return (
       <BrowserRouter>
+        <MuiThemeProvider theme={themeConfig}>
         <AuthIsLoaded>
-          <MuiThemeProvider theme={themeConfig}>
           <BackDrop/>
           <SnackSnackbar />
           <AlertDialog/>
@@ -123,8 +125,8 @@ const App = () => {
               </Switch>
               {Navbottom}
             </div>
-          </MuiThemeProvider >
-        </AuthIsLoaded>
+          </AuthIsLoaded>
+        </MuiThemeProvider >
       </BrowserRouter>
     );
 }
