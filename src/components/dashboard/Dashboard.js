@@ -97,8 +97,14 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 10,
     paddingLeft: 4,
     paddingRight: 4,
+    fontSize: 14,
+    fontWeight: 500,
     backgroundColor: theme.palette.background.paper,
+    color: theme.palette.primary.main,
   },
+  box1: { backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText },
+  box2: { backgroundColor: theme.custom.colors.OrangeYellow },
+  box3: { backgroundColor: theme.custom.colors.BlueSapphire },
   footer: {
     marginTop: 'auto',
     marginBottom: theme.spacing(10)
@@ -174,7 +180,7 @@ function Dashboard(props) {
         <Grid item xs={12} sm={4}>
             <Box className={classes.newMatchesBoxes}>
               <Box display="flex" flexDirection="row">
-                <Box fontSize={13} fontWeight="fontWeightMedium" letterSpacing={1} className={classes.onBorderText}>{props.type}</Box>
+                <Box letterSpacing={1} className={classes.onBorderText}>{props.type}</Box>
               </Box>
               <Box>
                 <List >
@@ -192,15 +198,26 @@ function Dashboard(props) {
       for (const i of Matches) if(match === i.id) match = i;
       if(match.lrdate<getCurrentDate()) return null
       return( match.mtime &&
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={4} key={match.id}>
           <Box className={classes.newMatchesBoxes}>
             <Box display="flex" flexDirection="row">
-              <Box fontSize={13} fontWeight="fontWeightMedium" letterSpacing={1} className={classes.onBorderText}>{match.name}</Box>
+              <Box letterSpacing={1} className={classes.onBorderText}>{match.name}</Box>
             </Box>
-            <Box>
-              <Box fontSize={14}>{convt(1,match.mtime)}</Box>
-              <Box fontSize={14}>{match && dateString(match.mdate)}</Box>
+            <Box p={1} ml={1} mr={1} mb={1}>
+              <Box>
+                <Box fontSize={14}>{convt(1,match.mtime)}</Box>
+                <Box fontSize={14}>{match && dateString(match.mdate)}</Box>
+              </Box>
+              <Box display="flex" flexDirection="row" style={{width: '100%'}}>
+                <Box display="inline-flex" textAlign="left" mt={1} style={{width: '50%'}}>{match.tags && (Array.isArray(match.tags) && match.tags.length) && match.tags.map((tag, ind) => {
+                  return (
+                    <Box key={ind} mr={1} pr={0.5} pl={0.5} borderRadius={1} className={classes.box1}>{tag}</Box>
+                  )
+                })}</Box>
+                <Box textAlign="right" style={{width: '50%'}}><Button variant="outlined" size="small" color="primary">Details</Button></Box>
+              </Box>
             </Box>
+            
           </Box>
         </Grid>
         // <Grid item className={classes.enPaper} key={index} xs={12} sm={4}>
