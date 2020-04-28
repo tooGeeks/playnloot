@@ -42,7 +42,8 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
               'kills':{title:'Kills',field:'kills',type:'numeric',editable: 'onUpdate'},
               'ukills':{title:'Kills in Match',field:'ukills',type:'numeric',editable: 'onUpdate',defaultSort:'desc'},
               'wallet':{title:'Wallet Amount',field:'wallet',type:'numeric',editable: 'never'},
-              'rank':{title:'Rank',field:'rank',type:'numeric',editable: 'never'}
+              'rank':{title:'Rank',field:'rank',type:'numeric',editable: 'never'},
+              'coins':{title:"Coins",field:"coins",type:"numeric",editable:"onUpdate"}
             }
 
 
@@ -63,13 +64,15 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
             newData['ukills']=parseInt(newData['ukills'])
             newData['wallet']=parseInt(newData['wallet'])
             newData['rank']=parseInt(newData['rank'])
+            newData['coins']=parseInt(newData['coins'])
             const jdiff = cJSON(oldData,newData)
-            if(Object.keys(jdiff)[0]==='ukills' && oldData['ukills']<newData['ukills']){
-                let kdiff = newData['ukills'] - oldData['ukills']
-                newData['wallet'] = parseInt(newData['wallet']) + kdiff * unit
-            }else if(Object.keys(jdiff)[0]==='ukills' && oldData['ukills']>newData['ukills']){
-                let kdiff = oldData['ukills'] - newData['ukills']
-                newData['wallet'] = parseInt(newData['wallet']) - kdiff * unit
+            console.log(jdiff)
+            if(Object.keys(jdiff)[0]==='coins' && oldData['coins']<newData['coins']){
+                let kdiff = newData['coins'] - oldData['coins']
+                newData['wallet'] = parseInt(newData['wallet']) + kdiff
+            }else if(Object.keys(jdiff)[0]==='coins' && oldData['coins']>newData['coins']){
+                let kdiff = oldData['coins'] - newData['coins']
+                newData['wallet'] = parseInt(newData['wallet']) - kdiff
             }
             data[inx] = newData;
             data.sort((a,b)=>{
