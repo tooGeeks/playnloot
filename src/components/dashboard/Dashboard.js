@@ -192,13 +192,24 @@ function Dashboard(props) {
       for (const i of Matches) if(match === i.id) match = i;
       if(match.lrdate<getCurrentDate()) return null
       return( match.mtime &&
-        <Grid item className={classes.enPaper} key={index} xs={12} sm={4}>
-          <Box padding={1.5}>
-            <Typography variant="body2"><Event className={classes.icons}/>&nbsp;{match && dateString(match.mdate)}&nbsp;</Typography>
-            <Typography variant="body2"><AccessAlarm className={classes.icons}/>&nbsp;{convt(1,match.mtime)}</Typography>
+        <Grid item xs={12} sm={4}>
+          <Box className={classes.newMatchesBoxes}>
+            <Box display="flex" flexDirection="row">
+              <Box fontSize={13} fontWeight="fontWeightMedium" letterSpacing={1} className={classes.onBorderText}>{match.name}</Box>
+            </Box>
+            <Box>
+              <Box fontSize={14}>{convt(1,match.mtime)}</Box>
+              <Box fontSize={14}>{match && dateString(match.mdate)}</Box>
+            </Box>
           </Box>
-            <Typography align="right" className={classes.primryColor} style={{fontWeight: 500, paddingRight: 7, paddingBottom: 2}}>{match.name}</Typography>
         </Grid>
+        // <Grid item className={classes.enPaper} key={index} xs={12} sm={4}>
+        //   <Box padding={1.5}>
+        //     <Typography variant="body2"><Event className={classes.icons}/>&nbsp;{match && dateString(match.mdate)}&nbsp;</Typography>
+        //     <Typography variant="body2"><AccessAlarm className={classes.icons}/>&nbsp;{convt(1,match.mtime)}</Typography>
+        //   </Box>
+        //     <Typography align="right" className={classes.primryColor} style={{fontWeight: 500, paddingRight: 7, paddingBottom: 2}}>{match.name}</Typography>
+        // </Grid>
       )
    }) 
    : <div>
