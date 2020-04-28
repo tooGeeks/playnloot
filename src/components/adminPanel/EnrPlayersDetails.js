@@ -42,7 +42,7 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
               'kills':{title:'Kills',field:'kills',type:'numeric',editable: 'onUpdate'},
               'ukills':{title:'Kills in Match',field:'ukills',type:'numeric',editable: 'onUpdate',defaultSort:'desc'},
               'wallet':{title:'Wallet Amount',field:'wallet',type:'numeric',editable: 'never'},
-              'rank':{title:'Rank',field:'rank',type:'numeric',editable: 'never'},
+              'rank':{title:'Rank',field:'rank',type:'numeric',editable: 'onUpdate'},
               'coins':{title:"Coins",field:"coins",type:"numeric",editable:"onUpdate"}
             }
 
@@ -78,10 +78,12 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
             data.sort((a,b)=>{
                 return a.ukills<b.ukills ? 1 : -1;
             })
+            /** 
             for(let x in data){
                 data[x].rank = parseInt(x)+1
                 data[x].srno = parseInt(x)+1
             }
+            */
             console.log(data)
             setState({data})
             resolve();

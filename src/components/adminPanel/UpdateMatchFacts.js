@@ -93,6 +93,7 @@ const UpdateMatchFacts = (props)=>{
       ux['ukills'] = ldruk
       ux['kills'] = ux['kills'] - ux['ukills']
       ux['coins']=0
+      ux['rank']=0
       if(match.mode!=="Solo"){
         let alp = ['a','b','c','d']
         let mates = 
@@ -125,10 +126,12 @@ const UpdateMatchFacts = (props)=>{
     players.sort((a,b)=>{
       return a.ukills>b.ukills ? -1 : 1;
     })
+    /**
     let rnk = 1
     for(let x in players){
       if(players[x].ldr===undefined) players[x].rank = rnk++
     }
+    */
     const msum = match ? <MatchSummary maxp='101' match={matches && match}/> 
     : <div className="center"><p>Loading Match Details...</p><div className="preloader-wrapper small active center">
     <div className="spinner-layer spinner-blue-only">
