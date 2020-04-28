@@ -77,13 +77,8 @@ export const requestWithdrawal = (data)=>{
                 rarr.reverse()
                 rarr.push({
                     isComplete:false,
-<<<<<<< HEAD
-                    reqdate : getCurrentDate(),
-                    ...data
-=======
                     reqdate : db.Timestamp.fromMillis(new Date().getTime()),
                     ...data 
->>>>>>> 3e6a65db901e9f91e40c75a6601c0ab1e3820178
                 })
                 rarr.reverse()
                 db.collection('WithdrawalRequests').doc(st.firebase.auth.uid).set({
