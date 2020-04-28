@@ -19,7 +19,11 @@ const CreateMatch = (props)=>{
         lrdate:'',
         mode: 'cao',
         deftag:'cao',
-        tags:''
+        tags:'',
+        fee:2,
+        "prize-1":0,
+        "prize-2":0,
+        "prize-3":0
     })
     const handleChange = (e)=>{
         if(e.target.id!==undefined) setState({...state,[e.target.id]:e.target.value});
@@ -128,17 +132,30 @@ const CreateMatch = (props)=>{
                     </div>
                     <div className="row">
                         <div className="input-field col s6 white-text">
-                                <input id="tags" className="white-text" defaultValue=""  type="text" onChange={handleChange}/>
-                                <label htmlFor="tags">Tags</label>
+                            <input id="tags" className="white-text" defaultValue=""  type="text" onChange={handleChange}/>
+                            <label htmlFor="tags">Tags</label>
                         </div>
                         <div className="input-field col s6 white-text">
-                                <input id="enfee" className="white-text" defaultValue={5}  type="number" onChange={handleChange}/>
-                                <label htmlFor="enfee">Entry Fee</label>
+                            <input id="fee" className="white-text" defaultValue={2}  type="number" onChange={handleChange}/>
+                            <label htmlFor="fee">Entry Fee</label>
                         </div>
                     </div>
                     <div>
+                        <label htmlFor="prizes">Prizes</label>
+                        <div className="row">
+                            {["1st","2nd","3rd"].map((pn,ind)=>{
+                                return(
+                                    <div key={ind} className="input-field col s4 white-text">
+                                        <input id={"prize-"+(ind+1)} className="white-text"  type="number" onChange={handleChange}/>
+                                        <label htmlFor={"prize-"+(ind+1)}>{pn+" Prize"}</label>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </div>
+                    <div className="row">
                         <div className="input-field col s4">
-                            <button id="crnmbttn" disabled={!state.name || !state.mdate || !state.mtime || !state.lrdate || state.mode==="cao"} className="waves-effect waves-light btn hoverable">Create Match</button> 
+                            <button id="crnmbttn" disabled={!state.name || !state.mdate || !state.mtime || !state.lrdate || state.mode==="cao" || state.deftag==="cao" || state["prize-1"]===0 || state["prize-2"]===0 || state["prize-3"]===0} className="waves-effect waves-light btn hoverable">Create Match</button> 
                         </div>
                     </div>
 

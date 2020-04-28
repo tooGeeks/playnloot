@@ -43,6 +43,7 @@ const MatchDetails = (props)=>{
   const {Matches} = useSelector(state =>state.firestore.ordered)
   const {Users} = useSelector(state =>state.firestore.ordered)
     const match = Matches && Matches[0]
+    console.log(match)
     const cols = ['srno','pubgid','mno','ukills','rank']
     let tableMetadata = {pages:0,psi:0,page:0,count:0 //psi - Player Starting Index, pei - Player Ending Index
       ,ppp:5} //ppp means Player Per Page 

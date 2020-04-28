@@ -14,6 +14,12 @@ export const createMatch = (rmatch)=>{
         delete match['tags']
         delete match['deftag']
         match['tags'] = taglist.split(',')
+        let prz = {1:parseInt(match['prize-1']),2:parseInt(match['prize-2']),3:parseInt(match['prize-3'])}
+        delete match['prize-1']
+        delete match['prize-2']
+        delete match['prize-3']
+        match['prizes'] = prz
+        match['fee'] = parseInt(match['fee'])
         console.log(match)
         const db = getFirestore();
         db.collection('Matches').get().then((snap)=>{
@@ -51,7 +57,7 @@ export const enterMatch = (match,userData)=>{
         const {profile, auth} = st.firebase;
         let wallet = profile.wallet;
         const db = getFirestore();
-        if(wallet<2){
+        if(wallet<match.fee){
             dispatch({type:"EN_MATCH_ERR"})
             //dispatch({ type: 'SNACKBAR', variant: 'error', message: "An Error Occured\nTry Again!\n or Contact Admin"});
             dispatch({ type: 'SNACKBAR', variant: 'error', message: "Insufficient Coins! Please, buy required Coins and try again!"});
@@ -80,7 +86,7 @@ export const enterMatch = (match,userData)=>{
                             plno:plno
                         },{merge:true}).then(()=>{
                             cpmatches.push(match.id);
-                            wallet-=2;
+                            wallet-=match.fee;
                             db.collection('Users').doc(auth.uid).set({matches:cpmatches,wallet},{merge:true})
                                 dispatch({ type: 'SNACKBAR', variant: 'success', message: "Success! You`ve enrolled in the match. Happy Looting!"});
                                 dispatch({type:"EN_MATCH",cp,'mid':match.id})
@@ -95,7 +101,7 @@ export const enterMatch = (match,userData)=>{
                         dispatch({ type: 'SNACKBAR', variant: 'error', message: "Same ID detected! Please, provide proper ID of your mate!"});
                         return
                     }
-                    if(wallet<4){
+                    if(wallet<(match.fee * 2)){
                         dispatch({ type: 'SNACKBAR', variant: 'error', message: "Insufficient Coins! Please, buy required Coins and try again!"});
                         return;
                     }
@@ -156,7 +162,7 @@ export const enterMatch = (match,userData)=>{
                         return
                     }
                     let parr = [mate1,mate2,mate3]
-                    if(wallet<8){
+                    if(wallet<(match.fee * 4)){
                         dispatch({ type: 'SNACKBAR', variant: 'error', message: "Insufficient Coins! Please, buy required Coins and try again!"});
                         return;
                     }
