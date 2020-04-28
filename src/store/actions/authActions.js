@@ -1,4 +1,5 @@
 import { clearDialog } from "./uiActions";
+import {reportError} from '../../Functions'
 
 export const signIn = (credentials) => {
   return (dispatch, getState, {getFirebase}) => {
@@ -21,20 +22,26 @@ export const signIn = (credentials) => {
 }
 
 export const signOut = () => {
-  return (dispatch, getState, {getFirebase}) => {
+  return (dispatch, getState, {getFirebase,getFirestore}) => {
     const firebase = getFirebase();
-
+    const db = getFirestore();
+    const {auth} = getState()
+    const {uid} = auth
     firebase.auth().signOut().then(() => {
       dispatch({ type: 'SNACKBAR', variant: 'info', message: "Come back Soon! We`ll miss you!"});
       dispatch({ type: 'SIGNOUT_SUCCESS' })
-    });
+    }).catch((err)=>{
+      reportError(db,uid,{date:db.Timestamp.fromMillis(new Date().getTime()),...err}).then(()=>{
+        
+      })
+    })
   }
 }
  
 export const signUp = (newUser) => {
   return (dispatch, getState, {getFirebase, getFirestore}) => {
     const firebase = getFirebase();
-    const firestore = firebase.firestore();
+    const firestore = getFirestore();
 
     dispatch({type: 'BACKDROP'});
 
@@ -91,16 +98,21 @@ export const signUp = (newUser) => {
 export const resetPassword = (email)=>{
   return(dispatch,getState,{getFirebase,getFirestore})=>{
       const fb = getFirebase();
-      // const st = getState();
+      const st = getState();
+      const db = getFirestore()
+      const {auth} = st
+      const {uid} = auth
       // console.log(st);
       fb.auth().sendPasswordResetEmail(email).then(()=>{
           dispatch({type:"PWD_RST"})
           dispatch(clearDialog())
           dispatch({ type: 'SNACKBAR', variant: 'success', message: "Check ur Email: We sent you a reset passwaord link!" });
       }).catch((err)=>{
-          dispatch({type:"PWD_RST_ERR",err})
-          dispatch(clearDialog());
-          dispatch({ type: 'SNACKBAR', variant: 'error', message: `Something went wrong! Don\`t worry just contact Admin (${err})` });
+          reportError(db,uid,{date:db.Timestamp.fromMillis(new Date().getTime()),...err}).then(()=>{
+            dispatch({type:"PWD_RST_ERR",err})
+            dispatch(clearDialog());
+            dispatch({ type: 'SNACKBAR', variant: 'error', message: `Something went wrong! Don\`t worry just contact Admin (${err})` });
+          })
       })
   }
 }

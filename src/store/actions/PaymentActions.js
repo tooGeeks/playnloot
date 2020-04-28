@@ -1,4 +1,4 @@
-import {getCurrentDate, getOS, getCDT} from '../../Functions'
+import {getOS, reportError} from '../../Functions'
 import { unit } from '../../constants'
 
 /*
@@ -58,6 +58,7 @@ export const requestWithdrawal = (data)=>{
         const st = getState();
         const db = getFirestore();
         const {auth, profile} = st.firebase
+        const uid = auth.uid
         db.collection('WithdrawalRequests').doc(st.firebase.auth.uid).get().then((snap)=>{
             if(!snap.exists){
                 db.collection('WithdrawalRequests').doc(st.firebase.auth.uid).set({
@@ -70,7 +71,11 @@ export const requestWithdrawal = (data)=>{
                     }]
                 }).then(()=>{
                     dispatch({type:"RW_SUCCESS"})
-                    dispatch({ type: 'SNACKBAR', variant: 'success', message: `Success! You\`ve requested for ₹${data.coins*unit}, Method: ${data.pmode}. We\`ll pop the admin! [Repeat]`});
+                    dispatch({ type: 'SNACKBAR', variant: 'success', message: `Success! You've requested for ₹${data.coins*unit}, Method: ${data.pmode}. We\`ll pop the admin! [Repeat]`});
+                }).catch((err)=>{
+                    reportError(db,uid,{date:db.Timestamp.fromMillis(new Date().getTime()),...err}).then(()=>{
+                        dispatch({type:'RW_ERR'})
+                    })
                 })
             }else{
                 let rarr = snap.data().requests;
@@ -86,6 +91,10 @@ export const requestWithdrawal = (data)=>{
                 },{merge:true}).then(()=>{
                     dispatch({type:"RW_SUCCESS"})
                     dispatch({ type: 'SNACKBAR', variant: 'success', message: `Success! You\`ve requested for ₹${data.coins*unit}, Method: ${data.pmode}. We\`ll pop the admin!`});
+                }).catch((err)=>{
+                    reportError(db,uid,{date:db.Timestamp.fromMillis(new Date().getTime()),...err}).then(()=>{
+                        dispatch({type:'RW_ERR'})
+                    })
                 })
             }
             
@@ -112,6 +121,10 @@ export const confirmWithdrawal = (reqid)=>{
                     },{merge:true})
                 }).then(()=>{
                     dispatch({type:'RW_CNF'})
+                }).catch((err)=>{
+                    reportError(db,uid,{date:db.Timestamp.fromMillis(new Date().getTime()),...err}).then(()=>{
+                        dispatch({type:'RW_CNF_ERR'})
+                    })
                 })
             })
         })
@@ -131,6 +144,10 @@ export const cancelWithdrawal = (reqid)=>{
                 requests:arr
             },{merge:true}).then(()=>{
                 dispatch({type:'RW_CAN'})
+            }).catch((err)=>{
+                reportError(db,uid,{date:db.Timestamp.fromMillis(new Date().getTime()),...err}).then(()=>{
+                    dispatch({type:'RW_CAN_ERR'})
+                })
             })
         })
     }

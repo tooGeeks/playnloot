@@ -1,6 +1,7 @@
 import {isinDocs,findinMatches,isPlayerinMatch, arePlayersinMatch} from '../../Functions'
 import 'firebase/functions'
 import { isEmpty } from 'react-redux-firebase';
+import {reportError} from '../../Functions'
 
 /*
   This File Contains All Match Actions such as Create Match, Update Match, Enter Match, etc. 
@@ -58,6 +59,7 @@ export const enterMatch = (match,userData)=>{
         let wallet = profile.wallet;
         const db = getFirestore();
         if(wallet<match.fee){
+            //reportError(db,auth.uid,{msg:"Insufficient Coins! Please, buy required Coins and try again!",date:db.Timestamp.fromMillis(new Date().getTime())})
             dispatch({type:"EN_MATCH_ERR"})
             //dispatch({ type: 'SNACKBAR', variant: 'error', message: "An Error Occured\nTry Again!\n or Contact Admin"});
             dispatch({ type: 'SNACKBAR', variant: 'error', message: "Insufficient Coins! Please, buy required Coins and try again!"});
@@ -99,6 +101,7 @@ export const enterMatch = (match,userData)=>{
                 case "Duo":
                     if(cp===mate1){
                         dispatch({ type: 'SNACKBAR', variant: 'error', message: "Same ID detected! Please, provide proper ID of your mate!"});
+                        
                         return
                     }
                     if(wallet<(match.fee * 2)){
