@@ -130,11 +130,18 @@ const CreateMatch = (props)=>{
                         <div className="input-field col s6 white-text">
                                 <input id="tags" className="white-text" defaultValue=""  type="text" onChange={handleChange}/>
                                 <label htmlFor="tags">Tags</label>
-                            </div>
-                            <div className="input-field col s4">
-                                <button id="crnmbttn" disabled={!state.name || !state.mdate || !state.mtime || !state.lrdate || state.mode==="cao"} className="waves-effect waves-light btn hoverable">Create Match</button> 
-                            </div>
                         </div>
+                        <div className="input-field col s6 white-text">
+                                <input id="enfee" className="white-text" defaultValue={5}  type="number" onChange={handleChange}/>
+                                <label htmlFor="enfee">Entry Fee</label>
+                        </div>
+                    </div>
+                    <div>
+                        <div className="input-field col s4">
+                            <button id="crnmbttn" disabled={!state.name || !state.mdate || !state.mtime || !state.lrdate || state.mode==="cao"} className="waves-effect waves-light btn hoverable">Create Match</button> 
+                        </div>
+                    </div>
+
                 </form>
             </div>
         </React.Fragment>
