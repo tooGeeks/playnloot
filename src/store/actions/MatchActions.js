@@ -284,8 +284,10 @@ export const cancelMatch = (mid)=>{
             let batch = db.batch();
             if(isEmpty(players)) return;
             if(players.length>10){
-                let i,batch = db.batch();
-            for(i=0;i<players.length;i+=10){
+                let i,incr=10,plength=players.length;
+            for(i=0;i<plength;i+=incr){
+                let batch = db.batch();
+                incr = players && players.length<incr ? players.length : incr
                 let nPlayers = players.splice(0,10)
                 db.collection("Users").where('pubgid','in',nPlayers).get().then((snaps)=>{
                     snaps.forEach(snap => {
@@ -301,6 +303,8 @@ export const cancelMatch = (mid)=>{
                                 dispatch({type:"MTH_CAN_SUCC"})
                             })
                         })
+                    }else{
+                        batch.commit()
                     }
                 })
             }
@@ -313,9 +317,10 @@ export const cancelMatch = (mid)=>{
                         let docRef = db.collection("Users").doc(snap.id)
                         batch.update(docRef,{wallet:wallet})
                     });
-                })
-                batch.commit().then(()=>{
-                    console.log('Done');
+                }).then(()=>{
+                    batch.commit().then(()=>{
+                        dispatch({type:"MTH_CAN_SUCC"})
+                    })
                 })
             }
         })
@@ -335,7 +340,6 @@ const getPlayers = (mid,st)=>{
     return new Promise((resolve,reject)=>{
         const matches = st.firestore.ordered.Matches;
         const match = matches ? findinMatches(matches,mid) : null;
-        console.log(match)
         const players = match && match.players;
         let parr = []
         for(let x in players){
