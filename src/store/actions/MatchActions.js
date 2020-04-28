@@ -350,21 +350,23 @@ export const updateWinner = (winner)=>{
         db.collection('Users').where('pubgid','==',winner.pubgid).get().then((snaps)=>{
             let winnerSnap = snaps.docs[0];
             if(snaps.isEmpty || !winnerSnap){
-                alert("ID Not Found")
+                dispatch({type:"MTHF_UPDWE",err:"ID Not Found"})
                 return
             }
             winner['id']=winnerSnap.id
             winner['kills']=winnerSnap.data().kills;
             //winner['wallet'] =winnerSnap.data().wallet + (winner['ukills'] * winner.unit)
             db.collection("Users").doc(winner.id).set({
-                kills:(winner.kills+winner.ukills)
+                kills:(winner.kills+parseInt(winner.ukills))
             },{merge:true}).then(()=>{
                 db.collection("Matches").doc(winner.mid).get().then((doc)=>{
-                    if(!doc.exists) return;
+                    if(!doc.exists){
+                        dispatch({type:"MTHF_UPDWE",err:"Match Not Found"})
+                        return;}
                     let mpl = doc.data().players;
                     mpl[winner.pubgid] = winner.ukills
                     db.collection("Matches").doc(winner.mid).set({players:mpl,winner:winner.pubgid},{merge:true}).then(()=>{
-                        dispatch({type:'MTHF_UPD'})
+                        dispatch({type:'MTHF_UPDW'})
                     })
                 })
             })

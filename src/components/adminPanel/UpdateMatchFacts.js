@@ -75,7 +75,7 @@ const UpdateMatchFacts = (props)=>{
       setState({...state,[e.target.id]:e.target.value})
     }
 
-    const cols = ['srno','pubgid','mno','ukills','coins','wallet','rank']
+    const cols = ['srno','pubgid','mno','ukills','coins','wallet','rank'] 
     var ind = 1;
     let mplayers = match && match.players
     let pljson = {}

@@ -27,6 +27,14 @@ const MatchReducer = (state=initState,action)=>{
             console.log("Already Enrolled");
             //alert("Already Enrolled");
             return state;
+        case 'MTHF_UPDW':
+            console.log("Winner Updated")
+            alert("Winner Updated")
+            return state;
+        case 'MTHF_UPDWE':
+            console.log("Error : ",action.err)
+            alert("Error : "+action.err)
+            return state;
         default:
             return state;
     } 
