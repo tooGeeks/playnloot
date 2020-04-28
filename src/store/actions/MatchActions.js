@@ -348,14 +348,16 @@ export const updateWinner = (winner)=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
         const db = getFirestore()
         db.collection('Users').where('pubgid','==',winner.pubgid).get().then((snaps)=>{
-            if(snaps.isEmpty) return
             let winnerSnap = snaps.docs[0];
+            if(snaps.isEmpty || !winnerSnap){
+                alert("ID Not Found")
+                return
+            }
             winner['id']=winnerSnap.id
             winner['kills']=winnerSnap.data().kills;
-            winner['wallet'] =winnerSnap.data().wallet + (winner['ukills'] * winner.unit)
+            //winner['wallet'] =winnerSnap.data().wallet + (winner['ukills'] * winner.unit)
             db.collection("Users").doc(winner.id).set({
-                kills:(winner.kills+winner.ukills),
-                wallet:(winner.wallet)
+                kills:(winner.kills+winner.ukills)
             },{merge:true}).then(()=>{
                 db.collection("Matches").doc(winner.mid).get().then((doc)=>{
                     if(!doc.exists) return;
