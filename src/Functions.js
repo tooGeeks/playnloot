@@ -154,5 +154,23 @@ export const getPlayerfromMatch = (plist,pid,mode)=>{
     return plist[pid]
 }
 
+export const reportError = (db,uid,error)=>{
+      return new Promise((resolve,reject)=>{
+        console.log(error)
+        db.collection("Logs").doc(uid).get().then((doc)=>{
+          if(!doc.exists){
+            db.collection("Logs").doc(uid).set({errors:[{...error}]}).then(()=>{
+              resolve(true)
+            })
+          }else{
+            let errors = doc.data().errors
+            errors.push({...error})
+            db.collection("Logs").doc(uid).set({errors},{merge:true}).then(()=>{
+                resolve(true)
+            })
+          }
+        })
+      })
+}
 
   

@@ -1,6 +1,7 @@
 import {isinDocs,findinMatches,isPlayerinMatch, arePlayersinMatch} from '../../Functions'
 import 'firebase/functions'
 import { isEmpty } from 'react-redux-firebase';
+import {reportError} from '../../Functions'
 
 /*
   This File Contains All Match Actions such as Create Match, Update Match, Enter Match, etc. 
@@ -58,6 +59,7 @@ export const enterMatch = (match,userData)=>{
         let wallet = profile.wallet;
         const db = getFirestore();
         if(wallet<match.fee){
+            //reportError(db,auth.uid,{msg:"Insufficient Coins! Please, buy required Coins and try again!",date:db.Timestamp.fromMillis(new Date().getTime())})
             dispatch({type:"EN_MATCH_ERR"})
             //dispatch({ type: 'SNACKBAR', variant: 'error', message: "An Error Occured\nTry Again!\n or Contact Admin"});
             dispatch({ type: 'SNACKBAR', variant: 'error', message: "Insufficient Coins! Please, buy required Coins and try again!"});
@@ -99,6 +101,7 @@ export const enterMatch = (match,userData)=>{
                 case "Duo":
                     if(cp===mate1){
                         dispatch({ type: 'SNACKBAR', variant: 'error', message: "Same ID detected! Please, provide proper ID of your mate!"});
+                        
                         return
                     }
                     if(wallet<(match.fee * 2)){
@@ -261,7 +264,8 @@ const ufacts = (db,players,mode)=>{
             }
             db.collection("Users").doc(pl.id).set({
                 kills:(pl.kills+pl.ukills),
-                wallet:(pl.wallet)
+                wallet:(pl.wallet),
+                looted:(pl.looted)
             },{merge:true})
             return pl;
         })
@@ -284,8 +288,10 @@ export const cancelMatch = (mid)=>{
             let batch = db.batch();
             if(isEmpty(players)) return;
             if(players.length>10){
-                let i,batch = db.batch();
-            for(i=0;i<players.length;i+=10){
+                let i,incr=10,plength=players.length;
+            for(i=0;i<plength;i+=incr){
+                let batch = db.batch();
+                incr = players && players.length<incr ? players.length : incr
                 let nPlayers = players.splice(0,10)
                 db.collection("Users").where('pubgid','in',nPlayers).get().then((snaps)=>{
                     snaps.forEach(snap => {
@@ -301,6 +307,8 @@ export const cancelMatch = (mid)=>{
                                 dispatch({type:"MTH_CAN_SUCC"})
                             })
                         })
+                    }else{
+                        batch.commit()
                     }
                 })
             }
@@ -313,9 +321,10 @@ export const cancelMatch = (mid)=>{
                         let docRef = db.collection("Users").doc(snap.id)
                         batch.update(docRef,{wallet:wallet})
                     });
-                })
-                batch.commit().then(()=>{
-                    console.log('Done');
+                }).then(()=>{
+                    batch.commit().then(()=>{
+                        dispatch({type:"MTH_CAN_SUCC"})
+                    })
                 })
             }
         })
@@ -335,7 +344,6 @@ const getPlayers = (mid,st)=>{
     return new Promise((resolve,reject)=>{
         const matches = st.firestore.ordered.Matches;
         const match = matches ? findinMatches(matches,mid) : null;
-        console.log(match)
         const players = match && match.players;
         let parr = []
         for(let x in players){
@@ -363,7 +371,8 @@ export const updateWinner = (winner)=>{
                 db.collection("Matches").doc(winner.mid).get().then((doc)=>{
                     if(!doc.exists){
                         dispatch({type:"MTHF_UPDWE",err:"Match Not Found"})
-                        return;}
+                        return;
+                    }
                     let mpl = doc.data().players;
                     mpl[winner.pubgid] = winner.ukills
                     db.collection("Matches").doc(winner.mid).set({players:mpl,winner:winner.pubgid},{merge:true}).then(()=>{

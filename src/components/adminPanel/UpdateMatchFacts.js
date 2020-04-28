@@ -75,10 +75,6 @@ const UpdateMatchFacts = (props)=>{
       setState({...state,[e.target.id]:e.target.value})
     }
 
-    let tmp = ['1','2','3','4','5','6','7','8','9','10']
-    tmp.splice(0,5)
-    console.log(tmp)
-
     const cols = ['srno','pubgid','mno','ukills','coins','wallet','rank'] 
     var ind = 1;
     let mplayers = match && match.players
@@ -95,9 +91,11 @@ const UpdateMatchFacts = (props)=>{
       ux['id']=ldr && ldr['id']
       let ldruk = match.mode==="Solo" ? mplayers[x] : mplayers[x][x]
       ux['ukills'] = ldruk
+      ux['kills']=ldr && ldr['kills']
       ux['kills'] = ux['kills'] - ux['ukills']
       ux['coins']=0
       ux['rank']=0
+      ux['looted']=ldr && ldr['looted']
       if(match.mode!=="Solo"){
         let alp = ['a','b','c','d']
         let mates = 
@@ -116,6 +114,7 @@ const UpdateMatchFacts = (props)=>{
             mx['id']= mate['id']
             mx['ldr']=x
             mx['coins']=0
+            mx['looted']=mate['looted']
             matex.push(mx)
           })
           ind++

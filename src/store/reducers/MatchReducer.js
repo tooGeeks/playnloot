@@ -35,6 +35,10 @@ const MatchReducer = (state=initState,action)=>{
             console.log("Error : ",action.err)
             alert("Error : "+action.err)
             return state;
+        case "MTH_CAN_SUCC":
+            console.log("Match Cancelled Successfully")
+            alert("Match Cancelled Successfully")
+            return state
         default:
             return state;
     } 
