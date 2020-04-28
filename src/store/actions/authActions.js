@@ -55,6 +55,7 @@ export const signUp = (newUser) => {
               mno: parseInt(newUser.mno),
               wallet: 1,
               kills: 0,
+              looted:0,
               orders: [],
               matches: [],
               //Del later :-

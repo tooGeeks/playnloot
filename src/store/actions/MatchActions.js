@@ -261,7 +261,8 @@ const ufacts = (db,players,mode)=>{
             }
             db.collection("Users").doc(pl.id).set({
                 kills:(pl.kills+pl.ukills),
-                wallet:(pl.wallet)
+                wallet:(pl.wallet),
+                looted:(pl.looted)
             },{merge:true})
             return pl;
         })
@@ -367,7 +368,8 @@ export const updateWinner = (winner)=>{
                 db.collection("Matches").doc(winner.mid).get().then((doc)=>{
                     if(!doc.exists){
                         dispatch({type:"MTHF_UPDWE",err:"Match Not Found"})
-                        return;}
+                        return;
+                    }
                     let mpl = doc.data().players;
                     mpl[winner.pubgid] = winner.ukills
                     db.collection("Matches").doc(winner.mid).set({players:mpl,winner:winner.pubgid},{merge:true}).then(()=>{

@@ -60,19 +60,23 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
             let data = state.data;
             let unit = getUnit()
             let inx = data.indexOf(oldData);
+            console.log(newData)
             newData['kills']=parseInt(newData['kills'])
             newData['ukills']=parseInt(newData['ukills'])
             newData['wallet']=parseInt(newData['wallet'])
             newData['rank']=parseInt(newData['rank'])
             newData['coins']=parseInt(newData['coins'])
+            newData['looted']=parseInt(newData['looted'])
             const jdiff = cJSON(oldData,newData)
             console.log(jdiff)
             if(Object.keys(jdiff)[0]==='coins' && oldData['coins']<newData['coins']){
                 let kdiff = newData['coins'] - oldData['coins']
                 newData['wallet'] = parseInt(newData['wallet']) + kdiff
+                newData['looted'] = parseInt(newData['looted']) + kdiff
             }else if(Object.keys(jdiff)[0]==='coins' && oldData['coins']>newData['coins']){
                 let kdiff = oldData['coins'] - newData['coins']
                 newData['wallet'] = parseInt(newData['wallet']) - kdiff
+                newData['looted'] = parseInt(newData['looted']) - kdiff
             }
             data[inx] = newData;
             data.sort((a,b)=>{
