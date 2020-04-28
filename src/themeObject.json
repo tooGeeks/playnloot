@@ -7,7 +7,7 @@
 		},
 		"secondary":
 		{
-			"main":"#4dcb99"
+			"main":"#ff934f"
 		},
 		"error":
 		{
@@ -30,7 +30,10 @@
 	"custom": {
 		"colors": {
 			"darkhead1": "#aca8b1",
-			"darkhead2": "#6f6a7a"
+			"darkhead2": "#6f6a7a",
+			"BitterLemon": "#c2e812",
+			"OrangeYellow": "#f4d06f",
+			"BlueSapphire": "#22577a"
 		}
 	}
 }
