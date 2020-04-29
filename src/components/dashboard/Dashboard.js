@@ -199,7 +199,7 @@ function Dashboard(props) {
     }
     const enrolledMatches = profile.isLoaded && Array.isArray(profile.matches) && Array.isArray(Matches) && (profile.matches.length !== 0) ? profile.matches && profile.matches.map((match, index) =>{
       for (const i of Matches) if(match === i.id) match = i;
-      if(match.lrdate<getCurrentDate()) return null
+      if(match.mdate<getCurrentDate()) return null
       return( match.mtime &&
         <Grid item xs={12} sm={4} key={match.id}>
           <Box className={classes.newMatchesBoxes}>
@@ -272,7 +272,6 @@ function Dashboard(props) {
             <Box boxShadow={1} className={classes.killWallet}>
               <Tooltip title="Coins in Ruppes(₹)" TransitionComponent={Zoom}>
                 <Typography component="span">
-                  {/* <MonetizationOn className={classes.icons}/> <br/> */}
                   <center><Avatar variant="circle" className={classes.ruppeIcon}>₹</Avatar></center>
                   ₹{profile.isLoaded ? profile.wallet*unit : 0}
                 </Typography>
@@ -282,9 +281,9 @@ function Dashboard(props) {
           <Grid item align="center">
             <Box boxShadow={1} className={classes.killWallet}>
               <Typography component="span">
-                <AccountBalanceWalletIcon className={classes.icons}/>{profile.wallet}
+                <AccountBalanceWalletIcon className={classes.icons}/>{profile.looted}
                 <br/>
-                Coins
+                Looted
               </Typography>
             </Box>
           </Grid>
@@ -334,16 +333,6 @@ function Dashboard(props) {
             </ExpansionPanelDetails>
           </ExpansionPanel>
         </Grid>
-        {/* <Grid item xs={12} sm={6}>
-          <Paper className={classes.paper}>
-            Kand5
-          </Paper>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Paper className={classes.paper}>
-            Kand6
-          </Paper>
-        </Grid> */}
       </Grid>
     </Container>
     <footer className={classes.footer}>

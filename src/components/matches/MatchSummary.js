@@ -3,7 +3,7 @@ import {convt,dateString} from '../../Functions';
 import { useHistory } from 'react-router-dom';
 
 //Updates
-import { makeStyles, Typography, Button } from '@material-ui/core';
+import { makeStyles, Typography, Button, Box } from '@material-ui/core';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { deepOrange } from '@material-ui/core/colors';
@@ -26,6 +26,7 @@ const useStyles = makeStyles(theme => ({
         color: theme.palette.getContrastText(deepOrange[500]),
         backgroundColor: deepOrange[500],
       },
+    box1: { backgroundColor: theme.custom.colors.greenPaper, color: theme.palette.primary.contrastText },
 }))
 
 const Details = (props) => {
@@ -67,7 +68,9 @@ const MatchSummary = (props) => {
     <>
         <ListItem className={classes.Item}>
             <ListItemText style={{marginRight: 3}} primary={match.name} secondary={
-                <><Typography variant="caption">On: {dateString(match.mdate)}<br/>At: {match.mtime}</Typography></>} />
+                <><Typography variant="caption">On: {dateString(match.mdate)}<br/>At: {match.mtime}<Box display="inline-flex">{match.tags && match.tags.map((tag, ind) => {
+                    return (<Box key={ind} ml={1} borderRadius={1} className={classes.box1}>&nbsp;{tag}&nbsp;</Box>)
+                })}</Box></Typography></>} />
             <Button size="small" align="right" variant="outlined" color="primary"  edge="end" onClick={() => dispatch(showDialog({title: ("Enroll in " + (match.name)), content: <Details id={match.id} match={match} canEnroll={canEnroll}/>, actions: <Actions mid={match.id} canEnroll={canEnroll}/>}))}>Details</Button>
         </ListItem>
     </>
