@@ -2,18 +2,24 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
-function storeOrder(email,order){
+function storeOrder(email,orderid,order){
   return new Promise(function(resolve,reject){
       switch(order.mode){
           case "PayTM":
               admin.auth().getUserByEmail(email).then(function(userRecord){
                   var uid = userRecord.uid;
                   let db = admin.firestore();
-                  db.collection("Users").doc(uid).get().then(function(doc){
+                  db.collection("Orders").doc(uid).get().then(function(doc){
+                      if(doc.empty){
+                        db.collection("Orders").doc(uid).set({
+                            orders:{[orderid]:{...order}}
+                        }, { merge: true });
+                        resolve(true);
+                      }
                       var orders = doc.data().orders;
-                      orders.push(order);
-                      db.collection("Users").doc(uid).set({
-                          orders:orders
+                      orders[orderid] = order
+                      db.collection("Orders").doc(uid).set({
+                          orders
                       }, { merge: true });
                       resolve(true);
                   }).catch((err)=>{
@@ -29,12 +35,23 @@ function storeOrder(email,order){
                   }
                   let usr = snapshot.docs[0];
                   let nwamt = (usr.data().wallet)+parseInt(order.amt)/5;
-                  let orders = usr.data().orders;
-                  orders.push(order);
                   db.collection("Users").doc(usr.id).set({
-                      wallet:nwamt,
-                      orders:orders
-                  }, { merge: true });
+                      wallet:nwamt
+                  }, { merge: true }).then(()=>{
+                    db.collection("Orders").doc(usr.id).get((snap)=>{
+                        if(!snap.exists){
+                            db.collection("Orders").doc(usr.id).set({
+                                orders:{[orderid]:{...order}}
+                            },{merge:true})
+                        }else{
+                            let orders = snap.data().orders
+                            orders[orderid] = order
+                            db.collection("Orders").doc(usr.id).set({
+                                orders
+                            },{merge:true})
+                        }
+                    })
+                  })
                   resolve(true);
               }).catch(err=>{
                   resolve(false);
@@ -65,7 +82,7 @@ exports.paytmpay = functions.https.onRequest((req,res) => {
           var mobile = req.body.mno;
           orderid= "ORDER"+"-"+name+"-"+ran;
           var CHANNEL_ID = ['iOS','Android'].includes(req.body.platform)?'WAP':'WEB';
-          storeOrder(email,{orderid:orderid,amt:parseInt(amount),mode:req.body.mode,date:admin.firestore.Timestamp.fromMillis(new Date(req.body.datetime).getTime()),status:"PENDING"}).then(function(result){
+          storeOrder(email,orderid,{amt:parseInt(amount),mode:req.body.mode,date:admin.firestore.Timestamp.fromMillis(new Date(req.body.datetime).getTime()),status:"PENDING"}).then(function(result){
               if(result){
                   var paramarray = {};
                   paramarray['MID'] = paytm_config.MID; //Provided by Paytm
@@ -153,23 +170,27 @@ function incrwalletamt(orderid,amount){
   var pubgid = orderid.split("-")[1];
   return new Promise(function(resolve,reject){
       db.collection("Users").where('pubgid','==',pubgid).get().then(snapshot => {
-          if(snapshot.empty){
-              console.error("PUBG ID : "+pubgid+"Not Found");
-              return;
-          }
-          var usr = snapshot.docs[0];
-          var noofcns = amount/5;
-          var nwamt = (usr.data().wallet)+noofcns;
-          var orders = usr.data().orders;
-          var corder = orders.find((od)=>od.orderid===orderid);
-          var ind = orders.indexOf(corder);
-          corder.status = "SUCCESS";
-          orders[ind] = corder;
-          db.collection("Users").doc(usr.id).set({
-              wallet : nwamt,
-              orders : orders
-          },{merge : true});
-          resolve(nwamt);
+        if(snapshot.empty){
+            console.error("PUBG ID : "+pubgid+"Not Found");
+            return;
+        }
+        var usr = snapshot.docs[0];
+        var noofcns = amount/5;
+        var nwamt = (usr.data().wallet)+noofcns;
+        db.collection("Users").doc(usr.id).set({
+            wallet : nwamt
+        },{merge : true}).then(()=>{
+            db.collection("Orders").doc(usr.id).get().then((snap)=>{
+                let orders = snap.data().orders;
+                let corder = orders[orderid]
+                console.log(orders)
+                corder.status = "SUCCESS";
+                orders[orderid] = corder;
+                db.collection("Orders").doc(usr.id).set({orders},{merge:true}).then(()=>{
+                    resolve(nwamt);
+                })
+            })
+        })
       });
   });
 }
@@ -184,16 +205,18 @@ function changeOrderStatus(orderid,nstatus,resmsg){
               return;
           }
           var usr = snapshot.docs[0];
-          var orders = usr.data().orders;
-          var corder = orders.find((od)=>od.orderid===orderid);
-          var ind = orders.indexOf(corder);
-          corder.status = nstatus;
-          corder.respmsg = resmsg;
-          orders[ind] = corder;
-          db.collection("Users").doc(usr.id).set({
-              orders : orders
-          },{merge : true});
-          resolve(nstatus);
+          db.collection("Orders").doc(usr.id).get().then((snap)=>{
+            let orders = usr.data().orders;
+            let corder = orders[orderid]
+            corder.status = nstatus;
+            corder.respmsg = resmsg;
+            orders[orderid] = corder;
+            db.collection("Orders").doc(usr.id).set({
+                orders
+            },{merge : true}).then(()=>{
+                resolve(nstatus);
+            })
+          })
       });
   });
 }

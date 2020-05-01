@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, connect } from 'react-redux';
 import { creditWallet, } from '../../../store/actions/PaymentActions';
 import useForm from "react-hook-form";
 import { makeStyles, Container, Grid, IconButton, TextField, CardHeader, Typography, Card, CardContent, CardActions, Button, Box } from '@material-ui/core';
@@ -9,6 +9,8 @@ import Copyright from '../../layout/Copyright'
 import { unit } from '../../../constants'
 import { CheckCircleOutlined, HighlightOff } from '@material-ui/icons';
 import moment from 'moment'
+import { compose } from 'redux';
+import { firestoreConnect } from 'react-redux-firebase';
 
 
 const useStyles = makeStyles(theme => ({
@@ -54,7 +56,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function Wallet(props) {
+function Wallet(props) {
     const classes = useStyles();
     const dispatch = useDispatch();
     const { use, mny } = props.match.params;
@@ -64,6 +66,12 @@ export default function Wallet(props) {
     const { profile } = useSelector(
         state => state.firebase
     )
+    const {userOrders} = props
+    const ordersJSON = userOrders && userOrders[0].orders
+    const orders = []
+    for(let x in ordersJSON){
+        orders.push({orderid:x,...ordersJSON[x]})
+    }
     useEffect(() => {
         if(profile.isLoaded && profile.isLoaded !== undefined){
             switch (use) {
@@ -90,7 +98,9 @@ export default function Wallet(props) {
         reset();
         //props.backDrop();
     };
-    const prevOrders = profile.orders && profile.orders.sort((d1, d2) => {
+    console.log(orders)
+    const prevOrders = orders && orders.sort((d1, d2) => {
+        console.log(d1)
         if (d1.date < d2.date) return 1;
         if (d1.date > d2.date) return -1;
         return 0;
@@ -185,3 +195,19 @@ export default function Wallet(props) {
         </div>
     );
 }
+
+const mapStatetoProps = (state)=>{
+    return{
+        auth:state.firebase.auth,
+        userOrders:state.firestore.ordered.Orders
+    }
+}
+
+export default compose(
+    connect(mapStatetoProps),
+    firestoreConnect((props) => {
+        return [
+            {collection:'Orders',doc:props.auth.uid}
+        ]
+    })
+)(Wallet)
