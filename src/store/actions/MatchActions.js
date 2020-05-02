@@ -1,7 +1,6 @@
 import {isinDocs,findinMatches,isPlayerinMatch, arePlayersinMatch} from '../../Functions'
 import 'firebase/functions'
 import { isEmpty } from 'react-redux-firebase';
-import {reportError} from '../../Functions'
 
 /*
   This File Contains All Match Actions such as Create Match, Update Match, Enter Match, etc. 

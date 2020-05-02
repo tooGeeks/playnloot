@@ -16,6 +16,8 @@ const MatchSummary = (props)=>{
     const fmsg = isEnr ? isEnrolledmsg : canEnrollmsg; //Final message depending upon enrollment status
     const canmsg = match.isActive ? null : <Fragment><span className='red-text'>Match has been canceled</span></Fragment>
     const bttn2 = bttnname2 && handleClick2 ? <button className="waves-effect waves-light btn-small" hidden id={match.id} onClick={()=>{link2(match.id)}} disabled={isEnr || !match.isActive}>{bttnname2}</button> : null
+    const {team,map,view} = match && match.mode
+    const prizes = match && match.prizes
     return(
         <div className="row">
             <div className="col s12 m6 offset-m3">
@@ -23,10 +25,13 @@ const MatchSummary = (props)=>{
                 <div className="card-content white-text">
                 <span className='card-title'>Match Name : {match.name}&emsp;</span><br/>
                 <span className='white-text'>Match ID : {match.id}&emsp;</span><br/>
+                <span className='white-text'>Entry Fee : {match.fee}&emsp;</span><br/>
                 <span className='white-text'>Match Date : {match.mdate}&emsp;</span><br/>
                 <span className='white-text'>L.Reg Date : {match.lrdate}&emsp;</span><br/>
                 <span className='white-text'>Match Time : {convt(1,match.mtime)}&emsp;</span><br/>{/* Converts Time */}
+                <span className='white-text'>Match Mode Details : {team+"-"+view+"-"+map}&emsp;</span><br/>
                 <span className='white-text'>Players Enrolled : {match.plno}&emsp;</span><br/>
+                <span className='white-text'>Prize Pool : {prizes ? "1st : "+prizes['1']+", 2nd : "+prizes['2']+", 3rd : "+prizes['3'] : null}&emsp;</span><br/>
                 <span className='white-text'>Room ID : {match && match.roomid ? match.roomid : "Not Set" }&emsp;</span><br/>
                 <span className='white-text'>Room Password : {match && match.roompass ? match.roompass : "Not Set" }&emsp;</span><br/>
                 {fmsg}
