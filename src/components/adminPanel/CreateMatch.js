@@ -17,10 +17,12 @@ const CreateMatch = (props)=>{
         mdate:'',
         mtime:'',
         lrdate:'',
-        mode: 'cao',
+        team: 'cao',
         deftag:'cao',
         tags:'',
         fee:2,
+        map:'cao',
+        view:'cao',
         "prize-1":0,
         "prize-2":0,
         "prize-3":0
@@ -42,17 +44,27 @@ const CreateMatch = (props)=>{
         const mdt = state.mdate;
         const ldt = state.lrdate;
         const mti = state.mtime
-        const mode = state.mode
+        const team = state.team
         const deftag = state.deftag
+        const view = state.view
+        const map = state.map
         if(mti===undefined){
             alert("Please Specify the Match Time")
             return;
         }
-        if(mode==='cao'){
+        if(team==='cao'){
             alert("Please Specify the Match Mode")
             return;
         }
         if(deftag==='cao'){
+            alert("Please Specify the Match Platform")
+            return;
+        }
+        if(view==='cao'){
+            alert("Please Specify the Match Platform")
+            return;
+        }
+        if(map==='cao'){
             alert("Please Specify the Match Platform")
             return;
         }
@@ -100,17 +112,49 @@ const CreateMatch = (props)=>{
                     </div>
                     <div className="row">
                         <div className=" col s6 white-text">
-                            <label id="modelbl">Select Mode</label>
+                            <label id="modelbl">Select TeamType</label>
                                 <div>
                                     {state && <Select
-                                        id="mode"
-                                        name="mode"
-                                        value={state.mode}
+                                        id="team"
+                                        name="team"
+                                        value={state.team}
                                         onChange={handleChange}
                                         style={{width:'150px',color:"#ffffff"}}
                                     >
                                         <MenuItem key={""} value={'cao'} disabled>Choose an Option</MenuItem>
-                                        {['Solo','Duo','Squad'].map(mode=>(<MenuItem key={mode} value={mode}>{mode}</MenuItem>))}
+                                        {['Solo','Duo','Squad'].map(team=>(<MenuItem key={team} value={team}>{team}</MenuItem>))}
+                                    </Select>}
+                                </div>
+                        </div>
+                        <div className="col s6 white-text">
+                            <label id="tag1">Select Perspective</label>
+                                <div>
+                                    {state && <Select
+                                        id="view"
+                                        name="view"
+                                        value={state.view}
+                                        onChange={handleChange}
+                                        style={{width:'150px',color:"#ffffff"}}
+                                    >
+                                        <MenuItem key={""} value={'cao'} disabled>Choose an Option</MenuItem>
+                                        {['TPP','FPP'].map(view=>(<MenuItem key={view} value={view}>{view}</MenuItem>))}
+                                    </Select>}
+                                </div>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col s6 white-text">
+                            <label id="tag1">Select Map</label>
+                                <div>
+                                    {state && <Select
+                                        id="map"
+                                        name="map"
+                                        value={state.map}
+                                        onChange={handleChange}
+                                        style={{width:'150px',color:"#ffffff"}}
+                                    >
+                                        <MenuItem key={""} value={'cao'} disabled>Choose an Option</MenuItem>
+                                        {['Erangel','Miramar','Sanhok','Vikendi'].map(map=>(<MenuItem key={map} value={map}>{map}</MenuItem>))}
                                     </Select>}
                                 </div>
                         </div>
@@ -155,7 +199,7 @@ const CreateMatch = (props)=>{
                     </div>
                     <div className="row">
                         <div className="input-field col s4">
-                            <button id="crnmbttn" disabled={!state.name || !state.mdate || !state.mtime || !state.lrdate || state.mode==="cao" || state.deftag==="cao" || state["prize-1"]===0 || state["prize-2"]===0 || state["prize-3"]===0} className="waves-effect waves-light btn hoverable">Create Match</button> 
+                            <button id="crnmbttn" disabled={!state.name || !state.mdate || !state.mtime || !state.lrdate || state.team==="cao" || state.view==="cao" || state.map==="cao" || state.deftag==="cao" || state["prize-1"]===0 || state["prize-2"]===0 || state["prize-3"]===0} className="waves-effect waves-light btn hoverable">Create Match</button> 
                         </div>
                     </div>
 

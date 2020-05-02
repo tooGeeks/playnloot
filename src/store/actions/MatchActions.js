@@ -14,6 +14,14 @@ export const createMatch = (rmatch)=>{
         const taglist = match.tags ? match.deftag+","+match.tags : match.deftag 
         delete match['tags']
         delete match['deftag']
+        let mode = {}
+        let modep = ['team','view','map']
+        modep.forEach((x)=>{
+            mode[x] = match[x]
+            delete match[x]
+        })
+        match['mode'] = mode
+        console.log(match['mode'])
         match['tags'] = taglist.split(',')
         let prz = {1:parseInt(match['prize-1']),2:parseInt(match['prize-2']),3:parseInt(match['prize-3'])}
         delete match['prize-1']
