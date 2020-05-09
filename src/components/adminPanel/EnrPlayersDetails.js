@@ -128,7 +128,7 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
                         pageSizeOptions:[5,10,15,20],
                         rowStyle:rowData =>(
                             {
-                            backgroundColor : winner===rowData.pubgid ? '#5DDF93' : '#2B3138'
+                            backgroundColor : (mode==="Solo" && winner===rowData.pubgid) || (mode!=="Solo" && winner===rowData.pubgid.split("'")[0]) || winner===rowData.ldr ? '#5DDF93' : '#2B3138'
                         })
                     }}
                     isLoading={!state}

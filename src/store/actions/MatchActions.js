@@ -49,10 +49,12 @@ export const createMatch = (rmatch)=>{
     }
 }
 
-export const updateMatch = (mid,match)=>{
+export const updateMatch = (mid,rmatch)=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
+        let match = {...rmatch}
         const db = getFirestore();
         console.log("MID : "+mid+" Match : ",match);
+        return;
         db.collection("Matches").doc(mid).set({...match},{merge:true}).then(()=>{
             dispatch({type:"UD_MATCH"});
         })
@@ -363,31 +365,71 @@ const getPlayers = (mid,st)=>{
 export const updateWinner = (winner)=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
         const db = getFirestore()
-        db.collection('Users').where('pubgid','==',winner.pubgid).get().then((snaps)=>{
-            let winnerSnap = snaps.docs[0];
-            if(snaps.isEmpty || !winnerSnap){
-                dispatch({type:"MTHF_UPDWE",err:"ID Not Found"})
-                return
-            }
-            winner['id']=winnerSnap.id
-            winner['kills']=winnerSnap.data().kills;
-            //winner['wallet'] =winnerSnap.data().wallet + (winner['ukills'] * winner.unit)
-            db.collection("Users").doc(winner.id).set({
-                kills:(winner.kills+parseInt(winner.ukills))
-            },{merge:true}).then(()=>{
-                db.collection("Matches").doc(winner.mid).get().then((doc)=>{
-                    if(!doc.exists){
-                        dispatch({type:"MTHF_UPDWE",err:"Match Not Found"})
-                        return;
+        const winnerData = winner.data
+        console.log(winner)
+        if(winner.mode.team==="Solo"){
+            console.log("Solo")
+                db.collection('Users').where('pubgid','==',winnerData.winner_id).get().then((snaps)=>{
+                    let winnerSnap = snaps.docs[0];
+                    if(snaps.isEmpty || !winnerSnap){
+                        dispatch({type:"MTHF_UPDWE",err:"ID Not Found"})
+                        return
                     }
-                    let mpl = doc.data().players;
-                    mpl[winner.pubgid] = winner.ukills
-                    db.collection("Matches").doc(winner.mid).set({players:mpl,winner:winner.pubgid},{merge:true}).then(()=>{
-                        dispatch({type:'MTHF_UPDW'})
+                    console.log(winnerSnap.data())
+                    winnerData['id']=winnerSnap.id
+                    winnerData['kills']=winnerSnap.data().kills;
+                    winnerData['wins']=parseInt(winnerSnap.data().wins) + 1
+                    //winner['wallet'] =winnerSnap.data().wallet + (winner['ukills'] * winner.unit)
+                    db.collection("Users").doc(winnerData.id).set({
+                        kills:(winner.kills+parseInt(winnerData.winner_kills)),wins:winnerData.wins
+                    },{merge:true}).then(()=>{
+                        db.collection("Matches").doc(winner.mid).get().then((doc)=>{
+                            if(!doc.exists){
+                                dispatch({type:"MTHF_UPDWE",err:"Match Not Found"})
+                                return;
+                            }
+                            let mpl = doc.data().players;
+                            mpl[winnerData.winner_id] = winnerData.winner_kills
+                            db.collection("Matches").doc(winner.mid).set({players:mpl,winner:winnerData.winner_id},{merge:true}).then(()=>{
+                                dispatch({type:'MTHF_UPDW'})
+                            })
+                        })
                     })
                 })
-            })
-        })
+        }else{
+            let parr = []
+                console.log(winner.mode.team,winnerData)
+                db.collection("Matches").doc(winner.mid).get().then((snap)=>{
+                    let players = snap.data().players
+                    let mwinners = players[winnerData.Leader]
+                    if(mwinners===undefined) {
+                        console.log("Leader ID Incorrect")
+                        return
+                    }
+                    for(let x in mwinners){
+                        if(winnerData[x]===undefined) {
+                            console.log("User NF")
+                            return
+                        }
+                        parr.push(x)
+                        mwinners[x] = parseInt(winnerData[x])
+                    }
+                    players[winnerData.Leader] = mwinners
+                    console.log(players)
+                    db.collection("Matches").doc(winner.mid).set({players,winner:winnerData.Leader},{merge:true}).then(()=>{
+                        let batch = db.batch()
+                        db.collection("Users").where('pubgid','in',parr).get().then(snaps=>{
+                            snaps.forEach(snap=>{
+                                let docRef = db.collection('Users').doc(snap.id)
+                                batch.update(docRef,{wins:db.FieldValue.increment(1)})
+                            })
+                            batch.commit().then(()=>{
+                                console.log("Done!!!")
+                            })
+                        })
+                    })
+                })
+        }
     }
 }
 

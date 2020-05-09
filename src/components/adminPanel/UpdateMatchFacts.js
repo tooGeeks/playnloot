@@ -1,14 +1,82 @@
 import React from 'react';
 import EnrPlayersDetails from './EnrPlayersDetails'
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import {findinMatches, findinUsers} from '../../Functions'
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import MatchSummary from '../matches/adminMatchSummary';
 import {updateFacts,updateWinner} from '../../store/actions/MatchActions'
 import Nav from './AdminNav'
+import { Button } from '@material-ui/core';
+import { showDialog, clearDialog } from '../../store/actions/uiActions';
+
+const WinnerDetails = (props)=>{
+  const {handleChange,team} = props
+  const soloDiv = (<div className="row">
+    <div className="input-field white-text col s6">
+    <input id="winner_id" type="text" className="validate white-text"
+     onKeyUp={handleChange}/>
+    <label htmlFor="winner_id">Winner ID</label>
+    </div>
+    <div className="input-field white-text col s6">
+    <input id="winner_kills" type="number" className="validate white-text"
+     onKeyUp={handleChange}/>
+    <label htmlFor="winner_kills">Winner Kills</label>
+    </div><br/>
+</div>)
+
+  const duoDiv = (<React.Fragment>
+    {['Leader','Mate'].map((idx)=>{
+      return(
+        <div className="row" key={idx}>
+      <div className="input-field white-text col s6">
+        <input id={idx+"_id"} type="text" className="validate white-text"
+         onKeyUp={handleChange}/>
+        <label htmlFor="winner_id">{idx} ID</label>
+        </div>
+        <div className="input-field white-text col s6">
+        <input id={idx+"_kills"} type="number" className="validate white-text"
+         onKeyUp={handleChange}/>
+        <label htmlFor="winner_kills">{idx} Kills</label>
+        </div>
+      </div>
+      )
+    })}
+  </React.Fragment>)
+
+  const squadDiv = (<React.Fragment>
+    {['Leader','Mate1','Mate2','Mate3'].map((idx)=>{
+      return(<div className="row" key={idx}>
+      <div className="input-field white-text col s6">
+        <input id={idx+"_id"} type="text" className="white-text"
+         onKeyUp={handleChange}/>
+        <label htmlFor="winner_id">{idx} ID</label>
+        </div>
+        <div className="input-field white-text col s6">
+        <input id={idx+"_kills"} type="number" className="validate white-text"
+         onKeyUp={handleChange}/>
+        <label htmlFor="winner_kills">{idx} Kills</label>
+        </div>
+      </div>)
+    })}
+  </React.Fragment>)
+
+    const winnerdiv = (team==="Solo" 
+    ? soloDiv: (team==="Duo" ? duoDiv : squadDiv ))
+  return(<div>
+      {winnerdiv}
+  </div>)
+}
+
+const WinnerActions = (props)=>{
+  const {handleClick} = props;
+  return(<>
+    <Button color="primary"  onClick={()=>handleClick()}>Update Winner</Button>
+  </>)
+}
 
 const UpdateMatchFacts = (props)=>{
+    const dispatch = useDispatch()
     const mid = props.match.params.mid;
     const [state,setState] = React.useState({winner_id:'',unit:1,winner_kills:0});
     const {matches,users} = props;
@@ -54,11 +122,29 @@ const UpdateMatchFacts = (props)=>{
     }
 
     const updateWinner = ()=>{
-      let winner_id = state.winner_id;
-      let winner_kills = parseInt(state.winner_kills);
-      let unit = parseInt(state.unit);
-      if(winner_id==='') return null;
-      props.updateWinner({pubgid:winner_id,ukills:winner_kills,mid:mid,unit:unit})
+      let data = {}
+      let hChange = (e)=>{
+        if(e.target.id.endsWith("_id")){
+          let id = e.target.id.split('_')[0]
+          data = {...data,[id]:e.target.value}
+        }
+        else if(e.target.id.endsWith("_kills")){
+          let idk = data[e.target.id.split('_')[0]]
+          data={...data,[idk]:e.target.value}
+        }
+      }
+      let hClick = ()=>{
+        let mates = ['Mate','Mate1','Mate2','Mate3']
+        for(let x in mates){
+          if(data[mates[x]]!==undefined) delete data[mates[x]]
+        }
+        console.log(data)
+        dispatch(clearDialog())
+        let unit = parseInt(state.unit);
+        props.updateWinner({data,mid:mid,mode:match.mode,unit:unit})
+        return
+      }
+      dispatch(showDialog({title:"Update Winner",content:<WinnerDetails handleChange={hChange} team={match.mode.team} />,actions:<WinnerActions handleClick={hClick} />}))
     }
 
     const hdata = (players)=>{
@@ -111,10 +197,10 @@ const UpdateMatchFacts = (props)=>{
             })
             mx['ukills'] = mate && mplayers && mplayers[x][mate.pubgid]
             mx['kills'] = mx['kills'] - mx['ukills']
-            mx['id']= mate['id']
-            mx['ldr']=x
+            mx['id']= mate && mate['id']
+            mx['ldr']=x 
             mx['coins']=0
-            mx['looted']=mate['looted']
+            mx['looted']=mate && mate['looted']
             matex.push(mx)
           })
           ind++
@@ -147,7 +233,6 @@ const UpdateMatchFacts = (props)=>{
       </div>
     </div>
   </div></div>
-
   let playerDetails = users && players ?
   <EnrPlayersDetails getUnit={getUnit} winner={winner} players={users && players} tableMetadata={tableMetadata} handleChangeRowsPerPage={handleChangeRowsPerPage} handlePageChange={handlePageChange} rstate={hdata} bttnname="Update Values" columns={cols} isEditing={true}/>
   : <div className="center"><p>Loading Player Details...</p><div className="preloader-wrapper small active center">
@@ -172,18 +257,8 @@ const UpdateMatchFacts = (props)=>{
                    onKeyUp={handleChange} defaultValue='1' autoFocus={true}/>
                   <label htmlFor="unit">Kill to Coin Unit</label>
                 </div>
-                <div className="input-field white-text col s4">
-                  <input id="winner_id" type="text" className="validate white-text"
-                   onKeyUp={handleChange}/>
-                  <label htmlFor="winner_id">Winner ID</label>
-                </div>
-                <div className="input-field white-text col s4">
-                  <input id="winner_kills" type="number" className="validate white-text"
-                   onKeyUp={handleChange}/>
-                  <label htmlFor="winner_kills">Winner Kills</label>
-                </div><br/>
                 <div className="col s4">
-                  <button className='waves-effect waves-light btn hoverable' disabled={!state.winner_id || !state.winner_kills} onClick={updateWinner}>Update Winner</button>
+                  <button className='waves-effect waves-light btn hoverable'  onClick={()=>updateWinner()} >Update Winner</button>
                 </div>
               </div> : null }<br/><br/>
               {playerDetails}

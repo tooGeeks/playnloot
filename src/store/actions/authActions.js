@@ -65,6 +65,7 @@ export const signUp = (newUser) => {
               looted:0,
               orders: [],
               matches: [],
+              wins:0,
               //Del later :-
               firstName: newUser.firstName,
               lastName: newUser.lastName,
