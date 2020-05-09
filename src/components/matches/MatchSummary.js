@@ -1,10 +1,10 @@
 import React from 'react';
 import {convt,dateString} from '../../Functions';
 import { useHistory } from 'react-router-dom';
+import { unit } from '../../constants';
 
 //Updates
 import { makeStyles, Typography, Button, Box } from '@material-ui/core';
-import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { deepOrange } from '@material-ui/core/colors';
 import {useDispatch} from 'react-redux'
@@ -19,8 +19,7 @@ const useStyles = makeStyles(theme => ({
         display: 'inline',
       },
     Item: {
-        paddingTop: 0,
-        paddingBottom: 0,
+        marginBottom: 3,
     },
     orange: {
         color: theme.palette.getContrastText(deepOrange[500]),
@@ -65,15 +64,20 @@ const MatchSummary = (props) => {
     const canEnroll = match.plno<100 ? true : false;//Checks if match is full?
     
     return(
-    <>
-        <ListItem className={classes.Item}>
-            <ListItemText style={{marginRight: 3}} primary={match.name} secondary={
-                <><Typography variant="caption">On: {dateString(match.mdate)}<br/>At: {match.mtime}<Box display="inline-flex">{match.tags && match.tags.map((tag, ind) => {
-                    return (<Box key={ind} ml={1} borderRadius={1} className={classes.box1}>&nbsp;{tag}&nbsp;</Box>)
-                })}</Box></Typography></>} />
-            <Button size="small" align="right" variant="outlined" color="primary"  edge="end" onClick={() => dispatch(showDialog({title: ("Enroll in " + (match.name)), content: <Details id={match.id} match={match} canEnroll={canEnroll}/>, actions: <Actions mid={match.id} canEnroll={canEnroll}/>}))}>Details</Button>
-        </ListItem>
-    </>
+    <Box p={2} className={classes.Item}>
+        <Box display="flex">
+            <Box width="100%" fontSize={16} fontWeight="FontWeightMedium">{match.name}</Box>
+            <Box flexShrink={0} fontSize={16} style={{marginRight: 15}}>₹ {(match.fee)*unit}</Box>
+        </Box>
+        <Box display="flex" justifyContent="center" alignItems="flex-end" mt={1}>
+            <Box mr={2} fontSize={16}>1<sup>st</sup> : ₹{match.prizes['1']}</Box><Box mr={2} fontSize={14}>2<sup>nd</sup> : ₹{match.prizes['2']}</Box><Box mr={2} fontSize={12}>3<sup>rd</sup> : ₹{match.prizes['3']}</Box>
+        </Box>
+        <ListItemText style={{marginRight: 3}} primary={match.name} secondary={
+            <Typography component="span" variant="caption">On: {dateString(match.mdate)}<br/>At: {match.mtime}<Box display="inline-flex">{match.tags && match.tags.map((tag, ind) => {
+                return (<Box key={ind} ml={1} borderRadius={1} className={classes.box1}>&nbsp;{tag}&nbsp;</Box>)
+            })}</Box></Typography>} />
+        <Button size="small" align="right" variant="outlined" color="primary"  edge="end" onClick={() => dispatch(showDialog({title: ("Enroll in " + (match.name)), content: <Details id={match.id} match={match} canEnroll={canEnroll}/>, actions: <Actions mid={match.id} canEnroll={canEnroll}/>}))}>Details</Button>
+    </Box>
     )
 }
 

@@ -3,7 +3,7 @@ import { useSelector, connect, useDispatch, } from 'react-redux'
 import { unit } from '../../constants'
 
 //UI
-import { makeStyles, Grid, Container, Paper, List, Button, Typography, CssBaseline, Box, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Avatar, Tooltip, Zoom, CircularProgress } from "@material-ui/core";
+import { makeStyles, Grid, Container, Paper, List, Button, Typography, CssBaseline, Box, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Avatar, Tooltip, Zoom, CircularProgress, Divider } from "@material-ui/core";
 import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core'
 //import { ReactComponent as Solid } from '../../imgs/soldier2.svg'
 import { AccountBox, TrackChanges, Event, AccessAlarm } from '@material-ui/icons';
@@ -139,7 +139,7 @@ function Dashboard(props) {
       if(x.lrdate<getCurrentDate()) return null;
       let isEnr =  isinDocs(profile.matches, x.id);
       if(!isEnr){
-        switch (x.mode) {
+        switch (x.mode.team) {
           case 'Solo': newSolo.push(x); break;
           case 'Duo': newDuo.push(x); break;
           case 'Squad': newSquad.push(x); break;
@@ -186,12 +186,15 @@ function Dashboard(props) {
               <Box display="flex" flexDirection="row">
                 <Box letterSpacing={1} className={classes.onBorderText}>{props.type}</Box>
               </Box>
-              <Box>
-                <List >
+              <Box display="flex" flexDirection="column" justifyContent="center">
                   {props.matchArr && props.matchArr.map((match) => {
-                    return <MatchSummary match={match} indexPos={Matches.indexOf(match)} bttnname={"Enroll"} key={match.id}/>
+                    return(
+                      <React.Fragment key={match.id}>
+                        <MatchSummary match={match} indexPos={Matches.indexOf(match)} bttnname={"Enroll"} key={match.id}/>
+                        <Divider variant="middle"/>
+                      </React.Fragment>
+                    )
                   })}
-                </List>
               </Box>
             </Box>
           </Grid>
@@ -317,6 +320,7 @@ function Dashboard(props) {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <Grid container spacing={2} justify="center">
+                {console.log(newSolo, newDuo, newSquad)}
                 {
                   newSolo && newDuo  && newSquad
                   ? (<>
