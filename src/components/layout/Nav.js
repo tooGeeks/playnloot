@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { connect } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
 import SignedIn, { SignedInMenu } from '../auth/SignedIn'
@@ -102,14 +102,12 @@ const Nav = (props) => {
       <div>
           <AppBar position="fixed" color="primary" className={classes.appBar}>
               <Toolbar>
-                  {/* <IconButton edge="start" color="inherit" aria-label="back" onClick={mhandleBack}>
+                  <IconButton edge="start" color="inherit" aria-label="back" onClick={mhandleBack}>
                     <ArrowBackIcon />   
-                  </IconButton> */}
-                  {/*
-                  <Fab color="secondary" aria-label="add" className={classes.fabButton}>
-                      { profile.pubgid ? profile.pubgid : <AddIcon />}
-                  </Fab>
-                  */}
+                  </IconButton>
+                  {/* <Fab color="secondary" aria-label="add" className={classes.fabButton}>
+                      { profile.pubgid ? profile.pubgid : <AddCircleOutline />}
+                  </Fab> */}
                   <div className={classes.grow} />
                   {auth.uid ? <Coincount/> : null}
                   {/* <IconButton edge="end" color="inherit" onClick={mhandleClick}>

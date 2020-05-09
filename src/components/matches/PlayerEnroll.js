@@ -2,10 +2,10 @@ import React from 'react'
 import { makeStyles, Container, TextField, Typography, Button, Paper, Grid, Box, Divider } from '@material-ui/core';
 import useForm from 'react-hook-form';
 import { compose } from 'redux';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { enterMatch } from '../../store/actions/MatchActions';
-import { backDrop, clearDialog } from '../../store/actions/uiActions'
+import { backDrop, clearBackDrop } from '../../store/actions/uiActions'
 import Copyright from '../layout/Copyright'
 import { rules } from '../../constants'
 import { convt, dateString } from '../../Functions'
@@ -38,9 +38,10 @@ const useStyles = makeStyles(theme=>({
 const PlayerEnroll = (props) => {
     const classes = useStyles()
     const dispatch = useDispatch();
-    dispatch(clearDialog()); //Clear Dialog
+    dispatch(backDrop());
     const {Matches, profile} = props
     const match = Matches && Matches[0]
+    if(match !== undefined) dispatch(clearBackDrop())
     console.log(profile, match)
     //if(Matches && profile.matches && (profile.matches).includes(match.id)) props.history.push('/dashboard');
     const {register,errors,handleSubmit, reset} = useForm()
@@ -51,8 +52,8 @@ const PlayerEnroll = (props) => {
         reset()
         // dispatch(backDrop())
         // props.history.push('/dashboard')
-    }
-    switch(match && match.mode){
+    }   
+    switch(match && match.mode.team){
         default:
             break;
         case "Duo":
@@ -106,6 +107,13 @@ const PlayerEnroll = (props) => {
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <Box fontSize={16} textAlign="center" mb={2}>Match Time: {match && convt(1,match.mtime)}</Box>
+                        </Grid>
+                        {console.log(match && match)}
+                        <Grid item xs={12}>
+                            <Typography align="center">Last Date: {dateString(match && match.lrdate)}</Typography>
+                            <Box display="flex" justifyContent="center" alignItems="flex-end" mt={1} mb={1}>
+                                <Box mr={2} fontSize={14}>1<sup>st</sup> : ₹{match && match.prizes['1']}</Box><Box mr={2} fontSize={14}>2<sup>nd</sup> : ₹{match && match.prizes['2']}</Box><Box mr={2} fontSize={14}>3<sup>rd</sup> : ₹{match && match.prizes['3']}</Box>
+                            </Box>
                         </Grid>
                         <Grid item xs={12} sm={12}>
                             <TextField id="pubgid" variant='outlined'

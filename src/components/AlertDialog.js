@@ -41,7 +41,7 @@ export default function AlertDialog() {
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle id="alert-dialog-slide-title">{DialogTitleParam ? DialogTitleParam : <></>}</DialogTitle>
-        <Divider  orientation="horizontal" variant="middle"/>
+        <Divider orientation="horizontal" variant="middle"/>
         <DialogContent>
           {/* <DialogContentText id="alert-dialog-slide-description"> */}
             {DialogContentParam ? DialogContentParam : <></>}
