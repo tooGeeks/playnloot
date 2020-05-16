@@ -33,8 +33,8 @@ export default function BackDrop(props) {
         open={backDropOpen}
         //onClick={handleClose}
       >
-        {/* <CircularProgress color="inherit" /> */}
-        <Loader />
+        <CircularProgress color="inherit" />
+        {/* <Loader /> */}
       </Backdrop>
     );
 }

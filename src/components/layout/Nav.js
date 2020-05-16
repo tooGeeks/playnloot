@@ -1,11 +1,11 @@
 import React from 'react';
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
 import SignedIn, { SignedInMenu } from '../auth/SignedIn'
 import SignedOut, { SignedOutMenu } from '../auth/SignedOut'
 //UI
 import AppBar from '@material-ui/core/AppBar';
-import { makeStyles, Typography } from '@material-ui/core';
+import { makeStyles, Typography, LinearProgress } from '@material-ui/core';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -19,6 +19,9 @@ const useStyles = makeStyles(theme => ({
   appBar: {
       top: 'auto',
       bottom: 0,
+  },
+  loadAppBar: {
+    zIndex: 1501
   },
   grow: {
     flexGrow: 1,
@@ -40,6 +43,7 @@ const Nav = (props) => {
     const { auth, profile, modeControl } = props;
     const classes = useStyles();
     const history = useHistory();
+    const { backDropOpen } = useSelector( state => state.ui )
     const [selectedIndex, setSelectedIndex] = React.useState(0);
     const handleListItemClick = (event, index) => {
       setSelectedIndex(index);
@@ -100,7 +104,9 @@ const Nav = (props) => {
     }
     return(
       <div>
-          <AppBar position="fixed" color="primary" className={classes.appBar}>
+          
+          <AppBar position="fixed" color="primary" className={backDropOpen ? `${classes.appBar} ${classes.loadAppBar}` : classes.appBar}>
+              <LinearProgress variant="query" hidden={!backDropOpen}/>
               <Toolbar>
                   <IconButton edge="start" color="inherit" aria-label="back" onClick={mhandleBack}>
                     <ArrowBackIcon />   
