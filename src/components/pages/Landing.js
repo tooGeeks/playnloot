@@ -123,7 +123,7 @@ const Landing = () => {
         </Grid>
         </Grid>
         <Container>
-        <Grid container direction="row" id="getstarted">
+        <Grid container direction="row" id="getstarted" spacing={1}>
           <Grid item xs={12} sm={6}>
             <Box fontSize="h6.fontSize" letterSpacing={1} textAlign="center" padding={2}>
               Steps to Participate

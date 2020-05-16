@@ -25,80 +25,51 @@
     <title>Play N Loot</title>
     
     <style>
-      body {
+      body{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        height: 100%;
         background: #202329;
+        font-family: sans-serif;
       }
-      .centerBike {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        margin-top: 26px;
-        margin-left: -12px;
-      }
-
-      .center {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        margin-top: -50px;
-        margin-left: -50px;
-      }
-
-      #loop {
-        height: 100px;
-        width: 100px;
-        border: #bb5f27 solid 4px;
-        border-radius: 200px;
-      }
-
-      #loop:before {
-        background: -moz-linear-gradient(left, rgba(187, 95, 39, 0) 0%, rgba(187, 95, 39, 1) 30%, rgba(187, 95, 39, 1) 70%, rgba(187, 95, 39, 0) 100%);
-        background: -webkit-gradient(linear, left top, right top, color-stop(0%, rgba(187, 95, 39, 0)), color-stop(30%, rgba(187, 95, 39, 1)), color-stop(70%, rgba(187, 95, 39, 1)), color-stop(100%, rgba(187, 95, 39, 0)));
-        background: -webkit-linear-gradient(left, rgba(187, 95, 39, 0) 0%, rgba(187, 95, 39, 1) 30%, rgba(187, 95, 39, 1) 70%, rgba(187, 95, 39, 0) 100%);
-        background: -o-linear-gradient(left, rgba(187, 95, 39, 0) 0%, rgba(187, 95, 39, 1) 30%, rgba(187, 95, 39, 1) 70%, rgba(187, 95, 39, 0) 100%);
-        background: -ms-linear-gradient(left, rgba(187, 95, 39, 0) 0%, rgba(187, 95, 39, 1) 30%, rgba(187, 95, 39, 1) 70%, rgba(187, 95, 39, 0) 100%);
-        background: linear-gradient(to right, rgba(187, 95, 39, 0) 0%, rgba(187, 95, 39, 1) 30%, rgba(187, 95, 39, 1) 70%, rgba(187, 95, 39, 0) 100%);
-        filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#00bb5f27', endColorstr='#00bb5f27', GradientType=1);
-        content: "";
-        display: block;
-        height: 4px;
-        left: -100px;
+      .loader {
         position: relative;
-        top: 100px;
-        width: 300px;
+        font-size: large;
+        color: #202329;
+        padding: 5px;
+        text-transform: uppercase;
+        font-weight: bold;
+        letter-spacing: .2em;
+      
       }
 
-      #bike-wrapper {
-        height: 108px;
-        width: 108px;
-        animation: drive 3s linear infinite;
+      .loader span {
+        color: #fff;
+        mix-blend-mode: difference;
       }
 
-      #bike {
-        height: 24px;
-        width: 25px;
-        background-image: url("%PUBLIC_URL%/img/motorbike.png");
+      .loader::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20%;
+        height: 100%;
+        background-color: #fff;
+        animation: ani 2s linear infinite;
       }
 
-      @keyframes drive {
+      @keyframes ani {
         0% {
-          margin-left: -364px;
-          opacity: 0;
+          left: 0;
         }
-        33.33% {
-          transform: rotate(0deg);
-          margin-left: -50px;
-          opacity: 1;
-        }
-        66.66% {
-          transform: rotate(-360deg);
-          margin-left: -50px;
-          opacity: 1;
+        50% {
+          left: calc(100% - 20%);
         }
         100% {
-          margin-left: 264px;
-          transform: rotate(-360deg);
-          opacity: 0;
+          left: 0;
         }
       }
     </style>
@@ -110,10 +81,7 @@
     </noscript>
     
     <div id="root">
-      <div id="loop" class="center"></div>
-        <div id="bike-wrapper" class="center">
-          <div id="bike" class="centerBike"></div>
-        </div>
+      <div class="loader"><span>Search for Patience</span></div>
     </div>
   </body>
 </html>
