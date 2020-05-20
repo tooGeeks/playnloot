@@ -3,7 +3,7 @@ import { useSelector, connect, useDispatch, } from 'react-redux'
 import { unit } from '../../constants'
 
 //UI
-import { makeStyles, Grid, Container, Paper, Button, Typography, CssBaseline, Box, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Avatar, Tooltip, Zoom, CircularProgress, Divider } from "@material-ui/core";
+import { makeStyles, Grid, Container, Paper, Button, Typography, CssBaseline, Box, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Avatar, Tooltip, Zoom, CircularProgress, Divider, Chip } from "@material-ui/core";
 import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core'
 //import { ReactComponent as Solid } from '../../imgs/soldier2.svg'
 import { AccountBox, TrackChanges, Event, AccessAlarm } from '@material-ui/icons';
@@ -13,7 +13,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {firestoreConnect} from 'react-redux-firebase';
 import {isinDocs,getCurrentDate, dateString, convt} from '../../Functions'
 import {compose} from 'redux';
-import MatchSummary from '../matches/MatchSummary';
+import { EnrolledDialog, MatchSummary } from '../matches/MatchSummary';
 import { backDrop, clearBackDrop } from '../../store/actions/uiActions'
 import Copyright from '../layout/Copyright'
 
@@ -76,7 +76,7 @@ const useStyles = makeStyles(theme => ({
   expanelHeading: {
     fontSize: theme.typography.pxToRem(16),
     fontWeight: theme.typography.fontWeightRegular,
-    color: theme.custom.colors.darkhead1,
+    color: theme.palette.custom.darkhead1,
   },
   enPaper: {
     width: '200px',
@@ -106,9 +106,9 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
     color: theme.palette.primary.main,
   },
-  box1: { backgroundColor: theme.custom.colors.greenPaper, color: theme.palette.primary.contrastText },
-  box2: { backgroundColor: theme.custom.colors.OrangeYellow },
-  box3: { backgroundColor: theme.custom.colors.BlueSapphire },
+  box1: { backgroundColor: theme.palette.custom.greenPaper, color: theme.palette.primary.contrastText },
+  box2: { backgroundColor: theme.palette.custom.OrangeYellow },
+  box3: { backgroundColor: theme.palette.custom.BlueSapphire },
   footer: {
     marginTop: 'auto',
     marginBottom: theme.spacing(10)
@@ -170,7 +170,7 @@ function Dashboard(props) {
               <TableRow key={player.id}>
                 <TableCell align="center" component="th" scope="row">#{index + 1}</TableCell>
                 <TableCell align="center">{player.pubgid}</TableCell>
-                <TableCell align="center">{player.kills}</TableCell>
+                <TableCell align="center">{`${player.kills}`}</TableCell>
               </TableRow>
             )
           })}
@@ -215,15 +215,15 @@ function Dashboard(props) {
                 <Box fontSize={14}><AccessAlarm className={classes.icons}/> {match && dateString(match.mdate)}</Box>
               </Box>
               <Box display="flex" flexDirection="row" style={{width: '100%'}}>
-                <Box display="inline-flex" textAlign="left" mt={1} style={{width: '50%'}}>{match.tags && (Array.isArray(match.tags) && match.tags.length) && match.tags.map((tag, ind) => {
+                <Box display="inline-flex" textAlign="left" mt={1} style={{width: '60%'}}>{match.tags && (Array.isArray(match.tags) && match.tags.length) && match.tags.map((tag, ind) => {
                   return (
-                    <Box key={ind} mr={1} pr={0.5} pl={0.5} borderRadius={1} className={classes.box1}>{tag}</Box>
+                    <Chip label={tag} key={ind} size="small" color="primary" style={{marginRight: 2}}/>
+                    // <Box key={ind} mr={1} pr={0.5} pl={0.5} borderRadius={1} className={classes.box1}>{tag}</Box>
                   )
                 })}</Box>
-                <Box textAlign="right" style={{width: '50%'}}><Button variant="outlined" size="small" color="primary">Details</Button></Box>
+                <Box key={match.id} textAlign="right" style={{width: '40%'}}><EnrolledDialog match={match}/></Box>
               </Box>
             </Box>
-            
           </Box>
         </Grid>
       )
@@ -320,15 +320,12 @@ function Dashboard(props) {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <Grid container spacing={2} justify="center">
-                {console.log(newSolo, newDuo, newSquad)}
                 {
                   newSolo && newDuo  && newSquad
                   ? (<>
-                    
                       {newSolo.length !== 0 ? <NewMatchesBox type="Solo" matchArr={newSolo} /> : null}
                       {newDuo.length !== 0 ? <NewMatchesBox type="Duo" matchArr={newDuo} /> : null}
                       {newSquad.length !== 0 ? <NewMatchesBox type="Squad" matchArr={newSquad} /> : null}
-                    
                     </>)
                   :
                     <Grid item xs={12}><Box fontSize={14} textAlign="center">Matches Comming Soon!</Box></Grid>

@@ -15,11 +15,11 @@ const useStyles = makeStyles(theme => ({
     Item: {
         marginBottom: 3,
     },
-    box1: { backgroundColor: theme.custom.colors.greenPaper, color: theme.palette.primary.contrastText },
+    box1: { backgroundColor: theme.palette.custom.greenPaper, color: theme.palette.primary.contrastText },
 }))
 
 const Details = (props) => {
-    const { mdate, lrdate, mtime} = props.match;
+    const { mdate, lrdate, mtime, roomid, roompass} = props.match;
     return (
         <Box display="flex" flexDirection="column">
             <Box display="flex" justifyContent="center" alignItems="flex-end" mt={1} mb={1}>
@@ -28,10 +28,11 @@ const Details = (props) => {
             <Box>Match Date: <b>{dateString(mdate)}</b></Box>
             <Box>Time: <b>{convt(1,mtime)}</b></Box>
             <Box>Last Date: <b>{dateString(lrdate)}</b></Box>
-            <Box display="inline-flex">Tags: {props.match.tags && props.match.tags.map((tag, ind) => {
+            <Box display="inline-flex" alignItems="center">Tags: &nbsp;{props.match.tags && props.match.tags.map((tag, ind) => {
                 return (<Chip label={tag} key={ind} variant="outlined" size="small" color="primary" style={{marginRight: 2}}/>)
             })}</Box>
-            {props.canEnroll ? null : <Box fontWeight="fontWeightLight" color="error">Match Full! Enroll in any another Match :)</Box>}
+            {roomid && roompass ? <Box>Room ID: <em>{roomid}</em> &nbsp; Password: <em>{roompass}</em></Box> : null}
+            <Box></Box>
         </Box>
     )
 }
@@ -47,7 +48,15 @@ const Actions = (props) => {
     )
 }
 
-const MatchSummary = (props) => {
+export const EnrolledDialog = (props) => {
+    const dispatch = useDispatch();
+    const { match } = props;
+    return (
+        <Button size="small" align="right" variant="outlined" color="primary" onClick={() => dispatch(showDialog({title: ((match.name)), content: <Details id={match.id} match={match}/>}))}>Details</Button>
+    )
+}
+
+export const MatchSummary = (props) => {
     const classes = useStyles();
     //const dispatch = useDispatch();
     const history = useHistory();
@@ -77,5 +86,3 @@ const MatchSummary = (props) => {
     </Box>
     )
 }
-
-export default MatchSummary;

@@ -18,6 +18,18 @@
 			"paper": "#2b3138",
 			"default": "#202329"
 		},
+		"custom":{
+			"darkhead1": "#aca8b1",
+			"darkhead2": "#6f6a7a",
+			"greenPaper": "#81c784",
+			"BitterLemon": "#c2e812",
+			"OrangeYellow": "#f4d06f",
+			"taxi": "#fff176",
+			"BlueSapphire": "#22577a",
+			"BlueBell": "#9792E3",
+			"GreyBlacky": "#272D2D",
+			"LighestGreen": "#A6EBC9"
+		},
 		"type": "dark"
 	},
 	"typography":
@@ -28,13 +40,6 @@
 		}
 	},
 	"custom": {
-		"colors": {
-			"darkhead1": "#aca8b1",
-			"darkhead2": "#6f6a7a",
-			"greenPaper": "#81c784",
-			"BitterLemon": "#c2e812",
-			"OrangeYellow": "#f4d06f",
-			"BlueSapphire": "#22577a"
-		}
+		
 	}
 }

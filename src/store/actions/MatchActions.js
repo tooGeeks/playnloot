@@ -82,7 +82,7 @@ export const enterMatch = (match,userData)=>{
             }
             const cp = profile.pubgid;
             const {mate1} = userData
-            switch(match.mode){
+            switch(match.mode.team){
                 case "Solo":
                     let cpmatches = st.firebase.profile.matches;
                     const isAlRegU = isinDocs(cpmatches,match.id);

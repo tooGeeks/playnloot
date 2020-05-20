@@ -37,8 +37,14 @@ const useStyles = makeStyles(theme => ({
         padding: 10,
         backgroundColor: theme.palette.background.paper,
     },
-    pendingBox: { borderLeft: '4px solid #fff176' },
-    successBox: { borderLeft: '4px solid #81c784' },
+    penTxt: {
+        color: theme.palette.custom.taxi,
+    },
+    pendingBox: { borderLeft: `4px solid ${theme.palette.custom.taxi}` },
+    sucTxt: {
+        color: '#81c784'
+    },
+    successBox: { borderLeft: `4px solid ${theme.palette.custom.greenPaper}` },
     footer: {
         marginTop: 'auto',
         marginBottom: theme.spacing(10)
@@ -67,13 +73,13 @@ const RequestWithDraw = () => {
     const requests = usr && usr.requests.map((req, index) => {
         return (
             <Grid item xs={12} sm={6} key={index}><Box boxShadow={2} justifyContent="center" alignItems="center" className={req.isComplete ? `${classes.prevBox} ${classes.successBox}` : `${classes.prevBox} ${classes.pendingBox}`}>
-                <Box display="flex" flexDirection="column" justifyContent="center" style={{width: '20%', textAlign: "center",}}><Box style={{ fontSize: 25, fontWeight: 'fontWeightBold'}}>₹{req.coins*unit}</Box><Box fontSize={12}>{req.isComplete ? `Paid` : `Pending`}</Box></Box>
+                <Box display="flex" flexDirection="column" justifyContent="center" style={{width: '20%', textAlign: "center",}}><Box style={{ fontSize: 25, fontWeight: 'fontWeightBold'}}>₹{req.coins*unit}</Box>{req.isComplete ? <Box fontSize={12} className={classes.sucTxt}>Paid</Box> : <Box fontSize={12} className={classes.penTxt}>Pending</Box>}</Box>
                 <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '60%'}}>
                     <Box>{req.pmode}</Box>
                     <Box>{moment(req.reqdate.toDate()).calendar()}</Box>
                     {(!req.isComplete) ? <Button variant="contained" style={{ fontSize: 10, backgroundColor: '#121212', color: '#FFF'}} onClick={() => dispatch(cancelWithdrawal(usr.id+'-'+usr.requests.indexOf(req)))}>Cancel</Button> : null}
                 </Box>
-                <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '20%'}}>{req.isComplete ? <CheckCircleOutlined style={{ fontSize: 35, color: '#81c784' }} /> : <HourglassEmptyOutlined style={{ fontSize: 35, color: '#fff176 ' }} />}</Box>
+                <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '20%'}}>{req.isComplete ? <CheckCircleOutlined style={{ fontSize: 35, color: "#81c784" }} /> : <HourglassEmptyOutlined style={{ fontSize: 35, color: "#fff176" }} />}</Box>
             </Box></Grid>
         )
     })
