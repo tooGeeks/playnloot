@@ -24,6 +24,7 @@ const variantIcon = {
   const useStyles = makeStyles(theme => ({
     root: {
       marginBottom: theme.spacing(7),
+      zIndex: 1501,
     },
     success: {
       backgroundColor: green[600],

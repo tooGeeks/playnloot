@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/styles'
 import Typist from 'react-typist';
 import { useHistory} from 'react-router-dom'
 import { Typography, Box, Grid, Button, Container, Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
-import { ReactComponent as Loading } from '../../imgs/loading.svg'
+import { ReactComponent as Loading } from '../../imgs/loading.svg' // rm
 import Copyright from '../layout/Copyright';
 import { unit, rules } from '../../constants'
 
@@ -20,9 +20,7 @@ const useStyles = makeStyles(theme => ({
     height: '50vh'
   },
   TypistWrap: {
-    //paddingTop: 50,
     minHeight: '105px',
-    //border: '1px solid #121212'
   },
   enroll: {
     color: '#f6734a'
@@ -47,8 +45,8 @@ const useStyles = makeStyles(theme => ({
 const Landing = () => {
   const classes = useStyles();
   const history = useHistory();
-  const [activeStep, setActiveStep] = useState(parseInt(0));
-  const [getStart, setgetStart] = useState(localStorage.getItem('getting_Started') || {gt: false});
+  const [activeStep, setActiveStep] = useState(parseInt(0)); // rm
+  const [getStart, setgetStart] = useState(localStorage.getItem('getting_Started') || {gt: false}); 
   const steps = getSteps();
 
   useEffect(() => {

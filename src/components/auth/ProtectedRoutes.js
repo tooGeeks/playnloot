@@ -14,7 +14,7 @@ export const ProtectedRoutes = ({ component: Component, ...rest }) => {
             (props) => {
                 if(auth.uid) return <Component {...props}/>
                 else {
-                    dispatch(showSnackbar({variant: 'info', message: "Sign-in to continue!"}))
+                    dispatch(showSnackbar({variant: 'info', message: "Login to continue!"}))
                     return <Redirect to={
                         {
                             pathname: '/signin',

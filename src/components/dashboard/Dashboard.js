@@ -3,7 +3,7 @@ import { useSelector, connect, useDispatch, } from 'react-redux'
 import { unit } from '../../constants'
 
 //UI
-import { makeStyles, Grid, Container, Paper, List, Button, Typography, CssBaseline, Box, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Avatar, Tooltip, Zoom, CircularProgress, Divider } from "@material-ui/core";
+import { makeStyles, Grid, Container, Paper, Button, Typography, CssBaseline, Box, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Avatar, Tooltip, Zoom, CircularProgress, Divider } from "@material-ui/core";
 import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core'
 //import { ReactComponent as Solid } from '../../imgs/soldier2.svg'
 import { AccountBox, TrackChanges, Event, AccessAlarm } from '@material-ui/icons';
@@ -126,10 +126,10 @@ function Dashboard(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if(profile.isLoaded ){
+    if(profile.isLoaded && Matches && Users){
       dispatch(clearBackDrop())
     }else dispatch(backDrop());
-  }, [profile, props, dispatch]);
+  }, [profile, Matches, Users, props, dispatch]);
 
   if(profile.isLoaded && Matches){
     var newSolo = [];

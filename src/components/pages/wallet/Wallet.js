@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { creditWallet, } from '../../../store/actions/PaymentActions';
 import useForm from "react-hook-form";
-import { makeStyles, Container, Grid, IconButton, TextField, CardHeader, Typography, Card, CardContent, CardActions, Button, Box } from '@material-ui/core';
+import { makeStyles, Container, Grid, IconButton, TextField, CardHeader, Typography, Card, CardContent, CardActions, Button, Box, Paper } from '@material-ui/core';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import { showSnackbar } from '../../../store/actions/uiActions'
 import Copyright from '../../layout/Copyright'
@@ -41,15 +41,24 @@ const useStyles = makeStyles(theme => ({
         marginRight: 'auto'
     },
     prevBox: {
-        minHeight: '5rem',
+        minHeight: '4rem',
+        minWidth: '100%',
         borderRadius: 3,
         boxShadow: 2,
         display: 'flex',
-        color: '#000',
         padding: 10,
+        backgroundColor: theme.palette.background.paper,
     },
-    pendingBox: { backgroundColor: theme.palette.error.dark },
-    successBox: { backgroundColor: '#81c784' },
+    failTxt: {
+        color: theme.palette.error.dark,
+    },
+    pendingBox: { borderLeft: `4px solid ${theme.palette.error.dark}`, '&.selected $failTxt': {
+        color: theme.palette.error.dark,
+    }},
+    sucTxt: {
+        color: '#81c784'
+    },
+    successBox: { borderLeft: '4px solid #81c784' },
     footer: {
         marginTop: 'auto',
         marginBottom: theme.spacing(10)
@@ -100,21 +109,19 @@ function Wallet(props) {
     };
     console.log(orders)
     const prevOrders = orders && orders.sort((d1, d2) => {
-        console.log(d1)
         if (d1.date < d2.date) return 1;
         if (d1.date > d2.date) return -1;
         return 0;
     }).map((order) => {
-        console.log(order)
         return (
             <Grid item xs={12} sm={6} key={order.orderid}><Box boxShadow={2} justifyContent="center" alignItems="center" className={order.status === 'SUCCESS' ? `${classes.prevBox} ${classes.successBox}` : `${classes.prevBox} ${classes.pendingBox}`}>
-                <Box display="flex" flexDirection="column" justifyContent="center" style={{width: '20%', textAlign: "center",}}><Box style={{ fontSize: 25, fontWeight: 'fontWeightBold'}}>₹{order.amt}</Box><Box fontSize={12}>{order.status === 'SUCCESS' ? `Success` : `Failure`}</Box></Box>
-                <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '60%'}}>
+                <Box display="flex" flexDirection="column" justifyContent="flex-start" style={{width: '30%', textAlign: "left",}}><Box style={{ fontSize: 25, fontWeight: 'fontWeightBold'}}>₹{order.amt}</Box><Box fontSize={12} className={order.status === 'SUCCESS' ? `${classes.sucTxt}` : `${classes.failTxt}`}>{order.status === 'SUCCESS' ? `Success` : `Failure`}</Box></Box>
+                <Box display="flex" flexDirection="column" justifyContent="flex-end" alignItems="center" style={{width: '70%'}}>
                     <Box>{order.mode}</Box>
-                    <Box>{moment(order.date.toDate()).calendar()}</Box>
-                    {order.status === 'FAILURE' ? <Box fontSize={10}>{order.respmsg}</Box> : null}
+                    <Box textAlign="center">{moment(order.date.toDate()).calendar()}</Box>
+                    {order.status === "PENDING" ? <Box fontSize={10}>{order.respmsg}</Box> : null}
                 </Box>
-                <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '20%'}}>{order.status === 'SUCCESS' ? <CheckCircleOutlined style={{ fontSize: 35 }} /> : <HighlightOff style={{ fontSize: 35 }} />}</Box>
+                {/* <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '20%'}}>{order.status === 'SUCCESS' ? <CheckCircleOutlined style={{ fontSize: 35 }} /> : <HighlightOff style={{ fontSize: 35 }} />}</Box> */}
             </Box></Grid>
         )
     })

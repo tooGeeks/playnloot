@@ -32,28 +32,3 @@ body {
     opacity: 0; }
   100% {
     opacity: 1; } }
-/*
-form{
-  padding: 20px;
-  margin-top: 60px;
-}
-
-form button, form h5{
-  margin: 20px 0;
-}
-
-input[type=text]:not(.browser-default):focus:not([readonly]),
-input[type=email]:not(.browser-default):focus:not([readonly]),
-input[type=password]:not(.browser-default):focus:not([readonly]),
-textarea.materialize-textarea:focus:not([readonly]){
-  border-color: #ec407a;
-  box-shadow: none;
-}
-
-input[type=text]:not(.browser-default):focus:not([readonly]) + label,
-textarea.materialize-textarea:focus:not([readonly]) + label,
-input[type=email]:not(.browser-default):focus:not([readonly]) + label,
-input[type=password]:not(.browser-default):focus:not([readonly]) + label{
-  color: #ec407a !important;
-}
-*/

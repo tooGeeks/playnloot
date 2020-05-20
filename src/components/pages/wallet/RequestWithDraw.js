@@ -34,11 +34,11 @@ const useStyles = makeStyles(theme => ({
         borderRadius: 3,
         boxShadow: 2,
         display: 'flex',
-        color: '#000',
         padding: 10,
+        backgroundColor: theme.palette.background.paper,
     },
-    pendingBox: { backgroundColor: '#fff176' },
-    successBox: { backgroundColor: '#81c784' },
+    pendingBox: { borderLeft: '4px solid #fff176' },
+    successBox: { borderLeft: '4px solid #81c784' },
     footer: {
         marginTop: 'auto',
         marginBottom: theme.spacing(10)
@@ -73,7 +73,7 @@ const RequestWithDraw = () => {
                     <Box>{moment(req.reqdate.toDate()).calendar()}</Box>
                     {(!req.isComplete) ? <Button variant="contained" style={{ fontSize: 10, backgroundColor: '#121212', color: '#FFF'}} onClick={() => dispatch(cancelWithdrawal(usr.id+'-'+usr.requests.indexOf(req)))}>Cancel</Button> : null}
                 </Box>
-                <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '20%'}}>{req.isComplete ? <CheckCircleOutlined style={{ fontSize: 35 }} /> : <HourglassEmptyOutlined style={{ fontSize: 35 }} />}</Box>
+                <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '20%'}}>{req.isComplete ? <CheckCircleOutlined style={{ fontSize: 35, color: '#81c784' }} /> : <HourglassEmptyOutlined style={{ fontSize: 35, color: '#fff176 ' }} />}</Box>
             </Box></Grid>
         )
     })
@@ -160,7 +160,7 @@ const RequestWithDraw = () => {
                     </form>
                 </Grid>
                 <Grid item xs={12}><Box fontSize="h6.fontSize" letterSpacing={1} textAlign="left" padding={2}>Previous Requests</Box></Grid>
-                <Grid container item xs={12} spacing={1} id="PrevRequests" justify="center" alignItems="flex-start">
+                <Grid container item xs={12} spacing={1} id="PrevRequests" justify="flex-start" alignItems="flex-start">
                     {requests}
                 </Grid>
             </Container>
