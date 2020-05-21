@@ -65,6 +65,7 @@ const storeOrder = (email,orderid,order)=>{
                     resolve(true);
                     return true;
                 }).catch(err=>{
+                    console.log(err)
                     resolve(false);
                 });
       }
