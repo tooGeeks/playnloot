@@ -28,6 +28,7 @@ const storeOrder = (email,orderid,order)=>{
                     }).catch((err)=>{
                       resolve(false);
                     });
+                return true;
               }).catch((err)=>{
                   console.log(err);
               })
@@ -61,6 +62,7 @@ const storeOrder = (email,orderid,order)=>{
                         console.log(err);
                     })
                     resolve(true);
+                    return true;
                 }).catch(err=>{
                     resolve(false);
                 });
@@ -104,7 +106,11 @@ exports.paytmpay = functions.https.onRequest((req,res) => {
                     paramarray['CALLBACK_URL'] = paytm_config.CALLBACK_URL; //Provided by Paytm
                     paramarray['EMAIL'] = email.replace(' ', '-'); // customer email id
                     paramarray['MOBILE_NO'] = mobile; // customer 10 digit mobile no.
-                    paytm_checksum.genchecksum(paramarray, paytm_config.MERCHANT_KEY, function (err, checksum) {
+                    paytm_checksum.genchecksum(paramarray, paytm_config.MERCHANT_KEY, (err, checksum)=>{
+                        if(err){
+                            console.error(err);
+                            return;
+                        }
                         var field = '';
                         var url = '';
                         paramarray['CHECKSUMHASH'] = checksum;
