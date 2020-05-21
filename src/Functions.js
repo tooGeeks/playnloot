@@ -1,3 +1,5 @@
+import firebase from './config/fbConfig'
+
 export const convt = (opt=0,time)=>{//Used to Convert Time from/to 12hr and 24 hr format
     var cd="";
     var th,tm,ap,h,m;
@@ -173,4 +175,28 @@ export const reportError = (db,uid,error)=>{
       })
 }
 
-  
+export const askPermission = async (messaging)=>{
+    try{
+        await messaging.requestPermission();
+        const token = await messaging.getToken();
+        console.log("Token : ",token);
+        localStorage.setItem("notification-token",token);
+        const db = firebase.firestore();
+        console.log(firebase.auth());
+        const uid = firebase.auth().currentUser.uid;
+        db.collection("Users").doc(uid).set({messageToken:token},{merge:true}).then(()=>{
+            db.collection("Notifications").doc("messageTokens").get().then(snap=>{
+                if(snap.empty) return;
+                let tokens = snap.data().tokens;
+                tokens.push(token)
+                db.collection("Notifications").doc("messageTokens").set({tokens},{merge:true}).then(()=>{
+                    console.log("Token Added")
+                })
+            })
+        })
+        return token;
+    }
+    catch(error){
+        console.error(error);
+    }
+}

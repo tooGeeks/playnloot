@@ -137,7 +137,7 @@ function Dashboard(props) {
     var newSquad = [];
     Matches.forEach((x) => { 
       if(x.lrdate<getCurrentDate()) return null;
-      let isEnr =  isinDocs(profile.matches, x.id);
+      let isEnr = profile && isinDocs(profile.matches, x.id);
       if(!isEnr){
         switch (x.mode.team) {
           case 'Solo': newSolo.push(x); break;

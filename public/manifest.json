@@ -1,6 +1,7 @@
 {
   "short_name": "Play N Loot",
   "name": "Play N Loot",
+  "gcm_sender_id":"651773897271",
   "icons": [
     {
       "src": "imgs/icon-192x192.png",

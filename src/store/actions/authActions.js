@@ -69,7 +69,9 @@ export const signUp = (newUser) => {
               //Del later :-
               firstName: newUser.firstName,
               lastName: newUser.lastName,
-            });
+            }).then(()=>{
+              firestore.collection("Orders").doc(resp.user.uid).set({orders:{}})
+            })
           })
           
         }).then(() => {
