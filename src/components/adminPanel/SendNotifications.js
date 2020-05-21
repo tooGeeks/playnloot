@@ -1,5 +1,5 @@
 import React from "react";
-import {sendNewNot} from '../../store/actions/MatchActions'
+import {pushNotification} from '../../store/actions/authActions'
 import {connect} from 'react-redux';
 import Nav from './AdminNav'
 
@@ -9,24 +9,38 @@ import Nav from './AdminNav'
 */
 
 const SendNotifications = (props)=>{
-    const [data,sdata] = React.useState({})
+    const [data,sdata] = React.useState({title:"",body:"",clink:""})
     const handleChange= (e)=>{
         sdata({...data,[e.target.id]:e.target.value})
     }
     const handleSubmit = (e)=>{
         e.preventDefault();
-        props.sendNewNot(data);
+        const {clink,body,title} = data;
+        if( clink==="" || title==="" || body===""){
+            alert("Enter Complete Details!");
+            return
+        }
+        props.pushNotification(data);
         
     }
     return(
         <React.Fragment>
-            <Nav/>
-            <div className='container black'>
+        <Nav/>
+            <div className='container'>
                 <form onSubmit={handleSubmit}>
                     <label>Notification Name : </label>
                     <input className="white-text" type="text" id="title" onChange={handleChange}/><br/>
                     <label>Notification Body : </label>
                     <input className="white-text" type="text" id="body" onChange={handleChange}/><br/>
+                    <label>Notification Link : </label>
+                    <div className="row">
+                        <div className="col s5 m3">
+                            <input className="white-text" type="text" defaultValue="pnloot.web.app/" disabled/>
+                        </div>
+                        <div className="col s6">
+                            <input className="white-text" type="text" id="clink" onChange={handleChange}/><br/>
+                        </div>
+                    </div>
                     <button className="waves-effect waves-light btn hoverable">Send</button>
                 </form>
             </div>
@@ -36,7 +50,7 @@ const SendNotifications = (props)=>{
 
 const mapDispatchtoProps = (dispatch)=>{
     return{
-        sendNewNot:(msg)=>dispatch(sendNewNot(msg))
+        pushNotification:(msg)=>dispatch(pushNotification(msg))
     }
 }
 export default connect(null,mapDispatchtoProps)(SendNotifications);

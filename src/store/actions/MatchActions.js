@@ -432,18 +432,3 @@ export const updateWinner = (winner)=>{
         }
     }
 }
-
-export const sendNewNot = (msg)=>{
-    return(dispatch,getState,{getFirebase,getFirestore})=>{
-        console.log(msg);
-        const fb = getFirebase();
-        let f = fb.functions().httpsCallable('newNotification');
-        f({msg}).then(()=>{
-            console.log("Sent");
-        }).catch((err)=>{
-            console.log(err);
-            
-        })
-        dispatch({type:"NEW_NOT"})
-    }
-}

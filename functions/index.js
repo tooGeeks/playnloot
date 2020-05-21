@@ -2,14 +2,16 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
+const unit = 5;
+
 const storeOrder = (email,orderid,order)=>{
-  return new Promise(function(resolve,reject){
+  return new Promise((resolve,reject)=>{
       switch(order.mode){
           case "PayTM":
-              admin.auth().getUserByEmail(email).then(function(userRecord){
+              admin.auth().getUserByEmail(email).then((userRecord)=>{
                     var uid = userRecord.uid;
                     let db = admin.firestore();
-                    db.collection("Orders").doc(uid).get().then(function(doc){
+                    db.collection("Orders").doc(uid).get().then((doc)=>{
                       if(doc.empty){
                         db.collection("Orders").doc(uid).set({
                             orders:{[orderid]:{...order}}
@@ -22,6 +24,7 @@ const storeOrder = (email,orderid,order)=>{
                           orders
                       }, { merge: true });
                       resolve(true);
+                      return true;
                     }).catch((err)=>{
                       resolve(false);
                     });
@@ -36,7 +39,7 @@ const storeOrder = (email,orderid,order)=>{
                         resolve(false);
                     }
                     let usr = snapshot.docs[0];
-                    let nwamt = (usr.data().wallet)+parseInt(order.amt)/5;
+                    let nwamt = (usr.data().wallet)+parseInt(order.amt)/unit;
                     db.collection("Users").doc(usr.id).set({
                         wallet:nwamt
                     }, { merge: true }).then(()=>{
@@ -53,6 +56,9 @@ const storeOrder = (email,orderid,order)=>{
                                     },{merge:true})
                                 }
                             })
+                        return true;
+                    }).catch(err=>{
+                        console.log(err);
                     })
                     resolve(true);
                 }).catch(err=>{
@@ -69,8 +75,8 @@ exports.paytmpay = functions.https.onRequest((req,res) => {
   var paytm_config = require('./paytm/paytm_config').paytm_config;
   var ran = Math.floor(Math.random() * 100000 + 100000).toString();
   var noofcns=req.body.noofcns;
-  var amount = (Number(noofcns)*5).toString();
-  if (amount == undefined) {
+  var amount = (Number(noofcns)*unit).toString();
+  if (amount === undefined) {
       res.send('Amount is Mandatory.');
   } else if (amount < paytm_config.MinAmount) {
         res.send('Minimum Amount of Rs.' + paytm_config.MinAmount + ' is Mandatory.');
@@ -84,7 +90,7 @@ exports.paytmpay = functions.https.onRequest((req,res) => {
             var mobile = req.body.mno;
             orderid= "ORDER"+"-"+name+"-"+ran;
             var CHANNEL_ID = ['iOS','Android'].includes(req.body.platform)?'WAP':'WEB';
-            storeOrder(email,orderid,{amt:parseInt(amount),mode:req.body.mode,date:admin.firestore.Timestamp.fromMillis(new Date(req.body.datetime).getTime()),status:"PENDING"}).then(function(result){
+            storeOrder(email,orderid,{amt:parseInt(amount),mode:req.body.mode,date:admin.firestore.Timestamp.fromMillis(new Date(req.body.datetime).getTime()),status:"PENDING"}).then((result)=>{
                 if(result){
                     var paramarray = {};
                     paramarray['MID'] = paytm_config.MID; //Provided by Paytm
@@ -102,9 +108,9 @@ exports.paytmpay = functions.https.onRequest((req,res) => {
                         var field = '';
                         var url = '';
                         paramarray['CHECKSUMHASH'] = checksum;
-                        if (paytm_config.PAYTM_ENVIRONMENT == 'PROD') {
+                        if (paytm_config.PAYTM_ENVIRONMENT === 'PROD') {
                             url = 'https://securegw.paytm.in/order/process';
-                        } else if (paytm_config.PAYTM_ENVIRONMENT == 'TEST') {
+                        } else if (paytm_config.PAYTM_ENVIRONMENT === 'TEST') {
                             url = 'https://securegw-stage.paytm.in/order/process';
                         }
                         for (var param in paramarray) {
@@ -131,14 +137,15 @@ exports.paytmpay = functions.https.onRequest((req,res) => {
                         res.end();
                     });
                 }
+            return true;
             }).catch((err)=>{
                 console.log(err);
             });
           break;
       case "Cash":
-            let pubgid = req.body.pubgid;
+            const pubgid = req.body.pubgid;
             orderid= "ORDER"+"-"+pubgid+"-"+ran;
-            storeOrder(pubgid,{orderid:orderid,amt:parseInt(amount),mode:req.body.mode,date: admin.firestore.Timestamp.fromMillis(new Date(req.body.datetime).getTime()),status:"SUCCESS"}).then(result=>{
+            storeOrder(pubgid,orderid,{orderid:orderid,amt:parseInt(amount),mode:req.body.mode,date: admin.firestore.Timestamp.fromMillis(new Date(req.body.datetime).getTime()),status:"SUCCESS"}).then(result=>{
                 if(result){
                     res.write('<html>');
                     res.write('<head>');
@@ -164,6 +171,7 @@ exports.paytmpay = functions.https.onRequest((req,res) => {
                     res.write('</html>');
                     res.end();
                 }
+            return true;
             }).catch(err=>{
                 console.log(err);
             });
@@ -174,14 +182,14 @@ exports.paytmpay = functions.https.onRequest((req,res) => {
 const incrwalletamt = (orderid,amount)=>{
     var db = admin.firestore();
     var pubgid = orderid.split("-")[1];
-    return new Promise(function(resolve,reject){
+    return new Promise((resolve,reject)=>{
         db.collection("Users").where('pubgid','==',pubgid).get().then(snapshot => {
             if(snapshot.empty){
                 console.error("PUBG ID : "+pubgid+"Not Found");
                 return;
             }
             var usr = snapshot.docs[0];
-            var noofcns = amount/5;
+            var noofcns = amount/unit;
             var nwamt = (usr.data().wallet)+noofcns;
             db.collection("Users").doc(usr.id).set({
                 wallet : nwamt
@@ -194,13 +202,19 @@ const incrwalletamt = (orderid,amount)=>{
                     orders[orderid] = corder;
                     db.collection("Orders").doc(usr.id).set({orders},{merge:true}).then(()=>{
                         resolve(nwamt);
+                        return;
+                    }).catch(err=>{
+                        console.log(err);
                     })
+                return true
                 }).catch(err=>{
                     console.log(err);
                 })
+                return true;
             }).catch(err=>{
                 console.log(err);
             })
+            return true;
         }).catch(err=>{
             console.log(err)
         })
@@ -210,7 +224,7 @@ const incrwalletamt = (orderid,amount)=>{
 const changeOrderStatus = (orderid,nstatus,resmsg)=>{
     var db = admin.firestore();
     var pubgid = orderid.split("-")[1];
-    return new Promise(function(resolve,reject){
+    return new Promise((resolve,reject)=>{
         db.collection("Users").where('pubgid','==',pubgid).get().then(snapshot=>{
             if(snapshot.empty){
                 console.error("PUBGID : "+pubgid+" not found");
@@ -218,7 +232,7 @@ const changeOrderStatus = (orderid,nstatus,resmsg)=>{
             }
             var usr = snapshot.docs[0];
             db.collection("Orders").doc(usr.id).get().then((snap)=>{
-                let orders = usr.data().orders;
+                let orders = snap.data().orders;
                 let corder = orders[orderid]
                 corder.status = nstatus;
                 corder.respmsg = resmsg;
@@ -228,9 +242,11 @@ const changeOrderStatus = (orderid,nstatus,resmsg)=>{
                 },{merge : true}).then(()=>{
                     resolve(nstatus);
                 })
+                return true;
             }).catch(err=>{
                 console.log(err);
             })
+            return true;
         }).catch(err=>{
             console.log(err);
         })
@@ -259,13 +275,13 @@ exports.paytmcallback = functions.https.onRequest((req,res) => {
     var paytmChecksum = "";
     var paytmParams = {};
     for(var key in received_data){
-        if(key=="CHECKSUMHASH") paytmChecksum = received_data[key];
+        if(key==="CHECKSUMHASH") paytmChecksum = received_data[key];
         else paytmParams[key] = received_data[key];
     }
     var isValidChecksum = checksum_lib.verifychecksum(paytmParams,paytm_config.MERCHANT_KEY,paytmChecksum);
     if(isValidChecksum){
-        if(received_data["STATUS"]=="TXN_SUCCESS"){
-            incrwalletamt(received_data['ORDERID'],parseInt(received_data['TXNAMOUNT'])).then(function(result){
+        if(received_data["STATUS"]==="TXN_SUCCESS"){
+            incrwalletamt(received_data['ORDERID'],parseInt(received_data['TXNAMOUNT'])).then((result)=>{
                 res.write('<html>');
                 res.write('<head>');
                 res.write('<title>Redirecting...</title>');
@@ -277,11 +293,12 @@ exports.paytmcallback = functions.https.onRequest((req,res) => {
                 res.write('</body>');
                 res.write('</html>');
                 res.end();
+                return true;
             }).catch(err=>{
                 console.log(err);
             })
         }else{
-            changeOrderStatus(received_data['ORDERID'],"FAILURE",received_data['RESPMSG']).then(result=>{
+            changeOrderStatus(received_data['ORDERID'],received_data["STATUS"],received_data['RESPMSG']).then(result=>{
                 res.write('<html>');
                 res.write('<head>');
                 res.write('<title>Redirecting...</title>');
@@ -293,12 +310,13 @@ exports.paytmcallback = functions.https.onRequest((req,res) => {
                 res.write('</body>');
                 res.write('</html>');
                 res.end();
+                return true;
             }).catch(err=>{
                 console.log(err);
             })
         }
     }else{
-        changeOrderStatus(received_data['ORDERID'],"FAILURE",received_data['RESPMSG']).then(result=>{
+        changeOrderStatus(received_data['ORDERID'],received_data["STATUS"],received_data['RESPMSG']).then(result=>{
             res.write('<html>');
             res.write('<head>');
             res.write('<title>Redirecting...</title>');
@@ -310,6 +328,7 @@ exports.paytmcallback = functions.https.onRequest((req,res) => {
             res.write('</body>');
             res.write('</html>');
             res.end();
+            return true;
         }).catch(err=>{
             console.log(err);
         })
@@ -324,13 +343,13 @@ const createNotification = ((notification) => {
 });
 
 
-exports.pushNotification = functions.https.onCall((data,context)=>{
+exports.pushNotification = functions.https.onCall(async (data,context)=>{
     console.log(data)
     const title = data.msg.title;
     const body = data.msg.body;
     const clink = data.msg.clink;
     const db = admin.firestore();
-    return db.collection("Notifications").doc("messageTokens").get().then((snap)=>{
+    return db.collection("Notifications").doc("messageTokens").get().then(async (snap)=>{
         if(!snap.exists) return;
         let messageTokens = snap.data().tokens;
         console.log(snap.data());

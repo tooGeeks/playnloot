@@ -119,3 +119,18 @@ export const resetPassword = (email)=>{
       })
   }
 }
+
+export const pushNotification = (msg)=>{
+  return(dispatch,getState,{getFirebase,getFirestore})=>{
+      console.log(msg);
+      const fb = getFirebase();
+      let f = fb.functions().httpsCallable('pushNotification');
+      f({msg}).then((resp)=>{
+          console.log("Sent",resp);
+      }).catch((err)=>{
+          console.log(err);
+          
+      })
+      dispatch({type:"NEW_NOT"})
+  }
+}
