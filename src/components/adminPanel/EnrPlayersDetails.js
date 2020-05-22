@@ -1,7 +1,6 @@
 import React from 'react'
 import MaterialTable from 'material-table'
 import { TablePagination, TableCell } from '@material-ui/core';
-import MatchSummary from '../matches/adminMatchSummary';
 
 
 
@@ -78,9 +77,18 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
                 newData['wallet'] = parseInt(newData['wallet']) - kdiff
                 newData['looted'] = parseInt(newData['looted']) - kdiff
             }
+            if(oldData.ldr===undefined){
+                let mate = data.find(pl=>(pl.ldr && (oldData.pubgid).split("'")[0]===pl.ldr))
+                console.log(mate)
+                if(mate!==undefined){
+                    let minx = data.indexOf(mate);
+                    mate['rank'] = newData.rank;
+                    data[minx] = mate;
+                }
+            }
             data[inx] = newData;
             data.sort((a,b)=>{
-                return a.ukills<b.ukills ? 1 : -1;
+                return a.rank<b.rank ? 1 : -1;
             })
             /** 
             for(let x in data){
@@ -128,7 +136,7 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
                         pageSizeOptions:[5,10,15,20],
                         rowStyle:rowData =>(
                             {
-                            backgroundColor : (mode==="Solo" && winner===rowData.pubgid) || (mode!=="Solo" && winner===rowData.pubgid.split("'")[0]) || winner===rowData.ldr ? '#5DDF93' : '#2B3138'
+                            backgroundColor : (mode==="Solo" && winner===rowData.pubgid) || (mode!=="Solo" && rowData.pubgid && winner===rowData.pubgid.split("'")[0]) || winner===rowData.ldr ? '#5DDF93' : '#2B3138'
                         })
                     }}
                     isLoading={!state}

@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {compose} from 'redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import {updateMatch} from '../../store/actions/MatchActions';
-import {compdate,getCurrentDate,findinMatches} from '../../Functions';
+import {compdate,getCurrentDate,findinMatches} from './adminFunctions';
 import Nav from './AdminNav'
 import { useState } from "react";
 import { Select, MenuItem } from "@material-ui/core";

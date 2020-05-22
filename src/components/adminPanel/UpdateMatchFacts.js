@@ -1,7 +1,7 @@
 import React from 'react';
 import EnrPlayersDetails from './EnrPlayersDetails'
 import { connect, useDispatch } from 'react-redux';
-import {findinMatches, findinUsers} from '../../Functions'
+import {findinMatches, findinUsers, buildPlayerList} from './adminFunctions'
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import MatchSummary from '../matches/adminMatchSummary';
@@ -165,55 +165,12 @@ const UpdateMatchFacts = (props)=>{
     var ind = 1;
     let mplayers = match && match.players
     let pljson = {}
-    let uinm = []
-    for(let x in mplayers){
-      let mpkarr = Object.keys(mplayers[x])
-      let ldr = users && findinUsers(users,x)
-      var ux = {};
-        // eslint-disable-next-line no-loop-func
-      ldr && users && cols.map(cl=>{
-          return  cl==='srno' ? (match.mode==="Solo" ?ux[cl]=ind++ : ux[cl]=ind ) : (cl==='pubgid' && match.mode!=="Solo" ? ux[cl]=ldr[cl]+"'s Team" : ux[cl]=ldr[cl])
-      })
-      ux['id']=ldr && ldr['id']
-      let ldruk = match.mode==="Solo" ? mplayers[x] : mplayers[x][x]
-      ux['ukills'] = ldruk
-      ux['kills']=ldr && ldr['kills']
-      ux['kills'] = ux['kills'] - ux['ukills']
-      ux['coins']=0
-      ux['rank']=0
-      ux['looted']=ldr && ldr['looted']
-      if(match.mode!=="Solo"){
-        let alp = ['a','b','c','d']
-        let mates = 
-        users && mpkarr.map(mpk=>users && findinUsers(users,mpk))
-        let matex = []
-          // eslint-disable-next-line no-loop-func
-          mates && users && mates.forEach((mate,sinx)=>{
-            let sindx = 1
-            if(mates && mate && mate.pubgid===x) {sindx++;return;}
-            let mx = {}
-            mates && mate && cols.map(cl=>{
-              return  cl==='srno' ? mx[cl]=(ind)+(match.mode==="Duo"?alp[sindx++]:alp[sinx]) : mx[cl]=mate[cl]
-            })
-            mx['ukills'] = mate && mplayers && mplayers[x][mate.pubgid]
-            mx['kills'] = mx['kills'] - mx['ukills']
-            mx['id']= mate && mate['id']
-            mx['ldr']=x 
-            mx['coins']=0
-            mx['looted']=mate && mate['looted']
-            matex.push(mx)
-          })
-          ind++
-        uinm.push(...matex)
-      }
-      uinm.push({...ux})
-      pljson = {...pljson,[x]:mplayers[x][mpkarr[0]]+mplayers[x][mpkarr[1]]}
-    }
+    let uinm = match && users && buildPlayerList(mplayers,users,match.mode,cols);
     let winner = match && match.winner;
     tableMetadata['count'] = uinm && uinm.length
-    let players = uinm.slice(tableMetadata.psi,tableMetadata.pei)
-    players.sort((a,b)=>{
-      return a.ukills>b.ukills ? -1 : 1;
+    let players = uinm && uinm.slice(tableMetadata.psi,tableMetadata.pei)
+    players && players.sort((a,b)=>{
+      return a.rank>b.rank ? -1 : 1;
     })
     /**
     let rnk = 1

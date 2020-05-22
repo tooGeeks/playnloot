@@ -91,7 +91,7 @@ export const enterMatch = (match,userData)=>{
                     console.log("isAlRegM : "+isAlRegM+" isAlRegU : "+isAlRegU);
                     let plno = match.plno+1
                     if(!isAlRegM && !isAlRegU){
-                        players[cp] = 0;
+                        players[cp] = "0-0";
                         db.collection('Matches').doc(match.id).set({
                             players:players,
                             plno:plno
@@ -133,7 +133,7 @@ export const enterMatch = (match,userData)=>{
                         if(!isAlRegM[0] && !isAlRegU[0] && !isAlRegM[1] && !isAlRegU[1]){
                             cp1matches.push(match.id)
                             cp2matches.push(match.id)
-                            players[cp] = {[cp]:0,[mate1]:0}
+                            players[cp] = {[cp]:"0-0",[mate1]:"0-0"}
                             let plno = parseInt(match.plno)+2
                             wallet -= 4
                             db.collection("Matches").doc(match.id).set({players,plno},{merge:true}).then(()=>{
@@ -207,7 +207,7 @@ export const enterMatch = (match,userData)=>{
                             })
                             let pjs = {}
                             parr.forEach(pl=>{
-                                pjs[pl]=0
+                                pjs[pl]="0-0"
                             })
                             players[cp]=pjs
                             db.collection("Matches").doc(match.id).set({players,plno},{merge:true}).then(()=>{
@@ -236,7 +236,7 @@ export const enterMatch = (match,userData)=>{
 export const updateFacts = (players,mid,mode)=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
         for(let x in players){
-            if(players[x].ukills===undefined) {
+            if(players[x].ukills===undefined || players[x].rank===undefined ) {
                 alert("Please Fill The Details properly");
                 return true;
             }
@@ -263,18 +263,19 @@ const ufacts = (db,players,mode)=>{
     return new Promise((resolve,reject)=>{
         let plist = {};
         players.map((pl)=>{
-            if(mode==="Solo") plist[pl.pubgid] = pl.ukills
+            if(mode==="Solo") plist[pl.pubgid] = pl.ukills+"-"+pl.rank
             else{
-                if(pl.ldr) plist[pl.ldr] = {...plist[pl.ldr],[pl.pubgid]:pl.ukills}
+                if(pl.ldr) plist[pl.ldr] = {...plist[pl.ldr],[pl.pubgid]:pl.ukills+"-"+pl.rank}
                 else {
                     let pid = pl.pubgid.split("'")[0]
-                    plist[pid] = {...plist[pid],[pid]:pl.ukills}
+                    plist[pid] = {...plist[pid],[pid]:pl.ukills+"-"+pl.rank}
                 }
             }
+            console.log(pl.kills,pl.ukills)
             db.collection("Users").doc(pl.id).set({
-                kills:(pl.kills+pl.ukills),
-                wallet:(pl.wallet),
-                looted:(pl.looted)
+                kills:(parseInt(pl.kills)+parseInt(pl.ukills)),
+                wallet:(parseInt(pl.wallet)),
+                looted:(parseInt(pl.looted))
             },{merge:true})
             return pl;
         })

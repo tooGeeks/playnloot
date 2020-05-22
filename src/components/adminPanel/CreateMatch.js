@@ -3,7 +3,7 @@ import { createMatch } from '../../store/actions/MatchActions';
 import {connect} from 'react-redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import {compose} from 'redux';
-import {compdate,getCurrentDate} from '../../Functions';
+import {compdate,getCurrentDate} from './adminFunctions';
 import Nav from './AdminNav'
 import { Select, MenuItem } from "@material-ui/core";
 
@@ -35,7 +35,7 @@ const CreateMatch = (props)=>{
     const chkexistmatch = ()=>{//checks if already a match is scheduled on specified date
         const {matches} = props;
         return matches.map(match =>{
-            return(match.mdate===state.mdate)
+            return(match.mtime===state.mtime)
         })
     }
     const handleSubmit = (e)=>{

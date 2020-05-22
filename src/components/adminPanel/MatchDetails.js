@@ -1,6 +1,6 @@
 import React from 'react';
 import EnrPlayersDetails from './EnrPlayersDetails'
-import {findinUsers} from '../../Functions'
+import {findinUsers, buildPlayerList} from './adminFunctions'
 import {useSelector, useDispatch} from 'react-redux'
 import MatchSummary from '../matches/adminMatchSummary'
 import Nav from './AdminNav'
@@ -52,39 +52,7 @@ const MatchDetails = (props)=>{
     let ind = 1
     let mplayers = match && match.players
     let pljson = {}
-    let uinm = []
-    for(let x in mplayers){
-      let mpkarr = Object.keys(mplayers[x])
-      let ldr = Users && findinUsers(Users,x)
-      var ux = {};
-        // eslint-disable-next-line no-loop-func
-      ldr && Users && cols.map(cl=>{
-          return  cl==='srno' ? (match.mode==="Solo" ?ux[cl]=ind++ : ux[cl]=ind ) : (cl==='pubgid' && match.mode!=="Solo" ? ux[cl]=ldr[cl]+"'s Team" : ux[cl]=ldr[cl])
-      })
-      if(match.mode!=="Solo"){
-        let alp = ['a','b','c','d']
-        let mates = 
-        Users && mpkarr.map(mpk=>Users && findinUsers(Users,mpk))
-        let matex = []
-          // eslint-disable-next-line no-loop-func
-          mates && Users && mates.forEach((mate,sinx)=>{
-            let sindx = 1
-            if(mates && mate && mate.pubgid===x) {sindx++;return;}
-            let mx = {}
-            mates && mate && cols.map(cl=>{
-              return  cl==='srno' ? mx[cl]=(ind)+(match.mode==="Duo"?alp[sindx++]:alp[sinx]) : mx[cl]=mate[cl]
-            })
-            mx['ukills'] = mate && mplayers && mplayers[x][mate.pubgid]
-            mx['ldr']=x
-            matex.push(mx)
-          })
-          ind++
-        uinm.push(...matex)
-      }
-      let ldruk = match.mode==="Solo" ? mplayers[x] : mplayers[x][x]
-      uinm.push({...ux,ukills:ldruk})
-      pljson = {...pljson,[x]:mplayers[x][mpkarr[0]]+mplayers[x][mpkarr[1]]}
-    }
+    let uinm = match && Users && buildPlayerList(mplayers,Users,match.mode,cols)
     /**
     let uinm = Users && Users.map(user=>{
         var px = match && getPlayerfromMatch(pljson,user.pubgid,match.mode)

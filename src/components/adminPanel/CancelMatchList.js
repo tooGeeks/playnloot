@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import {compose} from 'redux';
 import MatchSummary from "../matches/adminMatchSummary";
-import {getCurrentDate} from '../../Functions'
+import {getCurrentDate} from './adminFunctions'
 import Nav from './AdminNav'
 
 const CancelMatchList = (props)=>{
