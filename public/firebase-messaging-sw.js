@@ -14,22 +14,22 @@ messaging.setBackgroundMessageHandler(function(payload) {
       console.log("Supported ACt!")
     }
     const {title,body} = payload.data ;
-    const {link} = payload.fcmOptions
+    const clink = payload.fcmOptions.link || '/dashboard'
     console.log('[firebase-messaging-sw.js] Received background message ', payload);
     // Customize notification here
     const notificationTitle = title;
     console.log('actions' in Notification.prototype)
-    const actions = [
+    const actions = payload.fcmOptions.link ? [
       {
         action:'open-site',
         title:"Let's Loot",
       }
-    ]
+    ] : null
     const notificationOptions = {
       body: body,
-      data:{clink:link},
+      data:{clink:clink},
       icon: '/imgs/icon-192x192.png',
-      badge:'/favicon.ico',
+      badge:'/imgs/icon-192x192.png',
       //timestamp:'',
       actions
     };
@@ -52,6 +52,8 @@ messaging.setBackgroundMessageHandler(function(payload) {
         clients.openWindow(clnk)
         break;
       default:
+        // eslint-disable-next-line no-undef
+        clients.openWindow("/dashboard")
         break;
     }
   })

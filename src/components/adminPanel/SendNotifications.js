@@ -15,8 +15,8 @@ const SendNotifications = (props)=>{
     }
     const handleSubmit = (e)=>{
         e.preventDefault();
-        const {clink,body,title} = data;
-        if( clink==="" || title==="" || body===""){
+        const {body,title} = data;
+        if(title==="" || body===""){
             alert("Enter Complete Details!");
             return
         }
@@ -32,10 +32,10 @@ const SendNotifications = (props)=>{
                     <input className="white-text" type="text" id="title" onChange={handleChange}/><br/>
                     <label>Notification Body : </label>
                     <input className="white-text" type="text" id="body" onChange={handleChange}/><br/>
-                    <label>Notification Link : </label>
+                    <label>Open Link : </label>
                     <div className="row">
                         <div className="col s5 m3">
-                            <input className="white-text" type="text" defaultValue="pnloot.web.app/" disabled/>
+                            <input className="white-text" type="text" defaultValue="playandloot.web.app/" disabled/>
                         </div>
                         <div className="col s6">
                             <input className="white-text" type="text" id="clink" onChange={handleChange}/><br/>
