@@ -8,7 +8,7 @@ import { enterMatch } from '../../store/actions/MatchActions';
 import { backDrop, clearBackDrop } from '../../store/actions/uiActions'
 import Copyright from '../layout/Copyright'
 import { rules } from '../../constants'
-import { convt, dateString } from '../../Functions'
+import { convt, dateString, } from '../../Functions'
 
 
 const useStyles = makeStyles(theme=>({
