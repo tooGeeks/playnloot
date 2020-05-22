@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles, Container, TextField, Typography, Button, Paper, Grid, Box, Divider } from '@material-ui/core';
 import useForm from 'react-hook-form';
 import { compose } from 'redux';
@@ -38,14 +38,17 @@ const useStyles = makeStyles(theme=>({
 const PlayerEnroll = (props) => {
     const classes = useStyles()
     const dispatch = useDispatch();
-    dispatch(backDrop());
     const {Matches, profile} = props
     const match = Matches && Matches[0]
-    if(match !== undefined) dispatch(clearBackDrop())
-    console.log(profile, match)
-    //if(Matches && profile.matches && (profile.matches).includes(match.id)) props.history.push('/dashboard');
-    const {register,errors,handleSubmit, reset} = useForm()
-    let enpdiv;
+
+    useEffect(() => {
+        if(match && match.mode.team) dispatch(clearBackDrop())
+        else dispatch(backDrop())
+    }, [match, dispatch])
+
+    if(Matches && profile.matches && (profile.matches).includes(props.match.params.mid)) props.history.push('/dashboard');
+
+    const {register, errors, handleSubmit, reset} = useForm()
     const enroll = (data, e)=>{
         e.preventDefault();
         dispatch(enterMatch(match,data))
@@ -53,6 +56,7 @@ const PlayerEnroll = (props) => {
         // dispatch(backDrop())
         // props.history.push('/dashboard')
     }   
+    let enpdiv;
     switch(match && match.mode.team){
         default:
             break;

@@ -32,7 +32,6 @@ const Details = (props) => {
                 return (<Chip label={tag} key={ind} variant="outlined" size="small" color="primary" style={{marginRight: 2}}/>)
             })}</Box>
             {roomid && roompass ? <Box>Room ID: <em>{roomid}</em> &nbsp; Password: <em>{roompass}</em></Box> : null}
-            <Box></Box>
         </Box>
     )
 }
