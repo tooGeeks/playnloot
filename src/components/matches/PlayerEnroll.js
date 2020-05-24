@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { makeStyles, Container, TextField, Typography, Button, Paper, Grid, Box, Divider } from '@material-ui/core';
+import { makeStyles, Container, TextField, Typography, Button, Paper, Grid, Box, Divider, GridList, GridListTile } from '@material-ui/core';
 import useForm from 'react-hook-form';
 import { compose } from 'redux';
 import { connect, useDispatch } from 'react-redux';
@@ -8,7 +8,7 @@ import { enterMatch } from '../../store/actions/MatchActions';
 import { backDrop, clearBackDrop } from '../../store/actions/uiActions'
 import Copyright from '../layout/Copyright'
 import { rules } from '../../constants'
-import { convt, dateString, } from '../../Functions'
+import { convt, dateString } from '../../Functions'
 
 
 const useStyles = makeStyles(theme=>({
@@ -29,6 +29,24 @@ const useStyles = makeStyles(theme=>({
         paddingTop : theme.spacing(2),
         backgroundColor: theme.palette.background.paper
     },
+    prizes: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+        justifyContent: 'space-around',
+        backgroundColor: theme.palette.background.paper,
+    },
+    rankBar: {
+        padding: theme.spacing(2),
+        marginLeft: theme.spacing(1.5),
+        marginRight: theme.spacing(1),
+        backgroundColor: theme.palette.custom.BlueBell,
+        width: '2rem',
+        textAlign: 'center',
+        verticalAlign: 'center',
+        writingMode: 'vertical-rl',
+        textOrientation: 'sideways'
+    },
     footer: {
         marginTop: 'auto',
         marginBottom: theme.spacing(10)
@@ -40,12 +58,12 @@ const PlayerEnroll = (props) => {
     const dispatch = useDispatch();
     const {Matches, profile} = props
     const match = Matches && Matches[0]
+    let enpdiv = false;
 
     useEffect(() => {
-        if(match && match.mode.team) dispatch(clearBackDrop())
+        if(match && match.mode.team && enpdiv) dispatch(clearBackDrop())
         else dispatch(backDrop())
-    }, [match, dispatch])
-
+    }, [match, enpdiv, dispatch])
     if(Matches && profile.matches && (profile.matches).includes(props.match.params.mid)) props.history.push('/dashboard');
 
     const {register, errors, handleSubmit, reset} = useForm()
@@ -53,13 +71,11 @@ const PlayerEnroll = (props) => {
         e.preventDefault();
         dispatch(enterMatch(match,data))
         reset()
-        // dispatch(backDrop())
-        // props.history.push('/dashboard')
     }   
-    let enpdiv;
     switch(match && match.mode.team){
         default:
             break;
+        case "Solo": enpdiv = true; break;
         case "Duo":
             enpdiv = (
                 <TextField
@@ -102,22 +118,44 @@ const PlayerEnroll = (props) => {
                 <form noValidate onSubmit={handleSubmit(enroll)}>
                 <Paper className={classes.paper}>
                     <Grid container item direction="row" justify="space-evenly" alignContent="space-around" spacing={1}>
+                        <Grid item xs={12} style={{paddingBottom: 20}}><Typography component="h1" variant="h5" align="center" color="primary">Enroll in {match && match.name}</Typography></Grid>
+                        <Grid container item justify="space-between" xs={12}>
+                            <Grid item xs={4} order={2}>
+                                <Typography variant="body1">{match && dateString(match.mdate)}</Typography>
+                                <Typography variant='caption'>Match Date</Typography>
+                                <Typography variant="body1">{match && convt(1,match.mtime)}</Typography>
+                                <Typography variant="caption">Match Time</Typography>
+                                <Typography variant="body1">{match && dateString(match.lrdate)}</Typography>
+                                <Typography variant="caption">Last Date</Typography>
+                            </Grid>
+                            <Grid item xs={6} className={classes.prizes} order={1}>
+                                <Box className={classes.rankBar} style={{height: '100px'}}>1000</Box>
+                                <Box className={classes.rankBar} style={{height: '75px'}}>500</Box>
+                                <Box className={classes.rankBar} style={{height: '50px'}}>200</Box>
+                            </Grid>
+                        </Grid>
                         <Grid item xs={12}>
-                            <Typography component="h1" variant="h5" align="center">Enroll in {match && match.name}</Typography>
-                            <br/>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Box fontSize={16} textAlign="center">Match Date: {match && dateString(match.mdate)}</Box>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Box fontSize={16} textAlign="center" mb={2}>Match Time: {match && convt(1,match.mtime)}</Box>
-                        </Grid>
-                        {console.log(match && match)}
-                        <Grid item xs={12}>
-                            <Typography align="center">Last Date: {dateString(match && match.lrdate)}</Typography>
                             <Box display="flex" justifyContent="center" alignItems="flex-end" mt={1} mb={1}>
-                                <Box mr={2} fontSize={14}>1<sup>st</sup> : ₹{match && match.prizes['1']}</Box><Box mr={2} fontSize={14}>2<sup>nd</sup> : ₹{match && match.prizes['2']}</Box><Box mr={2} fontSize={14}>3<sup>rd</sup> : ₹{match && match.prizes['3']}</Box>
+                                <Box mr={2}>
+                                    <Typography variant="h6">₹{match && match.prizes['1']}</Typography>
+                                    <Typography variant="caption">1<sup>st</sup> Prize</Typography>
+                                </Box>
+                                <Box fontSize={14}>1<sup>st</sup> : ₹{match && match.prizes['1']}</Box><Box mr={2} fontSize={14}>2<sup>nd</sup> : ₹{match && match.prizes['2']}</Box><Box mr={2} fontSize={14}>3<sup>rd</sup> : ₹{match && match.prizes['3']}</Box>
                             </Box>
+                        </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <Typography align="center">Pros Follow these Rules</Typography>
+                            <Divider variant="middle"/>
+                            <Box mt={0.5} p={1}>
+                                {rules && rules.map((rule, ind) => {
+                                    return (
+                                    <Box key={ind} pl={1} pr={1} mb={1}>{`${ind+1}. ${rule}`}</Box>
+                                    )
+                                })}
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Typography variant="subtitle1">Fill to enroll now!</Typography>
                         </Grid>
                         <Grid item xs={12} sm={12}>
                             <TextField id="pubgid" variant='outlined'
@@ -136,17 +174,6 @@ const PlayerEnroll = (props) => {
                             helperText={errors.pubgid ? errors.pubgid.type === 'required' ? "Enter your PUBG ID" : errors.pubgid.type === 'idmatch' ? "Wrong ID! Contact Admin" : false : "Confirm your EXACT PUBG ID!"}
                             />
                             {enpdiv}
-                        </Grid>
-                        <Grid item xs={12} sm={12}>
-                            <Box letterSpacing={1} fontSize={18} textAlign="center">RULES</Box>
-                            <Divider variant="middle"/>
-                            <Box mt={0.5} p={1}>
-                                {rules && rules.map((rule, ind) => {
-                                    return (
-                                    <Box key={ind} pl={1} pr={1} mb={1}>{`${ind+1}. ${rule}`}</Box>
-                                    )
-                                })}
-                            </Box>
                         </Grid>
                         <Grid item xs={12}>
                             <Box fontSize={10} textAlign="center">*By clicking below, you agreed to all the rules</Box>

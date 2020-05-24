@@ -34,9 +34,8 @@
 	},
 	"typography":
 	{
-		"overline":
-		{
-			"color": "#6f6a7a"
+		"caption": {
+			"color": "rgb(255, 255, 255, 0.7)"
 		}
 	},
 	"custom": {

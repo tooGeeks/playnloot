@@ -30,11 +30,12 @@ export const convt = (opt=0,time)=>{//Used to Convert Time from/to 12hr and 24 h
     return cd;
 }
 
-export const dateString = (date)=>{//Returs 'date' in Readable Format Ex. 26 December 2019, Thursday
+export const dateString = (date, arg)=>{//Returs 'date' in Readable Format Ex. 26 December 2019, Thursday
     const cd = new Date(date);
     const months = ["January","February","March","April","May","June","July","August","September","Octocber","November","December"]
     const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
-    return cd.getDate() + " " + months[cd.getMonth()] + " " + cd.getFullYear() + ", " + days[cd.getDay()];
+    if(arg === 'full') return (cd.getDate() + " " + months[cd.getMonth()] + " " + cd.getFullYear() + ", " + days[cd.getDay()])
+    else return (cd.getDate() + " " + months[cd.getMonth()]);
 }
 
 export const isinDocs = (docs,id)=>{//Used to Check if a certain doc exists in a given list.
