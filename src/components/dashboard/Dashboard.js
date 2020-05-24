@@ -16,6 +16,7 @@ import {compose} from 'redux';
 import { EnrolledDialog, MatchSummary } from '../matches/MatchSummary';
 import { backDrop, clearBackDrop } from '../../store/actions/uiActions'
 import Copyright from '../layout/Copyright'
+import { getPlayerfromMatch } from "../../Functions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -202,6 +203,8 @@ function Dashboard(props) {
     }
     const enrolledMatches = profile.isLoaded && Array.isArray(profile.matches) && Array.isArray(Matches) && (profile.matches.length !== 0) ? profile.matches && profile.matches.map((match, index) =>{
       for (const i of Matches) if(match === i.id) match = i;
+      let pdx =match && getPlayerfromMatch(match.players,profile.pubgid,match.mode.team)// Fetch 
+      let rank = pdx.split('-')[1]
       if(match.mdate<getCurrentDate()) return null
       return( match.mtime &&
         <Grid item xs={12} sm={4} key={match.id}>
@@ -213,6 +216,7 @@ function Dashboard(props) {
               <Box mb={1}>
                 <Box fontSize={14}><Event className={classes.icons}/> {convt(1,match.mtime)}</Box>
                 <Box fontSize={14}><AccessAlarm className={classes.icons}/> {match && dateString(match.mdate)}</Box>
+                <Box fontSize={14}><AccessAlarm className={classes.icons}/>Rank : {rank}</Box>
               </Box>
               <Box display="flex" flexDirection="row" style={{width: '100%'}}>
                 <Box display="inline-flex" textAlign="left" mt={1} style={{width: '60%'}}>{match.tags && (Array.isArray(match.tags) && match.tags.length) && match.tags.map((tag, ind) => {

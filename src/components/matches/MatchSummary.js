@@ -1,5 +1,5 @@
 import React from 'react';
-import { convt, dateString } from '../../Functions';
+import { convt, dateString, getPlayerfromMatch } from '../../Functions';
 import { useHistory } from 'react-router-dom';
 import { unit } from '../../constants';
 

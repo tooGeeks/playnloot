@@ -50,6 +50,7 @@ export const getPlayerfromMatch = (plist,pid,mode)=>{
 }
 
 export const buildPlayerList = (mplayers,Users,mode,cols)=>{
+    const {team} = mode
     console.log(Users)
     let uinm = []
     let ind = 1;
@@ -59,9 +60,9 @@ export const buildPlayerList = (mplayers,Users,mode,cols)=>{
         var ux = {};
           // eslint-disable-next-line no-loop-func
         ldr && Users && cols.map(cl=>{
-            return  cl==='srno' ? (mode==="Solo" ?ux[cl]=ind++ : ux[cl]=ind ) : (cl==='pubgid' && mode!=="Solo" ? ux[cl]=ldr[cl]+"'s Team" : ux[cl]=ldr[cl])
+            return  cl==='srno' ? (team==="Solo" ?ux[cl]=ind++ : ux[cl]=ind ) : (cl==='pubgid' && team!=="Solo" ? ux[cl]=ldr[cl]+"'s Team" : ux[cl]=ldr[cl])
         })
-        if(mode!=="Solo"){
+        if(team!=="Solo"){
           let alp = ['a','b','c','d']
           let mates = 
           Users && mpkarr.map(mpk=>Users && findinUsers(Users,mpk))
@@ -72,7 +73,7 @@ export const buildPlayerList = (mplayers,Users,mode,cols)=>{
               if(mates && mate && mate.pubgid===x) {sindx++;return;}
               let mx = {}
               mates && mate && cols.map(cl=>{
-                return  cl==='srno' ? mx[cl]=(ind)+(mode==="Duo"?alp[sindx++]:alp[sinx]) : mx[cl]=mate[cl]
+                return  cl==='srno' ? mx[cl]=(ind)+(team==="Duo"?alp[sindx++]:alp[sinx]) : mx[cl]=mate[cl]
               })
               let mu = mate && mplayers && mplayers[x][mate.pubgid];
               let mukills = mu && parseInt(mu.split('-')[0]); 
@@ -83,15 +84,19 @@ export const buildPlayerList = (mplayers,Users,mode,cols)=>{
               mx['id'] = mate && mate.id
               mx['ldr']=x
               mx['looted'] = mate && mate.looted
+              mx['coins'] = 1
               matex.push(mx)
             })
             ind++
           uinm.push(...matex)
         }
-        let ldrkr = mode==="Solo" ? mplayers[x] : mplayers[x][x];
+        let ldrkr = team==="Solo" ? mplayers[x] : mplayers[x][x];
         let ldruk = ldrkr && parseInt(ldrkr.split('-')[0])
         let ldrr = ldrkr && parseInt(ldrkr.split('-')[1])
-        uinm.push({...ux,ukills:ldruk,rank:ldrr,id:ldr.id,looted:ldr.looted,kills:ldr.kills})
+        let ldrid = ldr && ldr.id;
+        let ldrlooted = ldr && ldr.looted
+        let ldrkills = ldr && ldr.kills
+        uinm.push({...ux,ukills:ldruk,rank:ldrr,id:ldrid,looted:ldrlooted,kills:ldrkills,coins:1})
         //pljson = {...pljson,[x]:mplayers[x][mpkarr[0]]+mplayers[x][mpkarr[1]]}
     }
     return uinm;

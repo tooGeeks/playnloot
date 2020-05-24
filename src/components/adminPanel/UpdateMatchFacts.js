@@ -1,7 +1,7 @@
 import React from 'react';
 import EnrPlayersDetails from './EnrPlayersDetails'
 import { connect, useDispatch } from 'react-redux';
-import {findinMatches, findinUsers, buildPlayerList} from './adminFunctions'
+import {findinMatches, buildPlayerList} from './adminFunctions'
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import MatchSummary from '../matches/adminMatchSummary';
@@ -161,10 +161,8 @@ const UpdateMatchFacts = (props)=>{
       setState({...state,[e.target.id]:e.target.value})
     }
 
-    const cols = ['srno','pubgid','mno','ukills','coins','wallet','rank'] 
-    var ind = 1;
+    const cols = ['srno','pubgid','mno','ukills','coins','wallet','rank']
     let mplayers = match && match.players
-    let pljson = {}
     let uinm = match && users && buildPlayerList(mplayers,users,match.mode,cols);
     let winner = match && match.winner;
     tableMetadata['count'] = uinm && uinm.length
@@ -191,7 +189,7 @@ const UpdateMatchFacts = (props)=>{
     </div>
   </div></div>
   let playerDetails = users && players ?
-  <EnrPlayersDetails getUnit={getUnit} winner={winner} players={users && players} tableMetadata={tableMetadata} handleChangeRowsPerPage={handleChangeRowsPerPage} handlePageChange={handlePageChange} rstate={hdata} bttnname="Update Values" columns={cols} isEditing={true}/>
+  <EnrPlayersDetails mode={match.mode} getUnit={getUnit} winner={winner} players={users && players} tableMetadata={tableMetadata} handleChangeRowsPerPage={handleChangeRowsPerPage} handlePageChange={handlePageChange} rstate={hdata} bttnname="Update Values" columns={cols} isEditing={true}/>
   : <div className="center"><p>Loading Player Details...</p><div className="preloader-wrapper small active center">
   <div className="spinner-layer spinner-blue-only">
     <div className="circle-clipper left">

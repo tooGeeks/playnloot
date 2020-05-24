@@ -4,8 +4,9 @@ import { TablePagination, TableCell } from '@material-ui/core';
 
 
 
-const EnrPlayersDetails = (props)=>{
+const EnrPlayersDetails = (props)=>{ 
     const {columns,rstate,getUnit,mode,bttnname,players,winner,isEditing,tableMetadata,handlePageChange,handleChangeRowsPerPage} = props;
+    const team = mode && mode.team
     const [state,setState] = React.useState();
     const [stableMetadata,setStableMetadata] = React.useState();
     React.useEffect(()=>{
@@ -131,12 +132,12 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
                             emptyDataSourceMessage : 'No Players Available'
                         }
                     }}
-                    parentChildData = {mode!=="Solo" ? (row,rows)=>rows.find((rw)=>rw.pubgid ? (rw.pubgid).split("'")[0]===row.ldr : null) : null}
+                    parentChildData = {team!=="Solo" ? (row,rows)=>rows.find((rw)=>rw.pubgid ? (rw.pubgid).split("'")[0]===row.ldr : null) : null}
                     options={{
                         pageSizeOptions:[5,10,15,20],
                         rowStyle:rowData =>(
                             {
-                            backgroundColor : (mode==="Solo" && winner===rowData.pubgid) || (mode!=="Solo" && rowData.pubgid && winner===rowData.pubgid.split("'")[0]) || winner===rowData.ldr ? '#5DDF93' : '#2B3138'
+                            backgroundColor : (team==="Solo" && winner===rowData.pubgid) || (team!=="Solo" && rowData.pubgid && winner===rowData.pubgid.split("'")[0]) || (winner!==undefined && winner===rowData.ldr) ? '#5DDF93' : '#2B3138'
                         })
                     }}
                     isLoading={!state}
