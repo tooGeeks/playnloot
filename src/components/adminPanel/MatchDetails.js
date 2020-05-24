@@ -49,9 +49,7 @@ const MatchDetails = (props)=>{
       ,ppp:5} //ppp means Player Per Page 
     tableMetadata['pei']=tableMetadata['ppp']
     tableMetadata.pages = Users && (Users.length/tableMetadata.ppp)
-    let ind = 1
     let mplayers = match && match.players
-    let pljson = {}
     let uinm = match && Users && buildPlayerList(mplayers,Users,match.mode,cols)
     /**
     let uinm = Users && Users.map(user=>{

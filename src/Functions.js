@@ -83,6 +83,23 @@ export const arePlayersinMatch= (docs,ids)=>{
     }
 }
 
+export const getPlayerfromMatch = (plist,pid,mode)=>{
+    if(!plist || plist.length===0 || !pid) return null;
+    if(mode==="Solo") return plist[pid]
+    else{
+        for(let x in plist){
+            if(x===pid){
+                return plist[x][x];
+            }
+        }
+        for(let x in plist){
+            for(let y in plist[x]){
+                if(y===pid) return plist[x][y];
+            }
+        }
+    }
+}
+
 export const findinMatches = (docs,id)=>{//Used to Find and return a match using its name Ex. MTH2001
     return docs.find((doc)=>id===doc.id);
 }
@@ -150,10 +167,6 @@ export const getOS = ()=>{
       os = 'Linux';
     }
     return os;
-}
-
-export const getPlayerfromMatch = (plist,pid,mode)=>{
-    return plist[pid]
 }
 
 export const reportError = (db,uid,error)=>{

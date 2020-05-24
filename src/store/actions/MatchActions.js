@@ -235,6 +235,7 @@ export const enterMatch = (match,userData)=>{
 
 export const updateFacts = (players,mid,mode)=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
+        const {team} = mode
         for(let x in players){
             if(players[x].ukills===undefined || players[x].rank===undefined ) {
                 alert("Please Fill The Details properly");
@@ -242,7 +243,7 @@ export const updateFacts = (players,mid,mode)=>{
             }
         }
         const db = getFirestore();
-        ufacts(db,players,mode).then((plist)=>{
+        ufacts(db,players,team).then((plist)=>{
             console.log(plist)
             db.collection("Matches").doc(mid).get().then((doc)=>{
                 if(!doc.exists) return;
