@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "playandloot"
+  },
+  "targets": {
+    "playandloot": {
+      "hosting": {
+        "client-app": [
+          "playandloot"
+        ],
+        "admin-app": [
+          "admin-l00t"
+        ]
+      }
+    }
   }
 }
