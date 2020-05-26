@@ -19,7 +19,7 @@ const Copyright = () => {
         <Container maxWidth="sm">
             <Box mt={4}>
                 <Box mb={1} display="flex" justifyContent="center">
-                    <a style={styles.a} href="https://api.whatsapp.com/send?phone=+919850496185" target="_blank" rel="noopener noreferrer"><Box><WhatsApp style={styles.Icons}/></Box></a>
+                    <a style={styles.a} href="https://api.whatsapp.com/send?phone=+91" target="_blank" rel="noopener noreferrer"><Box><WhatsApp style={styles.Icons}/></Box></a>
                     <a style={styles.a} href="https://#" target="_blank" rel="noopener noreferrer"><Box><Telegram style={styles.Icons}/></Box></a>
                     <a style={styles.a} href="https://#" target="_blank" rel="noopener noreferrer"><Box><Instagram style={styles.Icons}/></Box></a>
                 </Box>

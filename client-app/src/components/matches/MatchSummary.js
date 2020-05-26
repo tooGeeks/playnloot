@@ -79,7 +79,7 @@ export const MatchSummary = (props) => {
             <Box width="100%" display="inline-flex" flexDirection="row" alignItems="flex-end">{match.tags && match.tags.map((tag, ind) => {
                 return (<Chip label={tag} key={ind} size="small" color="primary" style={{marginRight: 2}}/>)
             })}</Box>
-            <Box flexShrink={0}><Button size="small" align="right" variant="outlined" color="primary" disabled={!canEnroll} onClick={() => history.push('/playerEnroll/' + (match.id))}>Enroll</Button></Box>
+            <Box flexShrink={0}><Button size="small" align="right" variant="outlined" color="primary" disabled={!canEnroll} onClick={() => history.push('/match/' + (match.id))}>Enroll</Button></Box>
             {/* <Box flexShrink={0}><Button size="small" align="right" variant="outlined" color="primary" onClick={() => dispatch(showDialog({title: ("Enroll in " + (match.name)), content: <Details id={match.id} match={match} canEnroll={canEnroll}/>, actions: <Actions mid={match.id} canEnroll={canEnroll}/>}))}>Details</Button></Box> */}
         </Box>
     </Box>
