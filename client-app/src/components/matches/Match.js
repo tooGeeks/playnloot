@@ -157,7 +157,7 @@ const PlayerEnroll = (props) => {
                         <Grid item xs={12}>
                             <Typography variant="subtitle1">Fill to enroll now!</Typography>
                         </Grid>
-                        <Grid item xs={12} sm={12}>
+                        <Grid item xs={12}>
                             <TextField id="pubgid" variant='outlined'
                             style={{marginBottom: 10}}
                             label="Enter your PUBG ID"

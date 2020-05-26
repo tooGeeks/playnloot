@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import './App.css';
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import Dashboard from './components/dashboard/Dashboard'
-import ProjectDetails from './components/projects/ProjectDetails'
 import SignIn from './components/auth/SignIn'
 import SignUp from './components/auth/SignUp'
-import CreateProject from './components/projects/CreateProject'
 import Wallet from './components/pages/wallet/Wallet'
 import RequestWithDraw from './components/pages/wallet/RequestWithDraw'
 import { isLoaded } from 'react-redux-firebase'
@@ -14,9 +12,7 @@ import { ProtectedRoutes } from './components/auth/ProtectedRoutes'
 // Other
 import EnterMatch from './components/matches/EnterMatch'
 import EnrolledMatches from './components/matches/EnrolledMatches'
-import PlayerEnroll from './components/matches/PlayerEnroll'
-//import HandleCallbackPaytm from './components/wallet/HandleCallbackPaytm'
-//import HandleCallbackPaytmErr from './components/wallet/HandleCallbackPaytmErr'
+import Match from './components/matches/Match'
 
 //Admin
 import CreateMatch from './components/adminPanel/CreateMatch'
@@ -96,17 +92,15 @@ const App = () => {
             <CssBaseline />
               <Switch>
                 <ProtectedRoutes exact path='/dashboard'component={Dashboard} />
-                <ProtectedRoutes path='/project/:id' component={ProjectDetails} />
                 <Route path='/signin' component={SignIn} />
                 <Route path='/signup' component={SignUp} />
-                <ProtectedRoutes path='/create' component={CreateProject} />
                 <Route exact path='/' component={Landing}/>
                 {/* <Route exact path='/:gti' component={Landing}/> This is intended for Getting-Started Tour*/}
                 <ProtectedRoutes exact path='/wallet/:use/:mny' component={Wallet}/>
                 <ProtectedRoutes path="/reqwithdrawal" component={RequestWithDraw} />
                 <ProtectedRoutes path="/entermatch/:mid" component={EnterMatch}/>
                 <ProtectedRoutes path="/enrolledmatches/" component={EnrolledMatches}/>
-                <ProtectedRoutes path="/playerEnroll/:mid" component={PlayerEnroll}/>
+                <ProtectedRoutes path="/match/:mid" component={Match}/>
 
                 {/* Admin  Paths */}
                 <ProtectedRoutes path="/admin/creatematch" component={CreateMatch}/>
