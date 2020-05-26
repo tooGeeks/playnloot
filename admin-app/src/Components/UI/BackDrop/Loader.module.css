@@ -1,0 +1,46 @@
+body{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  height: 100%;
+}
+.loader {
+  position: relative;
+  font-size: large;
+  /* background-color: rgba(0, 0, 0, 0.5); */
+  color: #202329;
+  padding: 5px;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: .2em;
+
+}
+
+.loader span {
+  color: #fff;
+  mix-blend-mode: difference;
+}
+
+.loader::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20%;
+  height: 100%;
+  background-color: #fff;
+  animation: ani 2s linear infinite;
+}
+
+@keyframes ani {
+  0% {
+    left: 0;
+  }
+  50% {
+    left: calc(100% - 20%);
+  }
+  100% {
+    left: 0;
+  }
+}

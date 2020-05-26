@@ -5,7 +5,6 @@ import {Menu, ListItem } from '@material-ui/core'
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
-import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
 import MenuItem from '@material-ui/core/MenuItem';
 
 const SignedOut = (props) => {
@@ -19,6 +18,7 @@ const SignedOut = (props) => {
         <ListItemIcon><LockOpenIcon/></ListItemIcon>
         <ListItemText primary="Sign In"></ListItemText>
       </ListItem>
+      {/**
       <ListItem color="secondary" button 
           onClick={(event) => {props.func(event, 2)}}
           selected={(props.sIndex) === 2}
@@ -26,7 +26,7 @@ const SignedOut = (props) => {
           rel="noopener">
         <ListItemIcon><SentimentVerySatisfiedIcon/></ListItemIcon>
         <ListItemText primary="Sign Up"></ListItemText>
-      </ListItem>
+      </ListItem> */}
     </div>
   )
 }
