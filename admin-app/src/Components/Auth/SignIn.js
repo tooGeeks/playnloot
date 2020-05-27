@@ -62,12 +62,6 @@ const PassReset = () => {
   )
 }
 
-const signUpwithPhone = (props)=>{
-  const dispatch = useDispatch();
-  const [phoneNumber,setPhoneNumber] = React.useState('');
-  
-
-}
 
 const SignIn = (props) => {
   const { register, handleSubmit, errors } = useForm();
