@@ -159,7 +159,7 @@ const Landing = () => {
               </Stepper>
             </Box>
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={6} id="rules">
           <Box fontSize="h6.fontSize" letterSpacing={1} textAlign="center" padding={2}>
             Rules to follow
           </Box>

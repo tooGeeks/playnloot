@@ -23,7 +23,7 @@ const Details = (props) => {
     return (
         <Box display="flex" flexDirection="column">
             <Box display="flex" justifyContent="center" alignItems="flex-end" mt={1} mb={1}>
-                <Box mr={2} fontSize={14}>1<sup>st</sup> : ₹{props.match.prizes['1']}</Box><Box mr={2} fontSize={14}>2<sup>nd</sup> : ₹{props.match.prizes['2']}</Box><Box mr={2} fontSize={14}>3<sup>rd</sup> : ₹{props.match.prizes['3']}</Box>
+                <Box mr={2} fontSize={14}>1<sup>st</sup> : ₹{props.match.survival['1']}</Box><Box mr={2} fontSize={14}>2<sup>nd</sup> : ₹{props.match.survival['2']}</Box><Box mr={2} fontSize={14}>3<sup>rd</sup> : ₹{props.match.survival['3']}</Box>
             </Box>
             <Box>Match Date: <b>{dateString(mdate)}</b></Box>
             <Box>Time: <b>{convt(1,mtime)}</b></Box>
@@ -70,7 +70,7 @@ export const MatchSummary = (props) => {
             <Box flexShrink={0} fontSize={16} style={{marginRight: 15}}>₹ {(match.fee)*unit}</Box>
         </Box>
         <Box display="flex" justifyContent="center" alignItems="flex-end" mt={1} mb={1}>
-            <Box mr={2} fontSize={14}>1<sup>st</sup> : ₹{match.prizes['1']}</Box><Box mr={2} fontSize={14}>2<sup>nd</sup> : ₹{match.prizes['2']}</Box><Box mr={2} fontSize={14}>3<sup>rd</sup> : ₹{match.prizes['3']}</Box>
+            <Box mr={2} fontSize={14}>1<sup>st</sup> : ₹{match.survival['1']}</Box><Box mr={2} fontSize={14}>2<sup>nd</sup> : ₹{match.survival['2']}</Box><Box mr={2} fontSize={14}>3<sup>rd</sup> : ₹{match.survival['3']}</Box>
         </Box>
         <Box>On: {dateString(match.mdate)}</Box>
         <Box>At: {convt(1,match.mtime)}</Box>
