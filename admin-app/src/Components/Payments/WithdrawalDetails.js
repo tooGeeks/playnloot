@@ -1,39 +1,42 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import {unit} from '../../Constants'
+import { Card, CardContent, CardActions, Button, makeStyles, Typography } from '@material-ui/core';
+import { green, red } from '@material-ui/core/colors';
+
+const useStyles = makeStyles({
+    root:{
+        minWidth:"90%",
+        marginBottom:"15px"
+    }
+})
 
 const WithdrawalDetails = (props)=>{
+    const classes = useStyles();
     const {details,bttnname,hClick,ukey,columns,colValues} = props
     const {fname,pmode,coins,isComplete,mno,reqdate} = details;
-    const reqdiv = columns ? columns.map(col=>{
-        if(col==='rs') return <Fragment key={col}><span>{colValues[col]} : {details['coins']*5}</span><br/></Fragment>
-        return(
-            <Fragment key={col}><span>{colValues[col]} : {details[col]}</span><br/></Fragment>
-        )
-    }) : <div>
-        <span className='card-title'>By {fname}</span><br/>
-                        <span>Made on : {moment(reqdate.toDate()).calendar()}</span><br/>
-                        <span>Coins : {coins}</span><br/>
-                        <span>Rs. : {coins*5}</span><br/>
-                        <span>WhatsApp No. : {mno}</span><br/>
-                        <span>Payment Mode : {pmode}</span><br/>
-    </div>
-    const status = isComplete ? <span className='green-text'>Status : Paid</span> : <span className='red-text'>Status : Pending</span>
+    console.log(details,columns)
+    const reqdiv = details ? <div>
+            <Typography variant="h6">By {fname}</Typography>
+            <Typography>Made on : {moment(reqdate.toDate()).calendar()}</Typography>
+            <Typography>Coins : {coins}</Typography>
+            <Typography>Rs. : {coins*5}</Typography>
+            <Typography>WhatsApp No. : {mno}</Typography>
+            <Typography>Payment Mode : {pmode}</Typography>
+    </div> : null
+    const status = isComplete ? <Typography color="primary">Status : Paid</Typography> : <Typography style={{color:"yellow"}}>Status : Pending</Typography>
     return(
         <React.Fragment>
-            <div className='row'>
-                <div className='col col s12 m6 offset-m3'>
-                    <div className='card black'>
-                        <div className='card-content white-text'>
-                            {reqdiv}
-                            {status}
-                        </div>
-                        <div hidden={!bttnname || isComplete} className="card-action">
-                        <Link className="white-text" to={window.location.pathname} onClick={()=>{hClick(ukey)}} ><button className="waves-effect waves-light btn-small">{bttnname}</button></Link>
-                    </div>
-                    </div>
-                </div>
-            </div>
+            <Card className={classes.root}>
+                <CardContent>
+                    {reqdiv}
+                    {status}
+                </CardContent>
+                <CardActions>
+                    <Button color="primary" variant="contained" onClick={()=>{hClick(ukey)}}>{bttnname}</Button>
+                </CardActions>
+            </Card>
         </React.Fragment>
     )
 }

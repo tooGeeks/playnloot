@@ -44,6 +44,7 @@ const Nav = (props) => {
     const classes = useStyles();
     const history = useHistory();
     const { backDropOpen } = useSelector( state => state.ui )
+    //def no-unused-vars
     const [selectedIndex, setSelectedIndex] = React.useState(0);
     const handleListItemClick = (event, index) => {
       setSelectedIndex(index);

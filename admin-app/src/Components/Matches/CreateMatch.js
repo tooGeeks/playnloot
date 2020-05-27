@@ -12,7 +12,7 @@ import useForm from "react-hook-form";
 */
 
 const CreateMatch = (props)=>{
-    const {handleSubmit, errors, register} = useForm();
+    const {handleSubmit, errors} = useForm();
     const [state,setState] = React.useState({
         name:'',
         mdate:'',
@@ -252,13 +252,15 @@ const mapDispatchtoProps = (dispatch) =>{
 }
 const mapStatetoProps = (state)=>{
     return{
-        matches:state.firestore.ordered.Matches
+        auth:state.firebase.auth,
+        matches:state.firestore.ordered.Matches,
+        profile:state.firebase.profile
     }
 }
 
 export default compose(
     connect(mapStatetoProps,mapDispatchtoProps),
-    firestoreConnect([
+    firestoreConnect((props)=>[
         {collection:'Matches'}
     ])
 )(CreateMatch);

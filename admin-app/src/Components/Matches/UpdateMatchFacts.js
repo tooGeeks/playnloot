@@ -6,8 +6,8 @@ import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import MatchSummary from "../Matches/MatchSummary";
 import {updateFacts,updateWinner} from '../../store/Actions/MatchActions'
-import { Button } from '@material-ui/core';
-//import { showDialog, clearDialog } from '../../store/actions/uiActions';
+import { Button, Container } from '@material-ui/core';
+import { showDialog, clearDialog } from '../../store/Actions/UIActions';
 
 const WinnerDetails = (props)=>{
   const {handleChange,team} = props
@@ -138,12 +138,12 @@ const UpdateMatchFacts = (props)=>{
           if(data[mates[x]]!==undefined) delete data[mates[x]]
         }
         console.log(data)
-        //dispatch(clearDialog())
+        dispatch(clearDialog())
         let unit = parseInt(state.unit);
         props.updateWinner({data,mid:mid,mode:match.mode,unit:unit})
         return
       }
-      //dispatch(showDialog({title:"Update Winner",content:<WinnerDetails handleChange={hChange} team={match.mode.team} />,actions:<WinnerActions handleClick={hClick} />}))
+      dispatch(showDialog({title:"Update Winner",content:<WinnerDetails handleChange={hChange} team={match.mode.team} />,actions:<WinnerActions handleClick={hClick} />}))
     }
 
     const hdata = (players)=>{
@@ -175,34 +175,13 @@ const UpdateMatchFacts = (props)=>{
       if(players[x].ldr===undefined) players[x].rank = rnk++
     }
     */
-    const msum = match ? <MatchSummary maxp='101' match={matches && match}/> 
-    : <div className="center"><p>Loading Match Details...</p><div className="preloader-wrapper small active center">
-    <div className="spinner-layer spinner-blue-only">
-      <div className="circle-clipper left">
-        <div className="circle"></div>
-      </div><div className="gap-patch">
-        <div className="circle"></div>
-      </div><div className="circle-clipper right">
-        <div className="circle"></div>
-      </div>
-    </div>
-  </div></div>
+    const msum = match && <MatchSummary children maxp='100' match={matches && match}/>
   let playerDetails = users && players ?
   <EnrPlayersDetails mode={match.mode} getUnit={getUnit} winner={winner} players={users && players} tableMetadata={tableMetadata} handleChangeRowsPerPage={handleChangeRowsPerPage} handlePageChange={handlePageChange} rstate={hdata} bttnname="Update Values" columns={cols} isEditing={true}/>
-  : <div className="center"><p>Loading Player Details...</p><div className="preloader-wrapper small active center">
-  <div className="spinner-layer spinner-blue-only">
-    <div className="circle-clipper left">
-      <div className="circle"></div>
-    </div><div className="gap-patch">
-      <div className="circle"></div>
-    </div><div className="circle-clipper right">
-      <div className="circle"></div>
-    </div>
-  </div>
-</div></div>
+  : null;
     return(
       <React.Fragment>
-          <div className="container white-text">
+          <Container >
               {msum}
               {users ? <div className="row">
                 <div className="input-field white-text col s4">
@@ -215,7 +194,7 @@ const UpdateMatchFacts = (props)=>{
                 </div>
               </div> : null }<br/><br/>
               {playerDetails}
-          </div>
+          </Container>
       </React.Fragment>
     )
 }

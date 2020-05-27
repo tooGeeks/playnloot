@@ -9,7 +9,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import MenuItem from '@material-ui/core/MenuItem';
-import { ExpandLess, ExpandMore, AccountBalanceWallet, AttachMoney, Add, DeleteForever, UpdateRounded, UpdateSharp, NotificationsNoneSharp, NotificationImportantSharp } from '@material-ui/icons'
+import { ExpandLess, ExpandMore, AccountBalanceWallet, AttachMoney, Add, DeleteForever, UpdateSharp, NotificationsNoneSharp, NotificationImportantSharp, NoteSharp } from '@material-ui/icons'
 
 const useStyles = makeStyles((theme) => ({
   nested: {
@@ -76,17 +76,11 @@ const SignedIn = (props) => {
       </ListItem>
       <Collapse in={openList === 2} timeout="auto">
         <List component="div" disablePadding>
-          <ListItem button className={classes.nested} component={Link} to={'/wo'} onClick={props.func('bottom', false)}>
+          <ListItem button className={classes.nested} component={Link} to={'/withdrawalreqlist'} onClick={props.func('bottom', false)}>
             <ListItemIcon>
-              <Add />
+              <NoteSharp/>
             </ListItemIcon>
-            <ListItemText primary="Buy Coins" />
-          </ListItem>
-          <ListItem button className={classes.nested} component={Link} to={'/reqwithdrawal'} onClick={props.func('bottom', false)}>
-            <ListItemIcon>
-              <AttachMoney />
-            </ListItemIcon>
-            <ListItemText primary="Withdraw Money" />
+            <ListItemText primary="Withdrawal Requests" />
           </ListItem>
         </List>
       </Collapse>

@@ -31,7 +31,6 @@ const matchReducer = (state=initState,action)=>{
         default:
                 return state;
     }
-    return state;
 }
 
 export default matchReducer

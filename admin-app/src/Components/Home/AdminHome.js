@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import MatchSummary from "../Matches/MatchSummary";
 import {firestoreConnect} from 'react-redux-firebase';
 import {compose} from 'redux';
+import { Typography } from "@material-ui/core";
 
 /*
   This Component is Admin Home
@@ -11,28 +12,17 @@ import {compose} from 'redux';
 const AdminHome = (props)=>{
   const {matches} = props;
   const handleClick = (mid)=>{
-    props.history.push("/admin/matchdetails/"+mid)
+    props.history.push("/matchdetails/"+mid)
   }
   const matchdiv = matches ? matches && matches.map(match =>{//Used to Generate MatchList using ternary operator
      return(
          <MatchSummary maxp='101' isCan={!match.isActive} match={match} handleClick={handleClick} isEnr={false}  bttnname={"View Details  "} key={match.id}/>
      )
-  }) : <div className="center"><p>Loading Matches...</p><div className="preloader-wrapper big active center">
-        <div className="spinner-layer spinner-blue-only">
-          <div className="circle-clipper left">
-            <div className="circle"></div>
-          </div><div className="gap-patch">
-            <div className="circle"></div>
-          </div><div className="circle-clipper right">
-            <div className="circle"></div>
-          </div>
-        </div>
-      </div>
-    </div>;
+  }) : null;
   return(
   <React.Fragment>
     <div className="container white-text">
-      <h3>Welcome Back, Admin</h3>
+      <Typography style={{marginTop:'25px',marginBottom:'25px'}} variant="h4">Welcome Back, Admin</Typography>
       {matchdiv}
     </div>
   </React.Fragment>

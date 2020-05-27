@@ -1,4 +1,4 @@
-import {isinDocs,findinMatches,isPlayerinMatch, arePlayersinMatch} from '../../Functions'
+import {findinMatches} from '../../Functions'
 import 'firebase/functions'
 import { isEmpty } from 'react-redux-firebase';
 
@@ -22,7 +22,7 @@ export const createMatch = (rmatch)=>{
         delete match['prize-1']
         delete match['prize-2']
         delete match['prize-3']
-        match['prizes'] = prz
+        match['survival'] = prz
         match['fee'] = parseInt(match['fee'])
         console.log(match)
         const db = getFirestore();
@@ -32,6 +32,7 @@ export const createMatch = (rmatch)=>{
             db.collection("Matches").doc(mname).set({
                 ...match,
                 players:{},
+                isTrusted:false,
                 plno:1,
                 isActive : true,
                 createdAt : new Date()
@@ -50,7 +51,6 @@ export const updateMatch = (mid,rmatch)=>{
         let match = {...rmatch}
         const db = getFirestore();
         console.log("MID : "+mid+" Match : ",match);
-        return;
         db.collection("Matches").doc(mid).set({...match},{merge:true}).then(()=>{
             dispatch({type:"UD_MATCH"});
         })

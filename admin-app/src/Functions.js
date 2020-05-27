@@ -217,7 +217,6 @@ export const askPermission = async (messaging)=>{
 
 export const buildPlayerList = (mplayers,Users,mode,cols)=>{
     const {team} = mode
-    console.log(Users)
     let uinm = []
     let ind = 1;
     for(let x in mplayers){

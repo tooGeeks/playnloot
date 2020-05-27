@@ -62,6 +62,13 @@ const PassReset = () => {
   )
 }
 
+const signUpwithPhone = (props)=>{
+  const dispatch = useDispatch();
+  const [phoneNumber,setPhoneNumber] = React.useState('');
+  
+
+}
+
 const SignIn = (props) => {
   const { register, handleSubmit, errors } = useForm();
   const dispatch = useDispatch();
@@ -75,7 +82,7 @@ const SignIn = (props) => {
   }
 
   const { auth, classes } = props;
-  if (auth.uid) return <Redirect to='/dashboard' />
+  if (auth.uid) return <Redirect to='/' />
 
   return (
     <div className={classes.root}>

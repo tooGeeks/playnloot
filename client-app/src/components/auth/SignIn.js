@@ -12,7 +12,7 @@ import { Link as MUILink} from '@material-ui/core';
 import { withStyles } from "@material-ui/core/styles";
 import { Container, Typography, CssBaseline, Avatar, TextField, Button, Grid, Box } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Copyright from '../layout/Copyright'
+import Copyright from '../layout/Copyright';
 
 const styles = theme => ({
   root: {

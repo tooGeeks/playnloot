@@ -1,40 +1,18 @@
 import React from 'react'
 import MaterialTable from 'material-table'
-import { TablePagination, TableCell } from '@material-ui/core';
+import { TablePagination, Container, Typography } from '@material-ui/core';
 
 
 
 const EnrPlayersDetails = (props)=>{ 
-    const {columns,rstate,getUnit,mode,bttnname,players,winner,isEditing,tableMetadata,handlePageChange,handleChangeRowsPerPage} = props;
+    const {columns,rstate,mode,bttnname,players,winner,isEditing,tableMetadata,handlePageChange,handleChangeRowsPerPage} = props;
     const team = mode && mode.team
     const [state,setState] = React.useState();
     const [stableMetadata,setStableMetadata] = React.useState();
     React.useEffect(()=>{
         setState({data:players})
         setStableMetadata({...tableMetadata})
-    },[players,tableMetadata])    
-
-    let ptable = <div className="center"><p>Loading Player Details...</p><div className="preloader-wrapper small active center">
-    <div className="spinner-layer spinner-blue-only">
-      <div className="circle-clipper left">
-        <div className="circle"></div>
-      </div><div className="gap-patch">
-        <div className="circle"></div>
-      </div><div className="circle-clipper right">
-        <div className="circle"></div>
-      </div>
-    </div>
-    </div></div>;
-
-const DPanel = (props)=>{
-    const {rowData} = props
-    const {mate} = rowData
-    console.log(rowData)
-    let mdiv = Object.keys(mate).map((cl)=>{
-        return (<TableCell field={cl}>{mate[cl]}</TableCell>)
-    })
-    return mdiv
-}
+    },[players,tableMetadata])
 
 const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 'never'},
               'pubgid':{title:'PUBG ID',field:'pubgid',editable: 'never'},
@@ -58,7 +36,6 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
         new Promise((resolve,reject)=>{
             setTimeout(()=>{
             let data = state.data;
-            let unit = getUnit()
             let inx = data.indexOf(oldData);
             console.log(newData)
             newData['kills']=parseInt(newData['kills'])
@@ -119,8 +96,8 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
 
     return(
         <React.Fragment>
-            <div>
-                {state && stableMetadata ? <MaterialTable
+            <Container>
+                {state && stableMetadata && state.data.length>0 ? <MaterialTable
                     title="Players"
                     columns={cols}
                     data={state && state.data}
@@ -166,7 +143,7 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
                         )
 
                     }}  
-                /> : ptable}
+                /> : <Typography style={{alignSelf:"center"}} variant="h5">No Players Avaialable</Typography>}
                 <div hidden={!bttnname}>
                     <button onClick={()=>{
                         rstate(state.data)
@@ -175,7 +152,7 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
                             setState({data:pageUpdate.players})
                         })}}  className='waves-effect waves-light btn hoverable'>{bttnname}</button>
                 </div>
-            </div>
+            </Container>
         </React.Fragment>
     )
 }

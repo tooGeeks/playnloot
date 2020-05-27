@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import {cancelMatch} from '../../store/Actions/MatchActions';
 import { connect, useDispatch } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
+import { Container } from '@material-ui/core';
 
 const CancelMatch = (props)=>{
     const dispatch = useDispatch();
@@ -27,9 +28,9 @@ const CancelMatch = (props)=>{
   </div></div> ;
     return(
         <React.Fragment>
-            <div className='container white-text'>
+            <Container maxWidth="xs">
                 {matchdiv}
-            </div>
+            </Container>
         </React.Fragment>
     )
 }

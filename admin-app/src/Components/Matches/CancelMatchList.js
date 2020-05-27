@@ -7,7 +7,7 @@ import {getCurrentDate} from '../../Functions'
 
 const CancelMatchList = (props)=>{
     const handleClick = (mid)=>{
-        props.history.push("/admin/cancelmatch/"+mid)
+        props.history.push("/cancelmatch/"+mid)
     }
     const {matches} = props;
         return(
