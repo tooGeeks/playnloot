@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import {compose} from 'redux';
 import {compdate,getCurrentDate} from '../../Functions';
-import { Select, MenuItem, TextField, Divider, Button } from "@material-ui/core";
+import { Select, MenuItem, TextField, Divider, Button, Container } from "@material-ui/core";
 
 import useForm from "react-hook-form";
 /*
@@ -12,7 +12,7 @@ import useForm from "react-hook-form";
 */
 
 const CreateMatch = (props)=>{
-    const {handleSubmit, errors} = useForm();
+    const { register, handleSubmit, errors} = useForm();
     const [state,setState] = React.useState({
         name:'',
         mdate:'',
@@ -92,12 +92,15 @@ const CreateMatch = (props)=>{
     }
     return(
         <React.Fragment>
-            <div className="container">
+            <Container maxWidth="md">
                 <form noValidate onSubmit={handleSubmit(onSubmit)}>
                     <TextField
                         variant="outlined"
                         margin="normal"
                         required
+                        inputRef={register({
+                            required: true,
+                        })}
                         fullWidth
                         id="name"
                         type="text"
@@ -105,12 +108,18 @@ const CreateMatch = (props)=>{
                         name="name"
                         autoFocus
                         error={!!errors.name}
-                        helperText={(errors.name ? (errors.name.type === 'required' ? "Enter Match Name!" : "Invalid email address") : null)}
+                        helperText={errors.name ? "Enter Match Name!" : null}
                     />
                     <TextField
                         variant="outlined"
                         margin="normal"
                         required
+                        inputRef={register({
+                            required: true,
+                            validate: { matchTime: (value)=> {
+                                props.matches.map(match => match.mtime===value)}
+                            },
+                        })}
                         fullWidth
                         id="mdate"
                         type="date"
@@ -124,6 +133,9 @@ const CreateMatch = (props)=>{
                         variant="outlined"
                         margin="normal"
                         required
+                        inputRef={register({
+                            required: true,
+                        })}
                         fullWidth
                         id="mtime"
                         type="time"
@@ -137,6 +149,9 @@ const CreateMatch = (props)=>{
                         variant="outlined"
                         margin="normal"
                         required
+                        inputRef={register({
+                            required: true,
+                        })}
                         fullWidth
                         id="lrdate"
                         type="date"
@@ -150,6 +165,9 @@ const CreateMatch = (props)=>{
                         id="team"
                         label="Select Team Type"
                         name="team"
+                        inputRef={register({
+                            required: true,
+                        })}
                         value={state.team}
                         onChange={handleChange}
                         style={{width:'150px',color:"#ffffff"}}
@@ -160,6 +178,9 @@ const CreateMatch = (props)=>{
                     {state && <Select
                         id="view"
                         name="view"
+                        inputRef={register({
+                            required: true,
+                        })}
                         label="Select Perspective"
                         value={state.view}
                         onChange={handleChange}
@@ -171,6 +192,9 @@ const CreateMatch = (props)=>{
                     <Select
                         id="map"
                         name="map"
+                        inputRef={register({
+                            required: true,
+                        })}
                         label="Select Map"
                         value={state.map}
                         onChange={handleChange}
@@ -184,6 +208,9 @@ const CreateMatch = (props)=>{
                         id="deftag"
                         label="Select Platform"
                         name="deftag"
+                        inputRef={register({
+                            required: true,
+                        })}
                         value={state.deftag}
                         onChange={handleChange}
                         style={{width:'150px',color:"#ffffff",position:'relative'}}
@@ -195,6 +222,7 @@ const CreateMatch = (props)=>{
                         variant="outlined"
                         margin="normal"
                         fullWidth
+                        inputRef={register}
                         id="tags"
                         type="text"
                         label="Tags"
@@ -206,6 +234,10 @@ const CreateMatch = (props)=>{
                         variant="outlined"
                         margin="normal"
                         id="fee"
+                        inputRef={register({
+                            required: true,
+                        })}
+                        value={0}
                         type="number"
                         label="Fee"
                         name="fee"
@@ -219,6 +251,7 @@ const CreateMatch = (props)=>{
                                         key={ind}
                                         variant="outlined"
                                         margin="normal"
+                                        inputRef={register}
                                         style={{width:"30%",marginLeft:"2%"}}
                                         id={"prize-"+(ind+1)}
                                         type="number"
@@ -239,7 +272,7 @@ const CreateMatch = (props)=>{
                     >Create Match
                      </Button>
                 </form>
-            </div>
+            </Container>
         </React.Fragment>
     )
 }
