@@ -43,7 +43,7 @@
 * [Usage](#usage) -->
 * [Roadmap](#roadmap)
 * [Contributing](#contributing)
-* [License](#license)
+<!-- * [License](#license) -->
 * [Contact](#contact)
 <!-- * [Acknowledgements](#acknowledgements) -->
 
