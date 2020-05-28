@@ -3,12 +3,11 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 <br/>
 ![Under Development Badge][underDevelopment-shield]
 
-
+<!-- [![MIT License][license-shield]][license-url] -->
 
 <br />
 <p align="center">
@@ -22,7 +21,7 @@
     Host and manage ESports Matches of PUBG, Call of Duty, Free Fire etc, make Players enroll in the matches, give them money prizes and earn Money!
     <br />
     <!-- <a href="https://github.com/limbu-timbu/playnloot/"><strong>Explore the docs »</strong></a> -->
-    <a href="https://playandloot.web.app/"><strong>Live Now »</strong></a>
+    <a href="https://playandloot.web.app/"><strong>Demo Live Now »</strong></a>
     <br />
     <!-- <a href="https://playandloot.web.app/">View Demo</a>
     · -->
@@ -30,7 +29,7 @@
     ·
     <a href="https://github.com/limbu-timbu/playnloot/issues">Request Feature</a>
   </p>
-  <h4 align="center">Made with :heart: by <a href="https://github.com/suebham/">Shubham</a> & <a href="https://github.com/destro1108">Swanand</a></h4>
+  <h4 align="center">Made with :heart: by <a href="https://github.com/seebham/">Shubham</a> & <a href="https://github.com/destro1108">Swanand</a></h4>
 </p>
 
 
@@ -52,8 +51,9 @@
 
 ## About The Project
 
-playnloot is a react.js based Web App developed by us to host E-Sports Tournaments, where players can sign-up, buy coins to participate in tournaments hosted on on our Web App and win coins, converted them into real money!
+playnloot is a react.js based Web App developed by us to host E-Sports Tournaments, where players can sign-up, buy coins to participate in tournaments hosted on on our Web App and win coins, converted them into real money! Plus, players can list their own hosted match too on our platform!
 
+> Playnloot: Made by the PUBG Players, for the PUBG Players!
 
 ### Built With
 
@@ -121,11 +121,11 @@ Contributions are what make the open source community such an amazing place to b
 5. Open a Pull Request
 
 
-
+<!--
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
-
+-->
 
 
 ## Contact
