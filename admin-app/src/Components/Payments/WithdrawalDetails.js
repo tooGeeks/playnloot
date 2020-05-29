@@ -1,9 +1,6 @@
-import React, { Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import moment from 'moment';
-import {unit} from '../../Constants'
 import { Card, CardContent, CardActions, Button, makeStyles, Typography } from '@material-ui/core';
-import { green, red } from '@material-ui/core/colors';
 
 const useStyles = makeStyles({
     root:{
@@ -14,7 +11,7 @@ const useStyles = makeStyles({
 
 const WithdrawalDetails = (props)=>{
     const classes = useStyles();
-    const {details,bttnname,hClick,ukey,columns,colValues} = props
+    const {details,bttnname,hClick,ukey,columns} = props
     const {fname,pmode,coins,isComplete,mno,reqdate} = details;
     console.log(details,columns)
     const reqdiv = details ? <div>

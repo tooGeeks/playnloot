@@ -4,15 +4,18 @@ import { signIn, resetPassword } from '../../store/Actions/AuthActions'
 //eslint-disable-next-line
 import { backDrop, showDialog } from '../../store/Actions/UIActions'
 import { Redirect } from 'react-router-dom'
+import firebase from '../../config/fbconfig'
+import {signInWithPhone} from '../../store/Actions/AuthActions'
 
 import useForm from "react-hook-form";
 //UI
 //import PropTypes from "prop-types";
-import { Link as MUILink} from '@material-ui/core';
+import { Link as MUILink, Icon} from '@material-ui/core';
 import { withStyles } from "@material-ui/core/styles";
 import { Container, Typography, CssBaseline, Avatar, TextField, Button, Grid, Box } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Copyright from '../UI/Copyright'
+import { ArrowBack, ArrowForward } from '@material-ui/icons'
 
 const styles = theme => ({
   root: {
@@ -62,6 +65,149 @@ const PassReset = () => {
   )
 }
 
+const SignUpwithPhone = (props)=>{
+  const dispatch = useDispatch();
+  const [userData,setUserData] = React.useState('');
+  const [acpg,setAcpg]= React.useState('name-pid')
+  const hChange = (e)=>{
+    setUserData({...userData,[e.target.id]:e.target.value})
+  }
+  const hClick = (opt)=>{
+    switch(acpg){
+      case 'name-pid':
+        if(opt==='back') return;
+        else{
+          console.log(userData)
+          setAcpg('ph-input')
+        }
+        break;
+      case 'ph-input':
+        if(opt==='back') setAcpg('name-pid')
+        else{
+          setAcpg('otp-input')
+          const recaptchaVerifier  = new firebase.auth.RecaptchaVerifier('cdiv',{size:"invisible"})
+          firebase.auth().settings.appVerificationDisabledForTesting = true;
+          firebase.auth().signInWithPhoneNumber("+91"+userData.phNo,recaptchaVerifier).then((resp)=>{
+            window.confirmOTP = resp;
+            console.log(resp)
+          })
+        }
+        break;
+      case 'otp-input':
+        if(opt==='back'){
+          setAcpg('ph-input')
+        }else{
+          dispatch(signInWithPhone(window.confirmOTP,userData));
+        }
+        break;
+      default:
+        break;
+        
+    }
+  }
+  return(
+    <React.Fragment>
+      <Box display="flex" alignContent="center" justifyItems="center" textAlign="center">
+        <Grid container spacing={3}>
+          <Grid item xs={3}>
+            <Button color="primary" id="back-bttn" variant="text" onClick={()=>hClick('back')}>
+              <Icon><ArrowBack/></Icon>
+              Back
+            </Button>
+          </Grid>
+          <Grid item xs={5}>
+
+          </Grid>
+          <Grid item xs={3}>
+            <Button color="primary" id="next-bttn" variant="text" onClick={()=>hClick('next')}>
+              Next
+              <Icon> <ArrowForward/> </Icon>
+            </Button>
+          </Grid>
+          <React.Fragment>
+            <Grid item hidden={acpg!=='name-pid'} xs={6}>
+              <TextField
+                required
+                id="fname"
+                name="fname"
+                label="First Name"
+                type="text"
+                onChange={hChange}
+              />
+            </Grid>
+            <Grid item hidden={acpg!=='name-pid'} xs={6}>
+              <TextField
+                required
+                id="lname"
+                name="lname"
+                label="Last Name"
+                type="text"
+                onChange={hChange}
+              />
+            </Grid>
+            <Grid item hidden={acpg!=='name-pid'} xs={12}>
+              <TextField
+                required
+                id="pubgid"
+                name="pubgid"
+                label="PUBG ID"
+                type="text"
+                onChange={hChange}
+              />
+            </Grid>
+            <Grid item hidden={acpg!=='name-pid'} xs={12}>
+              <TextField
+                id="email"
+                name="email"
+                label="E-Mail"
+                type="email"
+                onChange={hChange}
+              />
+            </Grid>
+          </React.Fragment>
+          <div >
+            <Grid item hidden={acpg!=='ph-input'} xs={1}>
+              <Typography style={{marginTop:'15px',marginRight:'1vh'}}>+91</Typography>
+            </Grid>
+          </div>
+          <div>
+            <Grid item hidden={acpg!=='ph-input'} xs={6}>
+              <TextField
+                autoFocus
+                required
+                id="phNo"
+                name="phNo"
+                label="Mobile No."
+                type="phone"
+                style={{marginLeft:'25px'}}
+                disabled={acpg!=='ph-input'}
+                onChange={hChange}
+                fullWidth
+              />
+            </Grid>
+          </div>
+          <div>
+            <Grid item xs={6} hidden={acpg!=='otp-input'}>
+              <TextField
+                autoFocus
+                required
+                id="otp"
+                label="OTP"
+                name="otp"
+                disabled={acpg!=='otp-input'}
+                type="number"
+                style={{width:'40%'}}
+                onChange={hChange}
+                fullWidth
+              />
+            </Grid>
+        </div>
+        </Grid>
+        <div id='cdiv'></div>
+        
+      </Box>
+    </React.Fragment>)
+}
 
 const SignIn = (props) => {
   const { register, handleSubmit, errors } = useForm();
@@ -136,6 +282,7 @@ const SignIn = (props) => {
           >
             Sign In
           </Button>
+          <div id="wow"></div>
           <Grid container>
             <Grid item xs>
               <MUILink component="button" onClick={resetHandle} variant="body2">
@@ -143,10 +290,11 @@ const SignIn = (props) => {
               </MUILink>
               {/* <Button variant="text"  onClick={() => props.resetPassword()}>Forgot password?</Button> */}
             </Grid>
-            <Grid item>{/** 
-              <MUILink component={Link} to={'/signup'} variant="body2">
+            <Grid item>{/**
+              */}
+              <Button variant="text" onClick={()=>dispatch(showDialog({title:"Sign Up With Phone",content:<SignUpwithPhone/>}))} >
                 Don't have an account? Sign Up
-              </MUILink>*/}
+              </Button>
             </Grid>
           </Grid>
         </form>

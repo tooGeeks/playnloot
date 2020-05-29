@@ -20,6 +20,42 @@ export const signIn = (credentials) => {
       });
     }
   }
+
+  export const signInWithPhone = (conOTP,userDetails)=>{
+    return (dispatch, getState, {getFirebase,getFirestore}) => {
+      const db = getFirestore();
+      dispatch({type: 'BACKDROP'});
+      db.collection('Users').where('pubgid', '==', userDetails.pubgid).get().then((snap)=>{
+        if(!snap.empty){
+          dispatch({type: 'BACKDROP_CLEAR'});
+          dispatch({ type: 'SNACKBAR', variant: 'error', message: "This PUBG ID is already registered! Please check again or contact Admin!"});
+        }else{
+          conOTP.confirm(userDetails.otp).then((resp)=>{
+            console.log(resp.user)
+            resp.user.updateProfile({displayName:userDetails.pubgid}).then(()=>{
+              return db.collection('Users').doc(resp.user.uid).set({
+                pubgid: userDetails.pubgid,
+                fname: userDetails.fname + " " + userDetails.lname,
+                mno: '+91 '+userDetails.phNo,
+                wallet: 1,
+                kills: 0,
+                looted:0,
+                matches: [],
+                wins:0,
+              }).then(()=>{
+                db.collection("Orders").doc(resp.user.uid).set({orders:{}})
+              })
+            }).then(()=>{
+              dispatch({type: 'BACKDROP_CLEAR'});
+              dispatch({ type: 'SIGNUP_SUCCESS' });
+              dispatch({ type: 'SNACKBAR', variant: 'success', message: "SignUp Successful! Happy Looting"});
+            })
+            dispatch(clearDialog())
+          })
+        }
+      })
+    }
+  }
   
   export const signOut = () => {
     return (dispatch, getState, {getFirebase,getFirestore}) => {

@@ -63,7 +63,6 @@ export const signUp = (newUser) => {
               wallet: 1,
               kills: 0,
               looted:0,
-              orders: [],
               matches: [],
               wins:0,
               //Del later :-

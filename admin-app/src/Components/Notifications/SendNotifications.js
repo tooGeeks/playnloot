@@ -2,7 +2,7 @@ import React from "react";
 import {pushNotification} from '../../store/Actions/AuthActions'
 import {connect} from 'react-redux';
 import useForm from 'react-hook-form'
-import { Container, TextField, Button, Typography, makeStyles } from "@material-ui/core";
+import { Container, TextField, Button, makeStyles } from "@material-ui/core";
 
 /*
   This Component is used to Send Notifications to users! *UNDER MASSIVE CONSTRUCTION* 
@@ -20,11 +20,8 @@ const useStyles = makeStyles((theme)=>({
 
 const SendNotifications = (props)=>{
     const classes = useStyles();
-    const {handleSubmit,errors} = useForm();
+    const {handleSubmit,errors, register} = useForm();
     const [data,sdata] = React.useState({title:"",body:"",clink:""})
-    const handleChange= (e)=>{
-        sdata({...data,[e.target.id]:e.target.value})
-    }
     const hSubmit = (date,e)=>{
         e.preventDefault();
         console.log(data);
