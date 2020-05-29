@@ -61,7 +61,7 @@ export const requestWithdrawal = (data)=>{
         console.log(new Date().getTime());
         const uid = auth.uid
         const id = new Date().getTime().toString()
-        db.collection('WithdrawalRequests').doc(st.firebase.auth.uid).collection('Requests').doc(id).set({
+        db.collection('Users').doc(st.firebase.auth.uid).collection('Requests').doc(id).set({
             isComplete:false,
             reqdate : db.Timestamp.fromMillis(new Date().getTime()),
             ...data
@@ -109,7 +109,7 @@ export const confirmWithdrawal = (reqid)=>{
 export const cancelWithdrawal = ({uid,reqid})=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
         const db = getFirestore();
-        db.collection('WithdrawalRequests').doc(uid).collection('Requests').doc(reqid).delete().then(()=>{
+        db.collection('Users').doc(uid).collection('Requests').doc(reqid).delete().then(()=>{
             dispatch({type:'RW_CAN'})
         }).catch((err)=>{
             reportError(db,uid,{date:db.Timestamp.fromMillis(new Date().getTime()),...err}).then(()=>{

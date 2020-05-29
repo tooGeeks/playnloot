@@ -178,7 +178,7 @@ const RequestWithDraw = () => {
                 <Grid container item xs={12} spacing={1} id="PrevRequests" justify="flex-start" alignItems="flex-start">
                     {requests}
                 </Grid>
-                <Button variant='text' color='primary' onClick={hMoreReq}>Show More...</Button>
+                <Button variant='text' hidden={!requestList || (requestList && requestList.length===0)} color='primary' onClick={hMoreReq}>Show More...</Button>
             </Container>
             <footer className={classes.footer}>
                 <Copyright />
