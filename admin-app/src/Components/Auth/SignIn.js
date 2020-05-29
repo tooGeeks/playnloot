@@ -7,7 +7,7 @@ import { Redirect } from 'react-router-dom'
 import firebase from '../../config/fbconfig'
 import {signInWithPhone} from '../../store/Actions/AuthActions'
 
-import useForm from "react-hook-form";
+import {useForm} from "react-hook-form";
 //UI
 //import PropTypes from "prop-types";
 import { Link as MUILink, Icon} from '@material-ui/core';

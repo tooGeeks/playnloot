@@ -6,13 +6,13 @@ import {compose} from 'redux';
 import {compdate,getCurrentDate} from '../../Functions';
 import { Select, MenuItem, TextField, Divider, Button, Container } from "@material-ui/core";
 
-import useForm from "react-hook-form";
+import {useForm} from "react-hook-form";
 /*
   This Component is used to Create a New Match
 */
 
 const CreateMatch = (props)=>{
-    const { register, handleSubmit, errors} = useForm();
+    const { register, handleSubmit, errors } = useForm();
     const [state,setState] = React.useState({
         name:'',
         mdate:'',
@@ -28,11 +28,6 @@ const CreateMatch = (props)=>{
         "prize-2":0,
         "prize-3":0
     })
-    const handleChange = (e)=>{
-        if(e.target.id!==undefined) setState({...state,[e.target.id]:e.target.value});
-        else setState({...state,[e.target.name]:e.target.value});
-    }
-    
     const chkexistmatch = ()=>{//checks if already a match is scheduled on specified date
         const {matches} = props;
         return matches.map(match =>{
@@ -42,15 +37,14 @@ const CreateMatch = (props)=>{
     const onSubmit = (data,e)=>{
         e.preventDefault();
         console.log(data,e);
-        return;
         const cds = getCurrentDate();
-        const mdt = state.mdate;
-        const ldt = state.lrdate;
-        const mti = state.mtime
-        const team = state.team
-        const deftag = state.deftag
-        const view = state.view
-        const map = state.map
+        const mdt = data.mdate;
+        const ldt = data.lrdate;
+        const mti = data.mtime
+        const team = data.team
+        const deftag = data.deftag
+        const view = data.view
+        const map = data.map
         if(mti===undefined){
             alert("Please Specify the Match Time")
             return;
@@ -76,7 +70,7 @@ const CreateMatch = (props)=>{
                 alert("Already A Match on Specified Date");
                 return;
             }
-            props.createMatch(state);
+            props.createMatch(data);
         }
         else{
             if(!compdate(cds,mdt)){
@@ -161,63 +155,58 @@ const CreateMatch = (props)=>{
                         error={!!errors.lrdate}
                         helperText={(errors.lrdate ? (errors.lrdate.type === 'required' ? "Enter Last Reg. Date!" : "Invalid Date Format") : null)}
                     />
-                    {state && <Select
+                    <Select
                         id="team"
                         label="Select Team Type"
                         name="team"
                         inputRef={register({
                             required: true,
                         })}
-                        value={state.team}
-                        onChange={handleChange}
+                        defaultValue='cao'
                         style={{width:'150px',color:"#ffffff"}}
                     >
-                        <MenuItem key={""} value={'cao'} disabled>Choose an Option</MenuItem>
-                        {['Solo','Duo','Squad'].map(team=>(<MenuItem key={team} value={team}>{team}</MenuItem>))}
-                    </Select>}
-                    {state && <Select
-                        id="view"
-                        name="view"
+                        <MenuItem key={""} innerRef={{name:"cao"}} name="cao" value={'cao'} disabled>Choose an Option</MenuItem>
+                        {['Solo','Duo','Squad'].map(team=>(<MenuItem name={team} key={team} value={team}>{team}</MenuItem>))}
+                    </Select>
+                    <Select
                         inputRef={register({
                             required: true,
                         })}
+                        name='view'
+                        id='view'
                         label="Select Perspective"
-                        value={state.view}
-                        onChange={handleChange}
+                        defaultValue='cao'
                         style={{width:'150px',color:"#ffffff"}}
                     >
-                        <MenuItem key={""} value={'cao'} disabled>Choose an Option</MenuItem>
+                        <MenuItem key={""} innerRef={{name:"cao"}} name="cao" value={'cao'} disabled>Choose an Option</MenuItem>
                         {['TPP','FPP'].map(view=>(<MenuItem key={view} value={view}>{view}</MenuItem>))}
-                    </Select>}
+                    </Select>
                     <Select
-                        id="map"
-                        name="map"
                         inputRef={register({
                             required: true,
                         })}
+                        name='map'
+                        id='map'
                         label="Select Map"
-                        value={state.map}
-                        onChange={handleChange}
+                        defaultValue='cao'
                         style={{width:'150px',color:"#ffffff"}}
                     >
-                        <MenuItem key={""} value={'cao'} disabled>Choose an Option</MenuItem>
-                        {['Erangel','Miramar','Sanhok','Vikendi'].map(map=>(<MenuItem key={map} value={map}>{map}</MenuItem>))}
-                    </Select>}
-                    {state && 
+                        <MenuItem key={""} innerRef={{name:"cao"}} name="cao" value={'cao'} disabled>Choose an Option</MenuItem>
+                        {['Erangel','Miramar','Sanhok','Vikendi'].map(map=>(<MenuItem name={map} key={map} value={map}>{map}</MenuItem>))}
+                    </Select>
                     <Select
-                        id="deftag"
                         label="Select Platform"
-                        name="deftag"
+                        name='deftag'
+                        id='deftag'
                         inputRef={register({
                             required: true,
                         })}
-                        value={state.deftag}
-                        onChange={handleChange}
+                        defaultValue='cao'
                         style={{width:'150px',color:"#ffffff",position:'relative'}}
                     >
-                        <MenuItem key={""} value={'cao'} disabled>Choose an Option</MenuItem>
-                        {['mobile','emu'].map(deftag=>(<MenuItem key={deftag} value={deftag}>{deftag}</MenuItem>))}
-                    </Select>}
+                        <MenuItem key={""}  name="cao" value={'cao'} disabled>Choose an Option</MenuItem>
+                        {['mobile','emu'].map(deftag=>(<MenuItem name={deftag} key={deftag} value={deftag}>{deftag}</MenuItem>))}
+                    </Select>
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -237,7 +226,7 @@ const CreateMatch = (props)=>{
                         inputRef={register({
                             required: true,
                         })}
-                        value={0}
+                        defaultValue={0}
                         type="number"
                         label="Fee"
                         name="fee"

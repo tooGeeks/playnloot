@@ -1,7 +1,7 @@
 import React from "react";
 import {pushNotification} from '../../store/Actions/AuthActions'
 import {connect} from 'react-redux';
-import useForm from 'react-hook-form'
+import {useForm} from 'react-hook-form'
 import { Container, TextField, Button, makeStyles } from "@material-ui/core";
 
 /*
@@ -21,11 +21,8 @@ const useStyles = makeStyles((theme)=>({
 const SendNotifications = (props)=>{
     const classes = useStyles();
     const {handleSubmit,errors, register} = useForm();
-    const [data,sdata] = React.useState({title:"",body:"",clink:""})
-    const hSubmit = (date,e)=>{
+    const hSubmit = (data,e)=>{
         e.preventDefault();
-        console.log(data);
-        return
         const {body,title} = data;
         if(title==="" || body===""){
             alert("Enter Complete Details!");
@@ -39,12 +36,16 @@ const SendNotifications = (props)=>{
             <Container>
             <form onSubmit={handleSubmit(hSubmit)}>
                 <TextField
-                    label="Notification Name"
+                    label="Notification Title"
                     id="title"
                     type="text"
                     className={classes.textfield}
                     name="title"
                     fullWidth
+                    inputRef={register({
+                        required:true,
+                    })}
+                    error={!!errors.title}
                 />
                 <TextField
                     label="Notification Body"
@@ -53,16 +54,24 @@ const SendNotifications = (props)=>{
                     name="body"
                     className={classes.textfield}
                     fullWidth
+                    inputRef={register({
+                        required:true,
+                    })}
+                    error={!!errors.body}
                 />
                 <TextField
                     label="Link"
-                    id="body"
+                    id="clink"
                     type="text"
                     className={classes.textfield}
-                    name="body"
+                    name="clink"
                     fullWidth
+                    inputRef={register({
+                        required:true,
+                    })}
+                    error={!!errors.clink}
                 />
-                <Button color="primary" className={classes.button} fullWidth variant="contained">Send</Button>
+                <Button type='submit' color="primary" className={classes.button} fullWidth variant="contained">Send</Button>
                 </form>
             </Container>
         </React.Fragment>
