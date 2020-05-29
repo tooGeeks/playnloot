@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { compose } from 'redux';
-import { firestoreConnect } from 'react-redux-firebase';
+import { firestoreConnect, useFirestoreConnect } from 'react-redux-firebase';
 import { useSelector, useDispatch } from 'react-redux';
 import { findinMatches } from '../../../Functions'
 import { cancelWithdrawal, requestWithdrawal } from '../../../store/actions/PaymentActions';
@@ -52,9 +52,13 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const RequestWithDraw = () => {
-    const classes = useStyles();
+    const [fetchData,setFetchData] = React.useState({start:0,count:3})
     const { auth, profile } = useSelector(state => state.firebase)
-    const users = useSelector(state => state.firestore.ordered.WithdrawalRequests)
+    useFirestoreConnect([{collection:'WithdrawalRequests',doc:auth.uid,
+        subcollections:[{collection:'Requests',orderBy:['reqdate','desc'],startAfter:fetchData.start,limit:fetchData.count}],storeAs:'Requests'}])
+    const classes = useStyles(); 
+    const requestList = useSelector(state => state.firestore.ordered.Requests)
+    console.log(requestList)
     const dispatch = useDispatch();
 
     const { register, handleSubmit, errors, reset } = useForm();
@@ -63,21 +67,26 @@ const RequestWithDraw = () => {
         setData({...data,[e.target.id]:e.target.value})
     }
 
+    const hMoreReq = ()=>{
+        let lastDoc = requestList[requestList.length-1]
+        console.log(lastDoc.id)
+        setFetchData({...fetchData,start:lastDoc.reqdate})
+    }
+
     const onSubmitRequest = (data, e) => {
         e.preventDefault();
-        dispatch(requestWithdrawal({coins: data.coins, pmode: data.pmode}));
+        dispatch(requestWithdrawal({coins: parseInt(data.coins), pmode: data.pmode}));
         reset();
         setData({coins: 0, mno: 0, pmode: ''});
-    }; 
-    const usr = auth && users && findinMatches(users, auth.uid);
-    const requests = usr && usr.requests.map((req, index) => {
+    };
+    const requests = requestList && requestList.map((req, index) => {
         return (
             <Grid item xs={12} sm={6} key={index}><Box boxShadow={2} justifyContent="center" alignItems="center" className={req.isComplete ? `${classes.prevBox} ${classes.successBox}` : `${classes.prevBox} ${classes.pendingBox}`}>
                 <Box display="flex" flexDirection="column" justifyContent="center" style={{width: '20%', textAlign: "center",}}><Box style={{ fontSize: 25, fontWeight: 'fontWeightBold'}}>₹{req.coins*unit}</Box>{req.isComplete ? <Box fontSize={12} className={classes.sucTxt}>Paid</Box> : <Box fontSize={12} className={classes.penTxt}>Pending</Box>}</Box>
                 <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '60%'}}>
                     <Box>{req.pmode}</Box>
                     <Box>{moment(req.reqdate.toDate()).calendar()}</Box>
-                    {(!req.isComplete) ? <Button variant="contained" style={{ fontSize: 10, backgroundColor: '#121212', color: '#FFF'}} onClick={() => dispatch(cancelWithdrawal(usr.id+'-'+usr.requests.indexOf(req)))}>Cancel</Button> : null}
+                    {(!req.isComplete) ? <Button variant="contained" style={{ fontSize: 10, backgroundColor: '#121212', color: '#FFF'}} onClick={() => dispatch(cancelWithdrawal({uid:auth.uid,reqid:req.id}))}>Cancel</Button> : null}
                 </Box>
                 <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '20%'}}>{req.isComplete ? <CheckCircleOutlined style={{ fontSize: 35, color: "#81c784" }} /> : <HourglassEmptyOutlined style={{ fontSize: 35, color: "#fff176" }} />}</Box>
             </Box></Grid>
@@ -169,6 +178,7 @@ const RequestWithDraw = () => {
                 <Grid container item xs={12} spacing={1} id="PrevRequests" justify="flex-start" alignItems="flex-start">
                     {requests}
                 </Grid>
+                <Button variant='text' color='primary' onClick={hMoreReq}>Show More...</Button>
             </Container>
             <footer className={classes.footer}>
                 <Copyright />
@@ -177,8 +187,12 @@ const RequestWithDraw = () => {
     )
 }
 
+/**
+
 export default compose(
     firestoreConnect([
         {collection:'WithdrawalRequests'}
     ])
 )(RequestWithDraw)
+ */
+export default RequestWithDraw;
