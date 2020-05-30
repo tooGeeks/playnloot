@@ -61,12 +61,9 @@ const RequestWithDraw = () => {
     useEffect(()=>{
         fetchReq && setFetchData(prevFData=>{console.log(fetchReq)
             let xdata = prevFData.data;
-            if(prevFData.deleted){
-                return {...prevFData,length:fetchReq.length,deleted:false}
-            }else{
-                xdata.push(...fetchReq)
-                return {...prevFData,length:fetchReq.length,data:xdata}
-            }
+            console.log(fetchData.data.length)
+            if(fetchData.data.length==0) fetchReq.push(...xdata)
+            return {...prevFData,length:fetchReq.length,data:fetchReq}
         })
     },[fetchReq])
     const dispatch = useDispatch();
@@ -88,12 +85,12 @@ const RequestWithDraw = () => {
         dispatch(requestWithdrawal({coins: parseInt(data.coins), pmode: data.pmode}));
         reset();
         setData({coins: 0, mno: 0, pmode: ''});
-        setFetchData({...fetchData});
+        setFetchData({...fetchData,data: []});
     };
     const deleteElem = (req)=>{
         const inx = fetchData.data.indexOf(req);
         dispatch(cancelWithdrawal({uid:auth.uid,req}));
-        delete requests[inx];
+        //delete requests[inx];
         setFetchData({...fetchData,deleted:true, data: []})
     }
     //console.log(fetchData.length)
