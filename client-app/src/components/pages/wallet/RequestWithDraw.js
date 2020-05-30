@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const RequestWithDraw = () => {
-    const [fetchData,setFetchData] = React.useState({start:0,count:3,data:[],length:0})
+    const [fetchData,setFetchData] = React.useState({start:0,count:3,data:[],length:0,deleted:false})
     const { auth, profile } = useSelector(state => state.firebase)
     useFirestoreConnect([{collection:'Users',doc:auth.uid,
         subcollections:[{collection:'Requests',orderBy:['reqdate','desc'],startAfter:fetchData.start,limit:fetchData.count}],storeAs:'Requests'}])
@@ -60,12 +60,16 @@ const RequestWithDraw = () => {
     const fetchReq = useSelector(state => state.firestore.ordered.Requests)
     useEffect(()=>{
         fetchReq && setFetchData(prevFData=>{console.log(fetchReq)
-            let xdata = prevFData.data
-            xdata.push(...fetchReq)
-            return {...prevFData,length:fetchReq.length,data:xdata}})
+            let xdata = prevFData.data;
+            if(prevFData.deleted){
+                return {...prevFData,length:fetchReq.length,deleted:false}
+            }else{
+                xdata.push(...fetchReq)
+                return {...prevFData,length:fetchReq.length,data:xdata}
+            }
+        })
     },[fetchReq])
     const dispatch = useDispatch();
-    const oldData = [];
     const { register, handleSubmit, errors, reset } = useForm();
     const [ data, setData ] = useState({coins: 0, mno: 0, pmode: ''});
     const handleChange = (e) => {
@@ -84,7 +88,14 @@ const RequestWithDraw = () => {
         dispatch(requestWithdrawal({coins: parseInt(data.coins), pmode: data.pmode}));
         reset();
         setData({coins: 0, mno: 0, pmode: ''});
+        setFetchData({...fetchData});
     };
+    const deleteElem = (req)=>{
+        const inx = fetchData.data.indexOf(req);
+        dispatch(cancelWithdrawal({uid:auth.uid,req}));
+        delete requests[inx];
+        setFetchData({...fetchData,deleted:true})
+    }
     //console.log(fetchData.length)
     const requests = fetchData && fetchData.data && fetchData.data.map((req, index) => {
         return (
@@ -93,7 +104,7 @@ const RequestWithDraw = () => {
                 <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '60%'}}>
                     <Box>{req.pmode}</Box>
                     <Box>{moment(req.reqdate.toDate()).calendar()}</Box>
-                    {(!req.isComplete) ? <Button variant="contained" style={{ fontSize: 10, backgroundColor: '#121212', color: '#FFF'}} onClick={() => dispatch(cancelWithdrawal({uid:auth.uid,reqid:req.id}))}>Cancel</Button> : null}
+                    {(!req.isComplete) ? <Button variant="contained" style={{ fontSize: 10, backgroundColor: '#121212', color: '#FFF'}} onClick={() => {deleteElem(req)}}>Cancel</Button> : null}
                 </Box>
                 <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '20%'}}>{req.isComplete ? <CheckCircleOutlined style={{ fontSize: 35, color: "#81c784" }} /> : <HourglassEmptyOutlined style={{ fontSize: 35, color: "#fff176" }} />}</Box>
             </Box></Grid>

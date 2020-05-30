@@ -66,8 +66,10 @@ export const requestWithdrawal = (data)=>{
             reqdate : db.Timestamp.fromMillis(new Date().getTime()),
             ...data
         }).then(()=>{
-            dispatch({type:"RW_SUCCESS"})
-            dispatch({ type: 'SNACKBAR', variant: 'success', message: `Success! You've requested for ₹${data.coins*unit}, Method: ${data.pmode}. We\`ll pop the admin! [Repeat]`});
+            db.collection('Users').doc(auth.uid).set({wallet:profile.wallet-data.coins},{merge:true}).then(()=>{
+                dispatch({type:"RW_SUCCESS"})
+                dispatch({ type: 'SNACKBAR', variant: 'success', message: `Success! You've requested for ₹${data.coins*unit}, Method: ${data.pmode}. We\`ll pop the admin! [Repeat]`});
+            })
         }).catch((err)=>{
             reportError(db,uid,{date:db.Timestamp.fromMillis(new Date().getTime()),...err}).then(()=>{
                 dispatch({type:'RW_ERR'})
@@ -106,12 +108,25 @@ export const confirmWithdrawal = (reqid)=>{
     }
 }
 
-export const cancelWithdrawal = ({uid,reqid})=>{
+export const cancelWithdrawal = ({uid,req})=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
+        if(req.isComplete){
+            dispatch({type:'RW_CAN_ERR'})
+            dispatch({type:'SNACKBAR',variant:'error',message:'Your Request is already Confirmed'})
+        }
+        const st = getState();
+        const { auth, profile } = st.firebase;
         const db = getFirestore();
-        db.collection('Users').doc(uid).collection('Requests').doc(reqid).delete().then(()=>{
-            dispatch({type:'RW_CAN'})
-        }).catch((err)=>{
+        db.collection('Users').doc(uid).set({wallet:profile.wallet+req.coins},{merge:true}).then(()=>{
+            db.collection('Users').doc(uid).collection('Requests').doc(req.id).delete().then(()=>{
+                dispatch({type:'RW_CAN'})
+            }).catch((err)=>{
+                reportError(db,uid,{date:db.Timestamp.fromMillis(new Date().getTime()),...err}).then(()=>{
+                    dispatch({type:'RW_CAN_ERR'})
+                })
+            })
+        })
+        .catch((err)=>{
             reportError(db,uid,{date:db.Timestamp.fromMillis(new Date().getTime()),...err}).then(()=>{
                 dispatch({type:'RW_CAN_ERR'})
             })
