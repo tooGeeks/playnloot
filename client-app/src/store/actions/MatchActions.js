@@ -29,12 +29,20 @@ export const createMatch = (rmatch)=>{
         match['prizes'] = prz
         match['fee'] = parseInt(match['fee'])
         console.log(match)
+        let md = new Date(match.mdate)
+        let ld = new Date(match.lrdate);
+        md.setHours(match.mtime.split(':')[0])
+        md.setMinutes(match.mtime.split(':')[1])
+        delete match['mdate']
+        delete match['lrdate']
         const db = getFirestore();
         db.collection('Matches').get().then((snap)=>{
             const size = snap.size;
             let mname ="MTH" +(2000 + parseInt(size)+1)
             db.collection("Matches").doc(mname).set({
                 ...match,
+                date:db.Timestamp.fromMillis(md.getTime()),
+                lrdate:db.Timestamp.fromMillis(ld.getTime()),
                 players:{},
                 plno:1,
                 isActive : true,
