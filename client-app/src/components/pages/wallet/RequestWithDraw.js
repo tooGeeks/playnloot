@@ -62,8 +62,19 @@ const RequestWithDraw = () => {
         fetchReq && setFetchData(prevFData=>{console.log(fetchReq)
             let xdata = prevFData.data;
             console.log(fetchData.data.length)
-            if(fetchData.data.length==0) fetchReq.push(...xdata)
-            return {...prevFData,length:fetchReq.length,data:fetchReq}
+            console.log(prevFData)
+            if(fetchData.newElem) {
+                console.log("WW")
+                return {...prevFData,length:fetchReq.length,data:fetchReq}
+            }
+            if(fetchData.data.length==0){
+                fetchReq.push(...xdata)
+                return {...prevFData,length:fetchReq.length,data:fetchReq}
+            }
+            if(fetchData.update) {
+                xdata.push(...fetchReq)
+                return {...prevFData,length:fetchReq.length,update:false,data:xdata}
+            }
         })
     },[fetchReq])
     const dispatch = useDispatch();
@@ -77,7 +88,7 @@ const RequestWithDraw = () => {
         ind++;
         let lastDoc = fetchData.data[fetchData.data.length-1]
         //console.log(lastDoc.id)
-        setFetchData(prevFData=>{return {...prevFData,start:lastDoc.reqdate}})
+        setFetchData(prevFData=>{return {...prevFData,start:lastDoc.reqdate,update:true,newElem:false}})
     }
     let ind = 1;
     const onSubmitRequest = (data, e) => {
@@ -85,13 +96,13 @@ const RequestWithDraw = () => {
         dispatch(requestWithdrawal({coins: parseInt(data.coins), pmode: data.pmode}));
         reset();
         setData({coins: 0, mno: 0, pmode: ''});
-        setFetchData({...fetchData,data: []});
+        setFetchData({...fetchData,data: [],newElem:true});
     };
     const deleteElem = (req)=>{
         const inx = fetchData.data.indexOf(req);
-        dispatch(cancelWithdrawal({uid:auth.uid,req}));
+        dispatch(cancelWithdrawal({uid:auth.uid,reqid:req.id}));
         //delete requests[inx];
-        setFetchData({...fetchData,deleted:true, data: []})
+        setFetchData({...fetchData,deleted:true, data: [],start:req.reqdate})
     }
     //console.log(fetchData.length)
     const requests = fetchData && fetchData.data && fetchData.data.map((req, index) => {

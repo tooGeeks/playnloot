@@ -108,27 +108,32 @@ export const confirmWithdrawal = (reqid)=>{
     }
 }
 
-export const cancelWithdrawal = ({uid,req})=>{
+export const cancelWithdrawal = ({uid,reqid})=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
-        if(req.isComplete){
-            dispatch({type:'RW_CAN_ERR'})
-            dispatch({type:'SNACKBAR',variant:'error',message:'Your Request is already Confirmed'})
-        }
         const st = getState();
         const { auth, profile } = st.firebase;
         const db = getFirestore();
-        db.collection('Users').doc(uid).set({wallet:profile.wallet+req.coins},{merge:true}).then(()=>{
-            db.collection('Users').doc(uid).collection('Requests').doc(req.id).delete().then(()=>{
-                dispatch({type:'RW_CAN'})
-            }).catch((err)=>{
+        db.collection('Users').doc(uid).collection('Requests').doc(reqid).get().then(snap=>{
+            if(snap.empty) return;
+            let req = snap.data();
+            console.log(req)
+            if(req.isComplete){
+                dispatch({type:'RW_CAN_ERR'})
+                dispatch({type:'SNACKBAR',variant:'error',message:'Your Request is already Confirmed'})
+            }
+            db.collection('Users').doc(uid).set({wallet:profile.wallet+req.coins},{merge:true}).then(()=>{
+                db.collection('Users').doc(uid).collection('Requests').doc(reqid).delete().then(()=>{
+                    dispatch({type:'RW_CAN'})
+                }).catch((err)=>{
+                    reportError(db,uid,{date:db.Timestamp.fromMillis(new Date().getTime()),err:err.message}).then(()=>{
+                        dispatch({type:'RW_CAN_ERR'})
+                    })
+                })
+            })
+            .catch((err)=>{
                 reportError(db,uid,{date:db.Timestamp.fromMillis(new Date().getTime()),...err}).then(()=>{
                     dispatch({type:'RW_CAN_ERR'})
                 })
-            })
-        })
-        .catch((err)=>{
-            reportError(db,uid,{date:db.Timestamp.fromMillis(new Date().getTime()),...err}).then(()=>{
-                dispatch({type:'RW_CAN_ERR'})
             })
         })
     }
