@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { compose } from 'redux';
 import { firestoreConnect, useFirestoreConnect } from 'react-redux-firebase';
 import { useSelector, useDispatch } from 'react-redux';
@@ -52,15 +52,20 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const RequestWithDraw = () => {
-    const [fetchData,setFetchData] = React.useState({start:0,count:3})
+    const [fetchData,setFetchData] = React.useState({start:0,count:3,data:[],length:0})
     const { auth, profile } = useSelector(state => state.firebase)
     useFirestoreConnect([{collection:'Users',doc:auth.uid,
         subcollections:[{collection:'Requests',orderBy:['reqdate','desc'],startAfter:fetchData.start,limit:fetchData.count}],storeAs:'Requests'}])
-    const classes = useStyles(); 
-    const requestList = useSelector(state => state.firestore.ordered.Requests)
-    console.log(requestList)
+    const classes = useStyles();
+    const fetchReq = useSelector(state => state.firestore.ordered.Requests)
+    useEffect(()=>{
+        fetchReq && setFetchData(prevFData=>{console.log(fetchReq)
+            let xdata = prevFData.data
+            xdata.push(...fetchReq)
+            return {...prevFData,length:fetchReq.length,data:xdata}})
+    },[fetchReq])
     const dispatch = useDispatch();
-
+    const oldData = [];
     const { register, handleSubmit, errors, reset } = useForm();
     const [ data, setData ] = useState({coins: 0, mno: 0, pmode: ''});
     const handleChange = (e) => {
@@ -68,18 +73,20 @@ const RequestWithDraw = () => {
     }
 
     const hMoreReq = ()=>{
-        let lastDoc = requestList[requestList.length-1]
-        console.log(lastDoc.id)
-        setFetchData({...fetchData,start:lastDoc.reqdate})
+        ind++;
+        let lastDoc = fetchData.data[fetchData.data.length-1]
+        //console.log(lastDoc.id)
+        setFetchData(prevFData=>{return {...prevFData,start:lastDoc.reqdate}})
     }
-
+    let ind = 1;
     const onSubmitRequest = (data, e) => {
         e.preventDefault();
         dispatch(requestWithdrawal({coins: parseInt(data.coins), pmode: data.pmode}));
         reset();
         setData({coins: 0, mno: 0, pmode: ''});
     };
-    const requests = requestList && requestList.map((req, index) => {
+    //console.log(fetchData.length)
+    const requests = fetchData && fetchData.data && fetchData.data.map((req, index) => {
         return (
             <Grid item xs={12} sm={6} key={index}><Box boxShadow={2} justifyContent="center" alignItems="center" className={req.isComplete ? `${classes.prevBox} ${classes.successBox}` : `${classes.prevBox} ${classes.pendingBox}`}>
                 <Box display="flex" flexDirection="column" justifyContent="center" style={{width: '20%', textAlign: "center",}}><Box style={{ fontSize: 25, fontWeight: 'fontWeightBold'}}>₹{req.coins*unit}</Box>{req.isComplete ? <Box fontSize={12} className={classes.sucTxt}>Paid</Box> : <Box fontSize={12} className={classes.penTxt}>Pending</Box>}</Box>
@@ -178,7 +185,7 @@ const RequestWithDraw = () => {
                 <Grid container item xs={12} spacing={1} id="PrevRequests" justify="flex-start" alignItems="flex-start">
                     {requests}
                 </Grid>
-                { ((requestList && requestList.length!==0)) ? <Button variant='text' color='primary' onClick={hMoreReq}>Show More...</Button> : <Typography>No Requests Available</Typography> }
+                { ((fetchData && fetchData.length!==0)) ? <Button variant='text' color='primary' onClick={hMoreReq}>Show More...</Button> : <Typography color='primary'>No Requests Available</Typography> }
             </Container>
             <footer className={classes.footer}>
                 <Copyright />
