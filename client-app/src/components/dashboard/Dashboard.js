@@ -205,7 +205,7 @@ function Dashboard(props) {
       for (const i of Matches) if(match === i.id) match = i;
       let pdx =match && getPlayerfromMatch(match.players,profile.pubgid,match.mode.team)// Fetch 
       let rank = pdx.split('-')[1]
-      if(match.mdate<getCurrentDate()) return null
+      if(match.date<getCurrentDate()) return null
       return( match.mtime &&
         <Grid item xs={12} sm={4} key={match.id}>
           <Box className={classes.newMatchesBoxes}>
@@ -215,7 +215,7 @@ function Dashboard(props) {
             <Box p={1} ml={1} mr={1} mb={1}>
               <Box mb={1}>
                 <Box fontSize={14}><Event className={classes.icons}/> {convt(1,match.mtime)}</Box>
-                <Box fontSize={14}><AccessAlarm className={classes.icons}/> {match && dateString(match.mdate)}</Box>
+                <Box fontSize={14}><AccessAlarm className={classes.icons}/> {match && dateString(match.date)}</Box>
                 <Box fontSize={14}><AccessAlarm className={classes.icons}/>Rank : {rank}</Box>
               </Box>
               <Box display="flex" flexDirection="row" style={{width: '100%'}}>

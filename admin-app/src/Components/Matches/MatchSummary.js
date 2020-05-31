@@ -33,7 +33,7 @@ const MatchSummary = (props)=>{
                 <Typography variant="h5">Match Name : {match.name}</Typography><br/>
                 <Typography>Match ID : {match.id}</Typography>
                 <Typography>Entry Fee : {match.fee}</Typography>
-                <Typography>Match Date : {match.mdate}</Typography>
+                <Typography>Match Date : {match.date}</Typography>
                 <Typography>L.Reg Date : {match.lrdate}</Typography>
                 <Typography>Match Time : {convt(1,match.mtime)}</Typography>{/* Converts Time */}
                 <Typography>Match Mode Details : {team+"-"+view+"-"+map}</Typography>

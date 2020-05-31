@@ -26,7 +26,7 @@ const MatchSummary = (props)=>{
                 <span className='card-title'>Match Name : {match.name}&emsp;</span><br/>
                 <span className='white-text'>Match ID : {match.id}&emsp;</span><br/>
                 <span className='white-text'>Entry Fee : {match.fee}&emsp;</span><br/>
-                <span className='white-text'>Match Date : {match.mdate}&emsp;</span><br/>
+                <span className='white-text'>Match Date : {match.date}&emsp;</span><br/>
                 <span className='white-text'>L.Reg Date : {match.lrdate}&emsp;</span><br/>
                 <span className='white-text'>Match Time : {convt(1,match.mtime)}&emsp;</span><br/>{/* Converts Time */}
                 <span className='white-text'>Match Mode Details : {team+"-"+view+"-"+map}&emsp;</span><br/>

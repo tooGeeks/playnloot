@@ -42,7 +42,7 @@
 //             </Avatar>
 //             </ListItemAvatar>
 //             <ListItemText primary={match.id} secondary={
-//                 <><Typography variant="caption">Match Date: {match.mdate}</Typography></>} />
+//                 <><Typography variant="caption">Match Date: {match.date}</Typography></>} />
 //             <Typography edge="end">Enroll</Typography>
 //         </ListItem>
 //     </>
@@ -64,7 +64,7 @@
 // //             <div className="card black">
 // //                 <div className="card-content white-text">
 // //                 <span className='card-title'>Match Name : {match.id}&emsp;</span><br/>
-// //                 <span className='white-text'>Match Date : {match.mdate}&emsp;</span><br/>
+// //                 <span className='white-text'>Match Date : {match.date}&emsp;</span><br/>
 // //                 <span className='white-text'>L.Reg Date : {match.lrdate}&emsp;</span><br/>
 // //                 <span className='white-text'>Match Time : {convt(1,match.mtime)}&emsp;</span><br/>{/* Converts Time */}
 // //                 <span className='white-text'>Players Enrolled : {match.plno}&emsp;</span><br/>

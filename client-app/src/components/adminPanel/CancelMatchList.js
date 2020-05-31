@@ -16,7 +16,7 @@ const CancelMatchList = (props)=>{
                 <Nav/>
                 <div className="container">
                     {matches && matches.map(match =>{
-                        if(match.mdate<getCurrentDate()){//Hides a Match if its Match Date has Passed
+                        if(match.date<getCurrentDate()){//Hides a Match if its Match Date has Passed
                             return null;
                         }
                             return(

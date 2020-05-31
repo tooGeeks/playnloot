@@ -57,7 +57,7 @@ const UpdateMatch = (props)=>{
     const chkexistmatch = ()=>{// Checks if a match is already on the updated Match Date
         const {matches} = props;
         return matches.map(match =>{
-            return(match.mdate===state.umdate)
+            return(match.date===state.umdate)
         })
     }
     const handleChkbox = (e)=>{//Updates State with Checkbox Status
@@ -82,7 +82,7 @@ const UpdateMatch = (props)=>{
                 alert("Already A Match on Specified Date");
                 return;
             }
-            mdata['mdate'] = state.chkmdate ? state.umdate : match.mdate;
+            mdata['mdate'] = state.chkmdate ? state.umdate : match.ddate;
             mdata['mtime'] = state.chkmtime && state.umtime ?  state.umtime : match.mtime;
             mdata['lrdate'] = state.ulrdate ?  state.ulrdate : match.lrdate;
             let moddata = match.mode
@@ -116,7 +116,7 @@ const UpdateMatch = (props)=>{
                             </div>
                             <div>
                                 <label><input type="checkbox" id="chkmdate" onChange={handleChkbox}/><span><b>Date of Match :</b></span></label>
-                                <input type="date" defaultValue={match && match.mdate} disabled={!state.chkmdate} className="white-text" id="umdate" onChange={handleChange}/><br/>
+                                <input type="date" defaultValue={match && match.date} disabled={!state.chkmdate} className="white-text" id="umdate" onChange={handleChange}/><br/>
                             </div>
                             <div>
                                 <label ><input type="checkbox" id="chkmtime" onChange={handleChkbox}/><span><b>Time of Match :</b></span></label>
