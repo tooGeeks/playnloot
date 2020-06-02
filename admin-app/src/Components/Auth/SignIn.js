@@ -1,11 +1,10 @@
 import React from 'react'
 import { connect, useDispatch } from 'react-redux'
-import { signIn, resetPassword } from '../../store/Actions/AuthActions'
+import { signIn, resetPassword, signInWithPhone } from '../../store/Actions/AuthActions'
 //eslint-disable-next-line
 import { backDrop, showDialog } from '../../store/Actions/UIActions'
 import { Redirect } from 'react-router-dom'
 import firebase from '../../config/fbconfig'
-import {signInWithPhone} from '../../store/Actions/AuthActions'
 
 import {useForm} from "react-hook-form";
 //UI

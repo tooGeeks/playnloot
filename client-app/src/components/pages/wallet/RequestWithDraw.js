@@ -102,7 +102,7 @@ const RequestWithDraw = () => {
         const inx = fetchData.data.indexOf(req);
         dispatch(cancelWithdrawal({uid:auth.uid,reqid:req.id}));
         //delete requests[inx];
-        setFetchData({...fetchData,deleted:true, data: [],start:req.reqdate})
+        setFetchData({...fetchData,deleted:true, data: [],start:0})
     }
     //console.log(fetchData.length)
     const requests = fetchData && fetchData.data && fetchData.data.map((req, index) => {
