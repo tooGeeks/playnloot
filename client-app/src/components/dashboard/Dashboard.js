@@ -140,7 +140,7 @@ function Dashboard(props) {
       if(x.lrdate<getCurrentDate()) return null;
       let isEnr = profile && isinDocs(profile.matches, x.id);
       if(!isEnr){
-        switch (x.mode.team) {
+        switch (x.team) {
           case 'Solo': newSolo.push(x); break;
           case 'Duo': newDuo.push(x); break;
           case 'Squad': newSquad.push(x); break;

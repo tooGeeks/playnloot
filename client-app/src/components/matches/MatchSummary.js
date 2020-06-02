@@ -2,6 +2,7 @@ import React from 'react';
 import { convt, dateString, getPlayerfromMatch } from '../../Functions';
 import { useHistory } from 'react-router-dom';
 import { unit } from '../../constants';
+import * as moment from 'moment'
 
 //Updates
 import { makeStyles, Typography, Button, Box, Chip } from '@material-ui/core';
@@ -19,15 +20,15 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const Details = (props) => {
-    const { mdate, lrdate, mtime, roomid, roompass} = props.match;
+    const { date, lrdate, mtime, roomid, roompass} = props.match;
     return (
         <Box display="flex" flexDirection="column">
             <Box display="flex" justifyContent="center" alignItems="flex-end" mt={1} mb={1}>
                 <Box mr={2} fontSize={14}>1<sup>st</sup> : ₹{props.match.survival['1']}</Box><Box mr={2} fontSize={14}>2<sup>nd</sup> : ₹{props.match.survival['2']}</Box><Box mr={2} fontSize={14}>3<sup>rd</sup> : ₹{props.match.survival['3']}</Box>
             </Box>
-            <Box>Match Date: <b>{dateString(mdate)}</b></Box>
-            <Box>Time: <b>{convt(1,mtime)}</b></Box>
-            <Box>Last Date: <b>{dateString(lrdate)}</b></Box>
+            <Box>Match Date: <b>{moment(date.toDate()).calendar()}</b></Box>
+            <Box>Time: <b>{moment(date.toDate()).format("LT")}</b></Box>
+            <Box>Last Date: <b>{moment(lrdate.toDate()).calendar()}</b></Box>
             <Box display="inline-flex" alignItems="center">Tags: &nbsp;{props.match.tags && props.match.tags.map((tag, ind) => {
                 return (<Chip label={tag} key={ind} variant="outlined" size="small" color="primary" style={{marginRight: 2}}/>)
             })}</Box>
@@ -72,8 +73,8 @@ export const MatchSummary = (props) => {
         <Box display="flex" justifyContent="center" alignItems="flex-end" mt={1} mb={1}>
             <Box mr={2} fontSize={14}>1<sup>st</sup> : ₹{match.survival['1']}</Box><Box mr={2} fontSize={14}>2<sup>nd</sup> : ₹{match.survival['2']}</Box><Box mr={2} fontSize={14}>3<sup>rd</sup> : ₹{match.survival['3']}</Box>
         </Box>
-        <Box>On: {dateString(match.date)}</Box>
-        <Box>At: {convt(1,match.mtime)}</Box>
+        <Box>On: {moment(match.date.toDate()).calendar()}</Box>
+        <Box>At: {moment(match.date.toDate()).format('LT')}</Box>
         {canEnroll ? null : <Typography variant="body2" fontWeight="fontWeightLight" color="error">Match Full! Enroll in any another Match :)</Typography>}
         <Box display="flex" flexDirection="row" mt={1}>
             <Box width="100%" display="inline-flex" flexDirection="row" alignItems="flex-end">{match.tags && match.tags.map((tag, ind) => {

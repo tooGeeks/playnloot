@@ -15,6 +15,7 @@ import mDuo from '../imgs/mDuo.png'
 import mSquad from '../imgs/mSquad.png'
 import { AccessTime, Today, EventBusy, CheckCircle, DirectionsRun } from '@material-ui/icons';
 import Trophy from '../imgs/trophy.svg'
+import moment from 'moment';
 
 
 const useStyles = makeStyles(theme=>({
@@ -75,7 +76,7 @@ const Match = (props) => {
     let topImg;
 
     useEffect(() => {
-        if(match && match.mode.team && enpdiv) dispatch(clearBackDrop())
+        if(match && match.team && enpdiv) dispatch(clearBackDrop())
         else dispatch(backDrop())
     }, [match, enpdiv, dispatch])
     if(Matches && profile.matches && (profile.matches).includes(props.match.params.mid)) props.history.push('/dashboard');
@@ -88,7 +89,7 @@ const Match = (props) => {
     }   
     const positions = ["", "st", "nd", "rd", "th", "th", "th", "th", "th", "th", "th", "th"]
     
-    switch(match && match.mode.team){
+    switch(match && match.team){
         default:
             break;
         case "Solo": 
@@ -150,7 +151,7 @@ const Match = (props) => {
                     <Grid item xs={6}>
                         <Box display="flex" flexDirection="column" justifyContent="space-around" p={1} height="100%">
                             <Box><Typography component='h1' variant='h5' color='secondary' align='center' style={{marginBottom: 4}}>{match && match.name}</Typography></Box>
-                            <Box textAlign="right" fontSize={14}>{match && match.mode.team}</Box>
+                            <Box textAlign="right" fontSize={14}>{match && match.team}</Box>
                             <Box textAlign="right" fontSize={16} fontWeight="fontWeightMedium"><Emoji symbol="💸" label="entry fees" />{match && match.fee !== 0 ? `₹${match.fee}` : "Free"}</Box>
                             <Box textAlign="right" fontSize={16}><Emoji symbol="🤑" label="prizepool" />Prizes ₹</Box>
                             <Box mt={1} display="flex" justifyContent="flex-end">
@@ -166,18 +167,18 @@ const Match = (props) => {
                         <Grid container item xs={12} justify="space-around" alignContent="space-between" style={{marginBottom: 10}}>
                             <Grid item>
                                 <Box textAlign="center">
-                                    <Today/><Typography variant="body1">{match && dateString(match.mdate)}</Typography>
+                                    <Today/><Typography variant="body1">{match && moment(match.date.toDate()).calendar()}</Typography>
                                     <Typography variant='caption'>Match Date</Typography>
                                 </Box>
                             </Grid>
                             <Grid item><Box textAlign='center'>
                                 <AccessTime />
-                                <Typography variant="body1">{match && convt(1,match.mtime)}</Typography>
+                                <Typography variant="body1">{match && moment(match.date.toDate()).format("LT")}</Typography>
                                 <Typography variant="caption">Match Time</Typography>
                             </Box></Grid>
                             <Grid item><Box textAlign="center">
                                 <EventBusy />
-                                <Typography variant="body1">{match && dateString(match.lrdate)}</Typography>
+                                <Typography variant="body1">{match && moment(match.lrdate.toDate()).calendar()}</Typography>
                                 <Typography variant="caption">Last Date</Typography>
                             </Box></Grid>
                         </Grid>
@@ -216,11 +217,11 @@ const Match = (props) => {
                             <Typography component="h6" variant="body1" color="initial" align="center">Details</Typography>
                             
                             <Box className={classes.detailsBox}>
-                                <Typography variant="body1">{match && match.mode.map}</Typography>
+                                <Typography variant="body1">{match && match.map}</Typography>
                                 <Typography variant="caption">Map</Typography>
                             </Box>
                             <Box className={classes.detailsBox}>
-                                <Typography variant="body1">{match && match.mode.view}</Typography>
+                                <Typography variant="body1">{match && match.view}</Typography>
                                 <Typography variant="caption">View</Typography>
                             </Box>
                             <Box className={classes.detailsBox}>
