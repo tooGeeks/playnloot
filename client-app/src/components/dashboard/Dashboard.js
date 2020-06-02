@@ -131,11 +131,6 @@ function Dashboard(props) {
       default:
         break;
     }
-    console.log(sort)
-  }
-  const handleChipDel = (chip) => {
-    setsort(null)
-    console.log(sort)
   }
   useFirestoreConnect([
     {collection:'Matches',orderBy:sort.orderBy,where:sort.where}
@@ -349,8 +344,8 @@ function Dashboard(props) {
               <Grid container justify="center" spacing={2}>
                 <Grid item xs={12}>
                   <Typography component="span" variant="body2" style={{paddingRight: 5}}>Sort by: </Typography>
-                  <Chip label="High Loot" variant={sort.chip === 'loot' ? 'default' : 'outlined'} color="primary" size="small" clickable deleteIcon={sort && sort === 'loot' ? <Done /> : <Add />} onClick={() => handleChipClick('loot')} onDelete={() => handleChipClick('loot')}/> &nbsp; 
-                  <Chip label="Free" variant={sort.chip === 'free' ? 'default' : 'outlined'} color="primary" size="small" clickable deleteIcon={sort === 'free' ? <Done /> : <Add />} onClick={() => handleChipClick('free')} onDelete={() => handleChipClick('free')}/>
+                  <Chip label="High Loot" variant={sort.chip === 'loot' ? 'default' : 'outlined'} color="primary" size="small" clickable deleteIcon={sort.chip === 'loot' ? <Done /> : <Add />} onClick={() => handleChipClick('loot')} onDelete={() => handleChipClick('loot')}/> &nbsp; 
+                  <Chip label="Free" variant={sort.chip === 'free' ? 'default' : 'outlined'} color="primary" size="small" clickable deleteIcon={sort.chip === 'free' ? <Done /> : <Add />} onClick={() => handleChipClick('free')} onDelete={() => handleChipClick('free')}/>
                 </Grid>
                 <Grid container item xs={12} spacing={2} justify="center">
                   {
