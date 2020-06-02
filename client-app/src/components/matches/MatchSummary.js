@@ -73,7 +73,7 @@ export const MatchSummary = (props) => {
         <Box display="flex" justifyContent="center" alignItems="flex-end" mt={1} mb={1}>
             <Box mr={2} fontSize={14}>1<sup>st</sup> : ₹{match.survival['1']}</Box><Box mr={2} fontSize={14}>2<sup>nd</sup> : ₹{match.survival['2']}</Box><Box mr={2} fontSize={14}>3<sup>rd</sup> : ₹{match.survival['3']}</Box>
         </Box>
-        <Box>On: {moment(match.date.toDate()).calendar()}</Box>
+        <Box>On: {moment(match.date.toDate()).format('Do MMMM')}</Box>
         <Box>At: {moment(match.date.toDate()).format('LT')}</Box>
         {canEnroll ? null : <Typography variant="body2" fontWeight="fontWeightLight" color="error">Match Full! Enroll in any another Match :)</Typography>}
         <Box display="flex" flexDirection="row" mt={1}>

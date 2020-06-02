@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { useSelector, connect, useDispatch, } from 'react-redux'
 import { unit } from '../../constants'
+import moment from 'moment'
 
 //UI
 import { makeStyles, Grid, Container, Paper, Button, Typography, CssBaseline, Box, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Avatar, Tooltip, Zoom, CircularProgress, Divider, Chip } from "@material-ui/core";
 import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core'
 //import { ReactComponent as Solid } from '../../imgs/soldier2.svg'
-import { AccountBox, TrackChanges, Event, AccessAlarm } from '@material-ui/icons';
+import { AccountBox, TrackChanges, Event, AccessAlarm, Done, Add } from '@material-ui/icons';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
@@ -137,7 +138,7 @@ function Dashboard(props) {
     var newDuo = [];
     var newSquad = [];
     Matches.forEach((x) => { 
-      if(x.lrdate<getCurrentDate()) return null;
+      if(moment(x.lrdate.toDate()) < getCurrentDate()) return null;
       let isEnr = profile && isinDocs(profile.matches, x.id);
       if(!isEnr){
         switch (x.team) {
@@ -236,6 +237,17 @@ function Dashboard(props) {
         <Typography>You haven`t enrolled in any new matches</Typography>
         <br/> <Button size="small" align="right" variant="outlined" color="primary" onClick={() => setExpanded('panel3')}>Enroll now!</Button>
       </div>
+
+    const [sort, setsort] = React.useState('loot')
+    const handleChipClick = (chip) => {
+      if(chip === sort) return;
+      setsort(chip)
+      console.log(sort)
+    }
+    const handleChipDel = (chip) => {
+      setsort(null)
+      console.log(sort)
+    }
     
   return (
     <div className={classes.root}>
@@ -323,17 +335,24 @@ function Dashboard(props) {
               <Typography className={expanded === 'panel3' ? classes.expanelHeading : classes.panelHeading}><b>NEW MATCHES</b></Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <Grid container spacing={2} justify="center">
-                {
-                  newSolo && newDuo  && newSquad
-                  ? (<>
-                      {newSolo.length !== 0 ? <NewMatchesBox type="Solo" matchArr={newSolo} /> : null}
-                      {newDuo.length !== 0 ? <NewMatchesBox type="Duo" matchArr={newDuo} /> : null}
-                      {newSquad.length !== 0 ? <NewMatchesBox type="Squad" matchArr={newSquad} /> : null}
-                    </>)
-                  :
-                    <Grid item xs={12}><Box fontSize={14} textAlign="center">Matches Comming Soon!</Box></Grid>
-                }
+              <Grid container justify="center" spacing={2}>
+                <Grid item xs={12}>
+                  <Typography component="span" variant="body2" style={{paddingRight: 5}}>Sort by: </Typography>
+                  <Chip label="High Loot" variant={sort === 'loot' ? 'default' : 'outlined'} color="primary" size="small" clickable deleteIcon={sort && sort === 'loot' ? <Done /> : <Add />} onClick={() => handleChipClick('loot')} onDelete={() => handleChipClick('loot')}/> &nbsp; 
+                  <Chip label="Free" variant={sort === 'free' ? 'default' : 'outlined'} color="primary" size="small" clickable deleteIcon={sort === 'free' ? <Done /> : <Add />} onClick={() => handleChipClick('free')} onDelete={() => handleChipClick('free')}/>
+                </Grid>
+                <Grid container item xs={12} spacing={2} justify="center">
+                  {
+                    newSolo && newDuo  && newSquad
+                    ? (<>
+                        {newSolo.length !== 0 ? <NewMatchesBox type="Solo" matchArr={newSolo} /> : null}
+                        {newDuo.length !== 0 ? <NewMatchesBox type="Duo" matchArr={newDuo} /> : null}
+                        {newSquad.length !== 0 ? <NewMatchesBox type="Squad" matchArr={newSquad} /> : null}
+                      </>)
+                    :
+                      <Grid item xs={12}><Box fontSize={14} textAlign="center">Matches Comming Soon!</Box></Grid>
+                  }
+                </Grid>
               </Grid>
             </ExpansionPanelDetails>
           </ExpansionPanel>

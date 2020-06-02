@@ -167,7 +167,7 @@ const Match = (props) => {
                         <Grid container item xs={12} justify="space-around" alignContent="space-between" style={{marginBottom: 10}}>
                             <Grid item>
                                 <Box textAlign="center">
-                                    <Today/><Typography variant="body1">{match && moment(match.date.toDate()).calendar()}</Typography>
+                                    <Today/><Typography variant="body1">{match && moment(match.date.toDate()).format('Do MMMM')}</Typography>
                                     <Typography variant='caption'>Match Date</Typography>
                                 </Box>
                             </Grid>
@@ -178,7 +178,7 @@ const Match = (props) => {
                             </Box></Grid>
                             <Grid item><Box textAlign="center">
                                 <EventBusy />
-                                <Typography variant="body1">{match && moment(match.lrdate.toDate()).calendar()}</Typography>
+                                <Typography variant="body1">{match && moment(match.lrdate.toDate()).format('Do MMMM')}</Typography>
                                 <Typography variant="caption">Last Date</Typography>
                             </Box></Grid>
                         </Grid>
