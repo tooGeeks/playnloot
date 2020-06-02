@@ -7,7 +7,7 @@ import { backDrop, showDialog } from '../../store/actions/uiActions'
 import { Redirect, Link } from 'react-router-dom'
 import {signInWithPhone} from '../../store/actions/authActions'
 
-import useForm from "react-hook-form";
+import {useForm} from "react-hook-form";
 //UI
 //import PropTypes from "prop-types";
 import { Link as MUILink, Icon } from '@material-ui/core';

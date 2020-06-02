@@ -32,17 +32,20 @@ export const createMatch = (rmatch)=>{
         delete match['lrdate']
         let rls = []
         let prz = {}
+        let pP = 0
         Object.keys(match).map(rx=>{
             if(rx.startsWith('rule')){
                 rls.push(match[rx])
                 delete match[rx]
             }else if(rx.startsWith('prize')){
+                pP+=parseInt(match[rx])
                 prz[rx.split('-')[1]] = parseInt(match[rx])
                 delete match[rx]
             }
             return rx;
         })
-        match['survival'] = prz
+        if(Object.keys(prz).length!==0) match['survival'] = prz
+        match['prizePool'] = pP;
         match['customRules'] = rls;
         console.log(match)
         const db = getFirestore();

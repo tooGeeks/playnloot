@@ -2,7 +2,7 @@ import React from 'react'
 import { Redirect, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { signUp } from '../../store/actions/authActions'
-import useForm from "react-hook-form";
+import {useForm} from "react-hook-form";
 //UI
 import { Avatar, Button, CssBaseline, TextField, Grid, Typography, Container, Link as MUILink } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';

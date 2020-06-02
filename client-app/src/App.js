@@ -39,6 +39,7 @@ import BackDrop from './components/BackDrop';
 import Loader from './components/BackDrop/Loader';
 import { ReactComponent as Loading } from './imgs/loading.svg';
 import { dark } from '@material-ui/core/styles/createPalette';
+import { Button } from '@material-ui/core';
 
 
 const AuthIsLoaded = ({children})=>{
@@ -56,6 +57,8 @@ const matchStr = (str, rule) => {
   var eR = (str) => str.replace(/([.*+?^=!:${}()|[\]/\\])/g, "\\$1");
   return new RegExp("^" + rule.split("*").map(eR).join(".*") + "$").test(str);
 }
+
+
 
 const useDarkMode = () => {
   const [theme, setTheme] = useState(themeObject)

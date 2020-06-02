@@ -4,7 +4,7 @@ import { firestoreConnect, useFirestoreConnect } from 'react-redux-firebase';
 import { useSelector, useDispatch } from 'react-redux';
 import { findinMatches } from '../../../Functions'
 import { cancelWithdrawal, requestWithdrawal } from '../../../store/actions/PaymentActions';
-import useForm from "react-hook-form";
+import {useForm} from "react-hook-form";
 import { unit } from '../../../constants';
 
 import { makeStyles, Grid, Container, Card, CardHeader, IconButton, CardContent, Typography, TextField, CardActions, Button, Box } from '@material-ui/core'

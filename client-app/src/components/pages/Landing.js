@@ -48,6 +48,7 @@ const Landing = () => {
   const [activeStep, setActiveStep] = useState(parseInt(0)); // rm
   const [getStart, setgetStart] = useState(localStorage.getItem('getting_Started') || {gt: false}); 
   const steps = getSteps();
+  let showATS;
 
   useEffect(() => {
     localStorage.setItem('getting_Started', localStorage.getItem('getting_Started') ? JSON.stringify({gt: false}) : JSON.stringify(getStart))
@@ -115,6 +116,7 @@ const Landing = () => {
               <Typography className={classes.enroll} variant="h6" >ENROLL IN A MATCH NOW!</Typography>
               <br/>
               <Button className={classes.GetStartBtn} variant="outlined" size="large" onClick={() => history.push('/signup')}>Get Started</Button>
+              
               <Box fontSize={13} fontWeight="fontWeightLight" style={{marginTop: 2, textDecoration: 'underline', cursor: 'help'}} id="gt" onClick={() => {setgetStart({...getStart, gt: true}); scrollTo('#getstarted');}}>Know More</Box>
             </Box>
           </Box>

@@ -11,7 +11,7 @@ import { AccountBox, TrackChanges, Event, AccessAlarm, Done, Add } from '@materi
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import {firestoreConnect} from 'react-redux-firebase';
+import {firestoreConnect, useFirestore, useFirestoreConnect} from 'react-redux-firebase';
 import {isinDocs,getCurrentDate, dateString, convt} from '../../Functions'
 import {compose} from 'redux';
 import { EnrolledDialog, MatchSummary } from '../matches/MatchSummary';
@@ -118,6 +118,28 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function Dashboard(props) {
+  const [sort, setsort] = React.useState({orderBy:['date'],where:null,chip:'loot'})
+  const handleChipClick = (chip) => {
+    if(chip === sort.chip) return;
+    switch(chip){
+      case 'loot':
+        setsort({...sort,chip,orderBy:['prizePool','desc'],where:null})
+        break;
+      case 'free':
+        setsort({...sort,chip,orderBy:null,where:['fee','==',0]})
+        break;
+      default:
+        break;
+    }
+    console.log(sort)
+  }
+  const handleChipDel = (chip) => {
+    setsort(null)
+    console.log(sort)
+  }
+  useFirestoreConnect([
+    {collection:'Matches',orderBy:sort.orderBy,where:sort.where}
+  ])
   const classes = useStyles();
   const { profile } = useSelector(
     state => state.firebase
@@ -238,17 +260,6 @@ function Dashboard(props) {
         <br/> <Button size="small" align="right" variant="outlined" color="primary" onClick={() => setExpanded('panel3')}>Enroll now!</Button>
       </div>
 
-    const [sort, setsort] = React.useState('loot')
-    const handleChipClick = (chip) => {
-      if(chip === sort) return;
-      setsort(chip)
-      console.log(sort)
-    }
-    const handleChipDel = (chip) => {
-      setsort(null)
-      console.log(sort)
-    }
-    
   return (
     <div className={classes.root}>
     <Container>
@@ -338,8 +349,8 @@ function Dashboard(props) {
               <Grid container justify="center" spacing={2}>
                 <Grid item xs={12}>
                   <Typography component="span" variant="body2" style={{paddingRight: 5}}>Sort by: </Typography>
-                  <Chip label="High Loot" variant={sort === 'loot' ? 'default' : 'outlined'} color="primary" size="small" clickable deleteIcon={sort && sort === 'loot' ? <Done /> : <Add />} onClick={() => handleChipClick('loot')} onDelete={() => handleChipClick('loot')}/> &nbsp; 
-                  <Chip label="Free" variant={sort === 'free' ? 'default' : 'outlined'} color="primary" size="small" clickable deleteIcon={sort === 'free' ? <Done /> : <Add />} onClick={() => handleChipClick('free')} onDelete={() => handleChipClick('free')}/>
+                  <Chip label="High Loot" variant={sort.chip === 'loot' ? 'default' : 'outlined'} color="primary" size="small" clickable deleteIcon={sort && sort === 'loot' ? <Done /> : <Add />} onClick={() => handleChipClick('loot')} onDelete={() => handleChipClick('loot')}/> &nbsp; 
+                  <Chip label="Free" variant={sort.chip === 'free' ? 'default' : 'outlined'} color="primary" size="small" clickable deleteIcon={sort === 'free' ? <Done /> : <Add />} onClick={() => handleChipClick('free')} onDelete={() => handleChipClick('free')}/>
                 </Grid>
                 <Grid container item xs={12} spacing={2} justify="center">
                   {
@@ -378,6 +389,5 @@ function Dashboard(props) {
 export default compose(
   connect(mapStatetoProps),
   firestoreConnect([
-      {collection:'Matches'},
       {collection:'Users',orderBy:['kills','desc'],limit:5,where:['kills','>',0]}
   ]))(Dashboard)

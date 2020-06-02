@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { makeStyles, Container, TextField, Typography, Button, Paper, Grid, Box, Divider, GridList, GridListTile, SvgIcon, Badge, Tooltip } from '@material-ui/core';
-import useForm from 'react-hook-form';
+import {useForm} from 'react-hook-form';
 import { compose } from 'redux';
 import { connect, useDispatch } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';

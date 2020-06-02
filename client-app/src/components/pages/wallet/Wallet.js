@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { creditWallet, } from '../../../store/actions/PaymentActions';
-import useForm from "react-hook-form";
+import {useForm} from "react-hook-form";
 import { makeStyles, Container, Grid, IconButton, TextField, CardHeader, Typography, Card, CardContent, CardActions, Button, Box, Paper } from '@material-ui/core';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import { showSnackbar } from '../../../store/actions/uiActions'
