@@ -151,7 +151,7 @@ function Wallet(props) {
                                         }
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <Box textAlign="center" fontSize={60} fontWeight="fontWeightMedium">₹
+                                        <Box textAlign="center" maxWidth="100vw" fontSize={60} fontWeight="fontWeightMedium">₹
                                             <Box display="inline-block" fontSize={100} fontWeight="fontWeightBold">{(coins.coins)*unit}</Box>
                                         </Box>
                                         <Box fontSize={18}>{coins.coins<0 ? `0` : coins.coins} X {unit}</Box>
@@ -174,6 +174,8 @@ function Wallet(props) {
                                             inputRef={
                                                 register({
                                                     required: true,
+                                                    min: 1,
+                                                    max: 200
                                                 })
                                             }
                                             error={!!errors.coins}
