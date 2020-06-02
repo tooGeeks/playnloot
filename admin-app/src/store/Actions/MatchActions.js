@@ -5,6 +5,7 @@ import { isEmpty } from 'react-redux-firebase';
 export const createMatch = (rmatch)=>{
     return (dispatch,getState,{getFirebase,getFirestore})=>{
         //Async Code
+        const {auth , profile } = getState().firebase;
         const match = {...rmatch}
         const taglist = match.tags ? match.deftag+","+match.tags : match.deftag 
         delete match['tags']
@@ -17,21 +18,33 @@ export const createMatch = (rmatch)=>{
             delete match[x]
         }) 
         match['mode'] = mode*/
-        console.log(match['mode'])
         match['tags'] = taglist.split(',')
-        let prz = {1:parseInt(match['prize-1']),2:parseInt(match['prize-2']),3:parseInt(match['prize-3'])}
-        delete match['prize-1']
-        delete match['prize-2']
-        delete match['prize-3']
-        match['survival'] = prz
         match['fee'] = parseInt(match['fee'])
-        console.log(match)
+        match['host'] = profile.pubgid;
+        match['isTrusted'] = profile.isTrusted;
+        match['hRating'] = profile.hRating;
         let md = new Date(match.mdate)
         let ld = new Date(match.lrdate);
         md.setHours(match.mtime.split(':')[0])
         md.setMinutes(match.mtime.split(':')[1])
         delete match['mdate']
+        delete match['mtime']
         delete match['lrdate']
+        let rls = []
+        let prz = {}
+        Object.keys(match).map(rx=>{
+            if(rx.startsWith('rule')){
+                rls.push(match[rx])
+                delete match[rx]
+            }else if(rx.startsWith('prize')){
+                prz[rx.split('-')[1]] = parseInt(match[rx])
+                delete match[rx]
+            }
+            return rx;
+        })
+        match['survival'] = prz
+        match['customRules'] = rls;
+        console.log(match)
         const db = getFirestore();
         db.collection('Matches').get().then((snap)=>{
             const size = snap.size;
@@ -42,6 +55,7 @@ export const createMatch = (rmatch)=>{
                 lrdate:db.Timestamp.fromMillis(ld.getTime()),
                 players:{},
                 isTrusted:false,
+                game:'PUBGM',
                 plno:1,
                 isActive : true,
                 createdAt : new Date()

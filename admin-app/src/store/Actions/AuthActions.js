@@ -41,6 +41,8 @@ export const signIn = (credentials) => {
                 kills: 0,
                 looted:0,
                 matches: [],
+                isTrusted:false,
+                hRating:0,
                 wins:0,
               }).then(()=>{
                 db.collection("Orders").doc(resp.user.uid).set({orders:{}})

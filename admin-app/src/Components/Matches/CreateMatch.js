@@ -4,34 +4,41 @@ import {connect} from 'react-redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import {compose} from 'redux';
 import {compdate,getCurrentDate} from '../../Functions';
-import { Select, MenuItem, TextField, Divider, Button, Container } from "@material-ui/core";
+import { Select, MenuItem, TextField, Divider, Button, Container, Grid, makeStyles, Typography, Icon } from "@material-ui/core";
 
-import {useForm} from "react-hook-form";
+import {useForm, useFieldArray, Controller} from "react-hook-form";
+import { AddCircle, CloseSharp, RemoveCircle, DeleteForeverRounded } from "@material-ui/icons";
+import { red } from "@material-ui/core/colors";
 /*
   This Component is used to Create a New Match
 */
 
+const useStyles = makeStyles(theme=>({
+    root:{
+        display:'flex',
+        minHeight:'100vh'
+    },
+    container:{
+        marginBottom:theme.spacing(9)
+    },
+    hText:{
+        marginTop:theme.spacing(4),
+        marginBottom:theme.spacing(2)
+    }
+}))
+
 const CreateMatch = (props)=>{
-    const { register, handleSubmit, errors } = useForm();
-    const [state,setState] = React.useState({
-        name:'',
-        mdate:'',
-        mtime:'',
-        lrdate:'',
-        team: 'cao',
-        deftag:'cao',
-        tags:'',
-        fee:2,
-        map:'cao',
-        view:'cao',
-        "prize-1":0,
-        "prize-2":0,
-        "prize-3":0
-    })
-    const chkexistmatch = ()=>{//checks if already a match is scheduled on specified date
+    const classes = useStyles();
+    const { register, handleSubmit, errors, control } = useForm();
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name:'rules'
+    }); 
+    const [rCount,setRCount] = React.useState(0);
+    const chkexistmatch = (data)=>{//checks if already a match is scheduled on specified date
         const {matches} = props;
         return matches.map(match =>{
-            return(match.mtime===state.mtime)
+            return(match.mtime===data.mtime)
         })
     }
     const onSubmit = (data,e)=>{
@@ -66,7 +73,7 @@ const CreateMatch = (props)=>{
             return;
         }
         if(compdate(cds,mdt) && compdate(ldt,mdt) && compdate(cds,ldt)){//checks that match date, last enrollment date and today's date are in order
-            if(chkexistmatch().includes(true)){
+            if(chkexistmatch(data).includes(true)){
                 alert("Already A Match on Specified Date");
                 return;
             }
@@ -84,185 +91,295 @@ const CreateMatch = (props)=>{
             }
         }
     }
+    const rulesDiv = []
+    /**
+    {
+        return(
+            <Grid item key={inx} xs={12}>
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    id={rule}
+                    name={rule}
+                    type='text'
+                    label={"Rule-"+(inx+1)}
+                    fullWidth
+                    inputRef={register({
+                        required: true,
+                    })}
+                />
+            </Grid>
+        )
+    }
+    */
     return(
-        <React.Fragment>
-            <Container maxWidth="md">
+        <div className={classes.root}>
+            <Container className={classes.container} maxWidth="md">
+                <Typography variant='h5' className={classes.hText}>Create a New Match</Typography>
                 <form noValidate onSubmit={handleSubmit(onSubmit)}>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        inputRef={register({
-                            required: true,
-                        })}
-                        fullWidth
-                        id="name"
-                        type="text"
-                        label="Match Name"
-                        name="name"
-                        autoFocus
-                        error={!!errors.name}
-                        helperText={errors.name ? "Enter Match Name!" : null}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        inputRef={register({
-                            required: true,
-                            validate: { matchTime: (value)=> {
-                                props.matches.map(match => match.mtime===value)}
-                            },
-                        })}
-                        fullWidth
-                        id="mdate"
-                        type="date"
-                        label="Match Date"
-                        name="mdate"
-                        defaultValue={getCurrentDate(2)}
-                        error={!!errors.mdate}
-                        helperText={(errors.mdate ? (errors.mdate.type === 'required' ? "Enter Match Date!" : "Invalid Date Format") : null)}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        inputRef={register({
-                            required: true,
-                        })}
-                        fullWidth
-                        id="mtime"
-                        type="time"
-                        label="Match Time"
-                        name="mtime"
-                        defaultValue={"00:00"}
-                        error={!!errors.mdate}
-                        helperText={(errors.mdate ? (errors.mtime.type === 'required' ? "Enter Match Time!" : "Invalid Time Format") : null)}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        inputRef={register({
-                            required: true,
-                        })}
-                        fullWidth
-                        id="lrdate"
-                        type="date"
-                        label="Last Registration Date"
-                        name="lrdate"
-                        defaultValue={getCurrentDate(1)}
-                        error={!!errors.lrdate}
-                        helperText={(errors.lrdate ? (errors.lrdate.type === 'required' ? "Enter Last Reg. Date!" : "Invalid Date Format") : null)}
-                    />
-                    <Select
-                        id="team"
-                        label="Select Team Type"
-                        name="team"
-                        inputRef={register({
-                            required: true,
-                        })}
-                        defaultValue='cao'
-                        style={{width:'150px',color:"#ffffff"}}
-                    >
-                        <MenuItem key={""} innerRef={{name:"cao"}} name="cao" value={'cao'} disabled>Choose an Option</MenuItem>
-                        {['Solo','Duo','Squad'].map(team=>(<MenuItem name={team} key={team} value={team}>{team}</MenuItem>))}
-                    </Select>
-                    <Select
-                        inputRef={register({
-                            required: true,
-                        })}
-                        name='view'
-                        id='view'
-                        label="Select Perspective"
-                        defaultValue='cao'
-                        style={{width:'150px',color:"#ffffff"}}
-                    >
-                        <MenuItem key={""} innerRef={{name:"cao"}} name="cao" value={'cao'} disabled>Choose an Option</MenuItem>
-                        {['TPP','FPP'].map(view=>(<MenuItem key={view} value={view}>{view}</MenuItem>))}
-                    </Select>
-                    <Select
-                        inputRef={register({
-                            required: true,
-                        })}
-                        name='map'
-                        id='map'
-                        label="Select Map"
-                        defaultValue='cao'
-                        style={{width:'150px',color:"#ffffff"}}
-                    >
-                        <MenuItem key={""} innerRef={{name:"cao"}} name="cao" value={'cao'} disabled>Choose an Option</MenuItem>
-                        {['Erangel','Miramar','Sanhok','Vikendi'].map(map=>(<MenuItem name={map} key={map} value={map}>{map}</MenuItem>))}
-                    </Select>
-                    <Select
-                        label="Select Platform"
-                        name='deftag'
-                        id='deftag'
-                        inputRef={register({
-                            required: true,
-                        })}
-                        defaultValue='cao'
-                        style={{width:'150px',color:"#ffffff",position:'relative'}}
-                    >
-                        <MenuItem key={""}  name="cao" value={'cao'} disabled>Choose an Option</MenuItem>
-                        {['mobile','emu'].map(deftag=>(<MenuItem name={deftag} key={deftag} value={deftag}>{deftag}</MenuItem>))}
-                    </Select>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        inputRef={register}
-                        id="tags"
-                        type="text"
-                        label="Tags"
-                        name="tags"
-                        error={!!errors.tags}
-                        helperText={(errors.tags ? (errors.tags.type === 'required' ? "Enter Last Reg. Date!" : "Invalid Date Format") : null)}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        id="fee"
-                        inputRef={register({
-                            required: true,
-                        })}
-                        defaultValue={0}
-                        type="number"
-                        label="Fee"
-                        name="fee"
-                        error={!!errors.fee}
-                        helperText={(errors.fee ? (errors.fee.type === 'required' ? "Enter Fee!" : "Invalid Date Format") : null)}
-                    />
-                    <Divider/>
-                    {["1st","2nd","3rd"].map((pn,ind)=>{
-                                return(
-                                    <TextField
-                                        key={ind}
-                                        variant="outlined"
-                                        margin="normal"
-                                        inputRef={register}
-                                        style={{width:"30%",marginLeft:"2%"}}
-                                        id={"prize-"+(ind+1)}
-                                        type="number"
-                                        label={pn+" Prize"}
-                                        name={pn}
-                                        error={!!errors[pn]}
-                                        helperText={(errors[pn] ? (errors['pn'].type === 'required' ? "Enter Fee!" : "Invalid Date Format") : null)}
-                                    />
-                                )
-                            })
-                    }
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        style={{marginTop:"1%",marginBottom:"2%"}}
-                    >Create Match
-                     </Button>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                inputRef={register({
+                                    required: true,
+                                })}
+                                fullWidth
+                                id="name"
+                                type="text"
+                                label="Match Name"
+                                name="name"
+                                autoFocus
+                                error={!!errors.name}
+                                helperText={errors.name ? "Enter Match Name!" : null}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                inputRef={register({
+                                    required: true,
+                                    validate: { matchTime: (value)=> {
+                                        props.matches.map(match => match.mtime===value)}
+                                    },
+                                })}
+                                fullWidth
+                                id="mdate"
+                                type="date"
+                                label="Match Date"
+                                name="mdate"
+                                defaultValue={getCurrentDate(2)}
+                                error={!!errors.mdate}
+                                helperText={(errors.mdate ? (errors.mdate.type === 'required' ? "Enter Match Date!" : "Invalid Date Format") : null)}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                inputRef={register({
+                                    required: true,
+                                })}
+                                fullWidth
+                                id="mtime"
+                                type="time"
+                                label="Match Time"
+                                name="mtime"
+                                defaultValue={"00:00"}
+                                error={!!errors.mdate}
+                                helperText={(errors.mdate ? (errors.mtime.type === 'required' ? "Enter Match Time!" : "Invalid Time Format") : null)}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                inputRef={register({
+                                    required: true,
+                                })}
+                                fullWidth
+                                id="lrdate"
+                                type="date"
+                                label="Last Registration Date"
+                                name="lrdate"
+                                defaultValue={getCurrentDate(1)}
+                                error={!!errors.lrdate}
+                                helperText={(errors.lrdate ? (errors.lrdate.type === 'required' ? "Enter Last Reg. Date!" : "Invalid Date Format") : null)}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Controller name="team" defaultValue="cao" control={control} as={
+                                <Select
+                                id="team"
+                                name="team"
+                                label="Select Team Type"
+                                inputRef={register({
+                                    required: true,
+                                })}
+                                defaultValue="cao"
+                                style={{width:'150px',color:"#ffffff"}}
+                            >
+                                <MenuItem key={""} innerRef={{name:"cao"}} name="cao" value={'cao'} disabled>Choose an Option</MenuItem>
+                                {['Solo','Duo','Squad'].map(team=>(<MenuItem innerRef={{name:team}} name={team} key={team} value={team}>{team}</MenuItem>))}
+                            </Select>
+                            }/>
+                            
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Controller 
+                                name="view"
+                                defaultValue="cao"
+                                control={control}
+                                as={<Select
+                                inputRef={register({
+                                    required: true,
+                                })}
+                                name="view"
+                                id="view"
+                                label="Select Perspective"
+                                defaultValue="cao"
+                                style={{width:'150px',color:"#ffffff"}}
+                            >
+                                <MenuItem key={""} innerRef={{name:"cao"}} name="cao" value={'cao'} disabled>Choose an Option</MenuItem>
+                                {['TPP','FPP'].map(view=>(<MenuItem key={view} name={view} innerRef={{name:view}} value={view}>{view}</MenuItem>))}
+                            </Select>}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Controller
+                                name="map"
+                                defaultValue="cao"
+                                control={control}
+                                as={<Select
+                                inputRef={register({
+                                    required: true,
+                                })}
+                                name="map"
+                                id="map"
+                                label="Select Map"
+                                defaultValue="cao"
+                                style={{width:'150px',color:"#ffffff"}}
+                            >
+                                <MenuItem key={"cao"} innerRef={{name:"cao"}} name="cao" value={'cao'} disabled>Choose an Option</MenuItem>
+                                {['Erangel','Miramar','Sanhok','Vikendi'].map(map=>(<MenuItem innerRef={{name:map}} name={map} key={map} value={map}>{map}</MenuItem>))}
+                            </Select>}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Controller
+                                name="deftag"
+                                defaultValue="cao"
+                                control={control}
+                                as={<Select
+                                label="Select Platform"
+                                name="deftag"
+                                id="deftag"
+                                inputRef={register({
+                                    required: true,
+                                })}
+                                defaultValue="cao"
+                                style={{width:'150px',color:"#ffffff",position:'relative'}}
+                            >
+                                <MenuItem key={"cao"}  name="cao" value={'cao'} disabled>Choose an Option</MenuItem>
+                                {['mobile','emu'].map(deftag=>(<MenuItem name={deftag} innerRef={{name:deftag}} key={deftag} value={deftag}>{deftag}</MenuItem>))}
+                            </Select>}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                fullWidth
+                                inputRef={register}
+                                id="tags"
+                                type="text"
+                                label="Tags"
+                                name="tags"
+                                error={!!errors.tags}
+                                helperText={(errors.tags ? (errors.tags.type === 'required' ? "Enter Last Reg. Date!" : "Invalid Date Format") : null)}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                id="fee"
+                                inputRef={register({
+                                    required: true,
+                                })}
+                                defaultValue={0}
+                                type="number"
+                                label="Fee"
+                                name="fee"
+                                error={!!errors.fee}
+                                helperText={(errors.fee ? (errors.fee.type === 'required' ? "Enter Fee!" : "Invalid Date Format") : null)}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                            variant="outlined"
+                                margin="normal"
+                                id="bKills"
+                                inputRef={register({
+                                    required: true,
+                                })}
+                                defaultValue={0}
+                                type="number"
+                                label="Coins Per Kill"
+                                name="bKills"
+                                error={!!errors.bKills}
+                                helperText={(errors.kills ? (errors.bKills.type === 'required' ? "Enter Coins Per Kill!" : "Invalid Date Format") : null)}
+                            />
+                        </Grid>
+                        <Divider/>
+                        {["1st","2nd","3rd"].map((pn,ind)=>{
+                                    return(
+                                        <Grid key={ind} item xs={4} >
+                                            <TextField
+                                                variant="outlined"
+                                                margin="normal"
+                                                inputRef={register}
+                                                id={"prize-"+(ind+1)}
+                                                type="number"
+                                                label={pn+" Prize"}
+                                                name={"prize-"+(ind+1)}
+                                                error={!!errors[pn]}
+                                                helperText={(errors[pn] ? (errors[pn].type === 'required' ? "Enter Fee!" : "Invalid Date Format") : null)}
+                                            />
+                                        </Grid>
+                                    )
+                                })
+                        }
+                        {fields.map((item,inx)=>(
+                            <React.Fragment key={item.id}>
+                                <Grid item xs={10}>
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    id={'rule-'+inx}
+                                    name={'rule-'+inx}
+                                    type='text'
+                                    label={"Rule "+(inx)}
+                                    fullWidth
+                                    defaultValue={item.name}
+                                    inputRef={register({
+                                        required: true,
+                                    })}
+                                />
+                                </Grid>
+                                <Grid item xs={2}>
+                                    <Button variant='text' color='default' size='small' style={{marginTop:'3vh',borderSpacing:'-1'}}
+                                    onClick={()=>remove(inx)}>
+                                        <Icon><DeleteForeverRounded/></Icon>
+                                    </Button>
+                                </Grid>
+                            </React.Fragment>
+                        ))}
+                        <Grid item xs={5}>
+                            <Button variant='text' color='primary' onClick={()=>{append({name:'rules'})}}>
+                                <Icon style={{marginRight:'1vh'}}><AddCircle/></Icon> Add Rule
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                style={{marginTop:"1%",marginBottom:"2%"}}
+                            >Create Match
+                            </Button>
+                        </Grid>
+                    </Grid>
                 </form>
             </Container>
-        </React.Fragment>
+        </div>
     )
 }
 
