@@ -68,11 +68,12 @@ export const MatchSummary = (props) => {
     <Box p={2} className={classes.Item}>
         <Box display="flex" fontWeight="fontWeightMedium">
             <Box width="100%" fontSize={16}>{match.name}</Box>
-            <Box flexShrink={0} fontSize={16} style={{marginRight: 15}}>₹ {(match.fee)*unit}</Box>
+            <Box flexShrink={0} fontSize={16} style={{marginRight: 15}}>{match.fee === 0 ? 'Free' : `₹ ${(match.fee)*unit}`}</Box>
         </Box>
-        <Box display="flex" justifyContent="center" alignItems="flex-end" mt={1} mb={1}>
+        { match && match.survival ? <Box display="flex" justifyContent="center" alignItems="flex-end" mt={1} mb={1}>
             <Box mr={2} fontSize={14}>1<sup>st</sup> : ₹{match.survival['1']}</Box><Box mr={2} fontSize={14}>2<sup>nd</sup> : ₹{match.survival['2']}</Box><Box mr={2} fontSize={14}>3<sup>rd</sup> : ₹{match.survival['3']}</Box>
-        </Box>
+        </Box> : null}
+        { match && match.bKills > 0 ? <Box fontSize={14} mt={1} mb={1}>Per Kill: ₹{match.bKills *unit}</Box> : null}
         <Box>On: {moment(match.date.toDate()).format('Do MMMM')}</Box>
         <Box>At: {moment(match.date.toDate()).format('LT')}</Box>
         {canEnroll ? null : <Typography variant="body2" fontWeight="fontWeightLight" color="error">Match Full! Enroll in any another Match :)</Typography>}
