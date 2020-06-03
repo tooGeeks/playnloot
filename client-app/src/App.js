@@ -7,7 +7,7 @@ import SignUp from './components/auth/SignUp'
 import Wallet from './components/pages/wallet/Wallet'
 import RequestWithDraw from './components/pages/wallet/RequestWithDraw'
 import { isLoaded } from 'react-redux-firebase'
-import {useSelector} from "react-redux"
+import {useSelector, useDispatch} from "react-redux"
 import { ProtectedRoutes } from './components/auth/ProtectedRoutes'
 // Other
 import EnterMatch from './components/matches/EnterMatch'
@@ -40,6 +40,7 @@ import Loader from './components/BackDrop/Loader';
 import { ReactComponent as Loading } from './imgs/loading.svg';
 import { dark } from '@material-ui/core/styles/createPalette';
 import { Button } from '@material-ui/core';
+import { setInstallApp } from './store/actions/uiActions';
 
 
 const AuthIsLoaded = ({children})=>{
@@ -77,11 +78,16 @@ const useDarkMode = () => {
 }
 
 const App = () => {
+    const dispatch = useDispatch();
     const [theme, toggleDarkMode] = useDarkMode();
     console.log("themeObject :-", themeObject.palette);
     const themeConfig = createMuiTheme(theme)
     console.log(themeConfig);
-    
+    window.addEventListener('beforeinstallprompt',(e)=>{
+      console.log("Setting Open BUTTON")
+      e.preventDefault();
+      dispatch(setInstallApp(e));
+    })
     //let Navbottom = matchStr(window.location.pathname, "/") ? null : <Nav modeControl={toggleDarkMode} />;
     let Navbottom = <Nav modeControl={toggleDarkMode}/>
     return (

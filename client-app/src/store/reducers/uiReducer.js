@@ -1,4 +1,4 @@
-const uiReducer = (state = {backDropOpen: false, SnackbarVariant: 'info', DialogOpen: false}, action) => {
+const uiReducer = (state = {backDropOpen: false, SnackbarVariant: 'info', DialogOpen: false,ATHSOpen:{prompt:()=>{console.log("Not Set")}},isAppInstalled:false}, action) => {
     switch (action.type) {
       case "SNACKBAR":
         return {
@@ -40,7 +40,18 @@ const uiReducer = (state = {backDropOpen: false, SnackbarVariant: 'info', Dialog
             ...state,
             backDropOpen: false,
           };
-      default:
+        case 'INSTALLAPP_SETATHS':
+          return {
+            ...state,
+            ATHSOpen:action.ATHSOpen
+          }
+        case "INSTALLAPP_OPEN":
+          console.log(state.ATHSOpen)
+          state.ATHSOpen.prompt();
+          return state;
+        case 'APP_INSTALLED':
+          return {...state,isAppInstalled:true}
+       default:
         return state;
     }
   };

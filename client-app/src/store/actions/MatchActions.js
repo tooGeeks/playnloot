@@ -24,6 +24,7 @@ export const createMatch = (rmatch)=>{
         match['mode'] = mode*/
         match['tags'] = taglist.split(',')
         match['fee'] = parseInt(match['fee'])
+        match['bKills'] = parseInt(match['bKills'])
         match['host'] = profile.pubgid;
         match['isTrusted'] = profile.isTrusted;
         match['hRating'] = profile.hRating;
@@ -50,7 +51,7 @@ export const createMatch = (rmatch)=>{
         })
         if(Object.keys(prz).length!==0) match['survival'] = prz
         match['prizePool'] = pP;
-        match['customRules'] = rls;
+        if(rls.length!==0) match['customRules'] = rls;
         console.log(match)
         const db = getFirestore();
         db.collection('Matches').get().then((snap)=>{

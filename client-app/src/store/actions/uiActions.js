@@ -32,3 +32,15 @@ export const clearBackDrop = () => {
         dispatch({type: "BACKDROP_CLEAR"});
     };
 }
+
+export const openInstallApp = ()=>{
+    return dispatch => {
+        dispatch({type:'INSTALLAPP_OPEN'});
+    }
+}
+
+export const setInstallApp = (defferedIP)=>{
+    return dispatch => {
+        dispatch({type:'INSTALLAPP_SETATHS',ATHSOpen:defferedIP})
+    }
+}

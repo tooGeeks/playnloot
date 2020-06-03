@@ -13,6 +13,9 @@
 import {askPermission} from './Functions'
 import firebase from './config/fbConfig'
 
+const CACHE_NAME = 'OFFLINE'
+const OFFLINE_PAGE = '/Offline.html'
+
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
     // [::1] is the IPv6 localhost address.
@@ -59,6 +62,49 @@ export function register(config) {
   }
 }
 
+/**
+// eslint-disable-next-line no-restricted-globals
+self.addEventListener('install',(e)=>{
+  console.log('LXL')
+  e.waitUntil(async ()=>{
+    const cache = await caches.open(CACHE_NAME);
+    await cache.add(new Request(OFFLINE_PAGE,{cache:'reload'})());
+  })
+})
+// eslint-disable-next-line no-restricted-globals
+self.addEventListener('activate', (event) => {
+  event.waitUntil((async () => {
+    // Enable navigation preload if it's supported.
+    // See https://developers.google.com/web/updates/2017/02/navigation-preload
+    // eslint-disable-next-line no-restricted-globals
+    if ('navigationPreload' in self.registration) {
+      // eslint-disable-next-line no-restricted-globals
+      await self.registration.navigationPreload.enable();
+    }
+  })())
+  // eslint-disable-next-line no-restricted-globals
+  self.clients.claim();
+});
+
+// eslint-disable-next-line no-restricted-globals
+self.addEventListener('fetch',(e)=>{
+  if(e.Request.mode==='navigate'){
+    e.respondWith((async ()=>{
+      try{
+        const preloadRes = await e.preloadResponse;
+        if(preloadRes) return preloadRes;
+        const netRes = await fetch(e.Request)
+        return netRes;
+      }catch(err){
+        console.log("Fetch Err",err);
+        const cache = await caches.open(CACHE_NAME);
+        const cachedRes = cache.match(OFFLINE_PAGE);
+        return cachedRes;
+      }
+    })());
+  }
+})
+ */
 function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
