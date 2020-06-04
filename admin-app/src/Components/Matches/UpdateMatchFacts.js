@@ -6,59 +6,104 @@ import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import MatchSummary from "../Matches/MatchSummary";
 import {updateFacts,updateWinner} from '../../store/Actions/MatchActions'
-import { Button, Container } from '@material-ui/core';
+import { Button, Container, makeStyles, Grid, TextField, Typography } from '@material-ui/core';
 import { showDialog, clearDialog } from '../../store/Actions/UIActions';
+
+const useStyles = makeStyles(theme=>({
+  root:{
+      display:'flex',
+      minHeight:'100vh'
+  },
+  container:{
+      marginTop:theme.spacing(4),
+      marginBottom:theme.spacing(9)
+  },
+  hText:{
+      marginTop:theme.spacing(4),
+      marginBottom:theme.spacing(2)
+  },
+  grid:{
+    marginTop:theme.spacing(4),
+    marginBottom:theme.spacing(4)
+  }
+}))
 
 const WinnerDetails = (props)=>{
   const {handleChange,team} = props
-  const soloDiv = (<div className="row">
-    <div className="input-field white-text col s6">
-    <input id="winner_id" type="text" className="validate white-text"
-     onKeyUp={handleChange}/>
-    <label htmlFor="winner_id">Winner ID</label>
-    </div>
-    <div className="input-field white-text col s6">
-    <input id="winner_kills" type="number" className="validate white-text"
-     onKeyUp={handleChange}/>
-    <label htmlFor="winner_kills">Winner Kills</label>
-    </div><br/>
-</div>)
+  const soloDiv = (<Grid container spacing={3}>
+    <Grid item xs={7}>
+      <TextField
+        name="winner_id"
+        id="winner_id"
+        label="Winner ID"
+        type="text"
+        onKeyUp={handleChange}
+      />
+    </Grid>
+    <Grid item xs={5}>
+      <TextField
+        name="winner_kills"
+        id="winner_kills"
+        label="Winner Kills"
+        type="text"
+        onKeyUp={handleChange}
+      />
+    </Grid>
+    </Grid>)
 
-  const duoDiv = (<React.Fragment>
+  const duoDiv = (<Grid container spacing={3}>
     {['Leader','Mate'].map((idx)=>{
       return(
-        <div className="row" key={idx}>
-      <div className="input-field white-text col s6">
-        <input id={idx+"_id"} type="text" className="validate white-text"
-         onKeyUp={handleChange}/>
-        <label htmlFor="winner_id">{idx} ID</label>
-        </div>
-        <div className="input-field white-text col s6">
-        <input id={idx+"_kills"} type="number" className="validate white-text"
-         onKeyUp={handleChange}/>
-        <label htmlFor="winner_kills">{idx} Kills</label>
-        </div>
-      </div>
+        <React.Fragment key={idx}>
+          <Grid item xs={7}>
+            <TextField
+              name={idx+"_id"}
+              id={idx+"_id"}
+              label={idx+" ID"} 
+              type="text"
+              onKeyUp={handleChange}
+            />
+          </Grid>
+          <Grid item xs={5}>
+            <TextField
+              name={idx+"_kills"}
+              id={idx+"_kills"}
+              label={idx+" Kills"}
+              type="text"
+              onKeyUp={handleChange}
+            />
+          </Grid>
+        </React.Fragment>
       )
     })}
-  </React.Fragment>)
+    </Grid>)
 
-  const squadDiv = (<React.Fragment>
+  const squadDiv = (<Grid container spacing={3}>
     {['Leader','Mate1','Mate2','Mate3'].map((idx)=>{
-      return(<div className="row" key={idx}>
-      <div className="input-field white-text col s6">
-        <input id={idx+"_id"} type="text" className="white-text"
-         onKeyUp={handleChange}/>
-        <label htmlFor="winner_id">{idx} ID</label>
-        </div>
-        <div className="input-field white-text col s6">
-        <input id={idx+"_kills"} type="number" className="validate white-text"
-         onKeyUp={handleChange}/>
-        <label htmlFor="winner_kills">{idx} Kills</label>
-        </div>
-      </div>)
+      return(
+        <React.Fragment key={idx}>
+          <Grid item xs={6}>
+            <TextField
+              name={idx+"_id"}
+              id={idx+"_id"}
+              label={idx+" ID"} 
+              type="text"
+              onKeyUp={handleChange}
+            />
+          </Grid>
+          <Grid item xs={5}>
+            <TextField
+              name={idx+"_kills"}
+              id={idx+"_kills"}
+              label={idx+" Kills"}
+              type="text"
+              onKeyUp={handleChange}
+            />
+          </Grid>
+        </React.Fragment>
+      )
     })}
-  </React.Fragment>)
+    </Grid>)
 
     const winnerdiv = (team==="Solo" 
     ? soloDiv: (team==="Duo" ? duoDiv : squadDiv ))
@@ -75,6 +120,7 @@ const WinnerActions = (props)=>{
 }
 
 const UpdateMatchFacts = (props)=>{
+    const classes = useStyles();
     const dispatch = useDispatch()
     const mid = props.match.params.mid;
     const [state,setState] = React.useState({winner_id:'',unit:1,winner_kills:0});
@@ -140,10 +186,10 @@ const UpdateMatchFacts = (props)=>{
         console.log(data)
         dispatch(clearDialog())
         let unit = parseInt(state.unit);
-        props.updateWinner({data,mid:mid,mode:match.mode,unit:unit})
+        props.updateWinner({data,mid:mid,team:match.team,unit:unit})
         return
       }
-      dispatch(showDialog({title:"Update Winner",content:<WinnerDetails handleChange={hChange} team={match.mode.team} />,actions:<WinnerActions handleClick={hClick} />}))
+      dispatch(showDialog({title:"Update Winner",content:<WinnerDetails handleChange={hChange} team={match.team} />,actions:<WinnerActions handleClick={hClick} />}))
     }
 
     const hdata = (players)=>{
@@ -162,7 +208,7 @@ const UpdateMatchFacts = (props)=>{
 
     const cols = ['srno','pubgid','mno','ukills','coins','wallet','rank']
     let mplayers = match && match.players
-    let uinm = match && users && buildPlayerList(mplayers,users,match.mode,cols);
+    let uinm = match && users && buildPlayerList(mplayers,users,match.team,cols);
     let winner = match && match.winner;
     tableMetadata['count'] = uinm && uinm.length
     let players = uinm && uinm.slice(tableMetadata.psi,tableMetadata.pei)
@@ -177,25 +223,32 @@ const UpdateMatchFacts = (props)=>{
     */
     const msum = match && <MatchSummary children maxp='100' match={matches && match}/>
   let playerDetails = users && players ?
-  <EnrPlayersDetails mode={match.mode} getUnit={getUnit} winner={winner} players={users && players} tableMetadata={tableMetadata} handleChangeRowsPerPage={handleChangeRowsPerPage} handlePageChange={handlePageChange} rstate={hdata} bttnname="Update Values" columns={cols} isEditing={true}/>
+  <EnrPlayersDetails team={match.team} getUnit={getUnit} winner={winner} players={users && players} tableMetadata={tableMetadata} handleChangeRowsPerPage={handleChangeRowsPerPage} handlePageChange={handlePageChange} rstate={hdata} bttnname="Update Values" columns={cols} isEditing={true}/>
   : null;
     return(
-      <React.Fragment>
-          <Container >
+      <div className={classes.root}>
+          <Container className={classes.container}>
+            <Typography variant="h4" className={classes.hText}>Match Details</Typography>
               {msum}
-              {users ? <div className="row">
-                <div className="input-field white-text col s4">
-                  <input id="unit" type="number" className="validate white-text"
-                   onKeyUp={handleChange} defaultValue='1' autoFocus={true}/>
-                  <label htmlFor="unit">Kill to Coin Unit</label>
-                </div>
-                <div className="col s4">
-                  <button className='waves-effect waves-light btn hoverable'  onClick={()=>updateWinner()} >Update Winner</button>
-                </div>
-              </div> : null }<br/><br/>
+              <Grid container spacing={3} className={classes.grid}>
+                <Grid item xs={6}>
+                  <TextField
+                    name="unit"
+                    id="unit"
+                    label="Kill to Coin Unit"
+                    type='number'
+                    onChange={handleChange}
+                    defaultValue={1}
+                    autoFocus
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <Button variant="contained" color="primary" onClick={()=>updateWinner()}>Update Winner</Button>
+                </Grid>
+              </Grid>
               {playerDetails}
           </Container>
-      </React.Fragment>
+      </div>
     )
 }
 

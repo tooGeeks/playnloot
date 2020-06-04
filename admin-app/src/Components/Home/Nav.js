@@ -75,7 +75,7 @@ const Nav = (props) => {
 
     //React.forwardRef((props, ref) => <div role="button" {...props} ref={ref} />);
     //const links = auth.uid ? <SignedIn profile={profile} sIndex={selectedIndex} func={handleListItemClick}/> : <SignedOut sIndex={selectedIndex} func={handleListItemClick}/>;
-    const links = auth.uid ? <SignedIn user={profile.pubgid} func={toggleDrawer}/> : <SignedOut func={handleListItemClick}/>
+    const links = auth.uid ? <SignedIn user={profile.pubgid} func={toggleDrawer}/> : <SignedOut x={selectedIndex} func={handleListItemClick}/>
    
 
     // eslint-disable-next-line no-unused-vars

@@ -7,8 +7,7 @@ import {compdate,getCurrentDate} from '../../Functions';
 import { Select, MenuItem, TextField, Divider, Button, Container, Grid, makeStyles, Typography, Icon } from "@material-ui/core";
 
 import {useForm, useFieldArray, Controller} from "react-hook-form";
-import { AddCircle, CloseSharp, RemoveCircle, DeleteForeverRounded } from "@material-ui/icons";
-import { red } from "@material-ui/core/colors";
+import { AddCircle, DeleteForeverRounded } from "@material-ui/icons";
 /*
   This Component is used to Create a New Match
 */
@@ -33,8 +32,7 @@ const CreateMatch = (props)=>{
     const { fields, append, remove } = useFieldArray({
         control,
         name:'rules'
-    }); 
-    const [rCount,setRCount] = React.useState(0);
+    });
     const chkexistmatch = (data)=>{//checks if already a match is scheduled on specified date
         const {matches} = props;
         return matches.map(match =>{
@@ -91,8 +89,8 @@ const CreateMatch = (props)=>{
             }
         }
     }
-    const rulesDiv = []
     /**
+    const rulesDiv = []
     {
         return(
             <Grid item key={inx} xs={12}>

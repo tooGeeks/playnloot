@@ -5,13 +5,33 @@ import {firestoreConnect} from 'react-redux-firebase';
 import {updateMatch} from '../../store/Actions/MatchActions';
 import {compdate, getCurrentDate, findinMatches} from '../../Functions';
 import { useState } from "react";
-import { Select, MenuItem } from "@material-ui/core";
+import { Select, MenuItem, makeStyles, Container, Typography } from "@material-ui/core";
 
 /*
   This Component is used to Update Existing Match 
 */
 
+const useStyles = makeStyles(theme=>({
+    root:{
+        display:'flex',
+        minHeight:'100vh'
+    },
+    container:{
+        marginTop:theme.spacing(4),
+        marginBottom:theme.spacing(9)
+    },
+    hText:{
+        marginTop:theme.spacing(4),
+        marginBottom:theme.spacing(2)
+    },
+    grid:{
+      marginTop:theme.spacing(4),
+      marginBottom:theme.spacing(4)
+    }
+  }))
+
 const UpdateMatch = (props)=>{
+    const classes = useStyles();
     console.log("X")
     const [state,setState] = useState({
         chkmname:false,
@@ -105,9 +125,9 @@ const UpdateMatch = (props)=>{
     }
     console.log(state)
     return(
-        <React.Fragment>
-            <div className='white-text container'>
-                <p>Match : {mid}</p>
+        <div className={classes.rot}>
+            <Container className={classes.container}>
+                <Typography variant="h5" className={classes.hText}>Match : {mid}</Typography>
                 <form onSubmit={handleSubmit}>
                         <div className="row">
                             <div className="">
@@ -176,8 +196,8 @@ const UpdateMatch = (props)=>{
                         </div>}
                             <button id="crnmbttn" disabled={!state.chkmdate && !state.chklrdate && !state.chkmtime && !state.chkmap && !state.chkview} className="waves-effect waves-light btn hoverable">Update Match</button>
                     </form>
-            </div>
-        </React.Fragment>
+            </Container>
+        </div>
     )
 }
 

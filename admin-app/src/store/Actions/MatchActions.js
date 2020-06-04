@@ -5,13 +5,13 @@ import { isEmpty } from 'react-redux-firebase';
 export const createMatch = (rmatch)=>{
     return (dispatch,getState,{getFirebase,getFirestore})=>{
         //Async Code
-        const {auth , profile } = getState().firebase;
+        const { profile } = getState().firebase;
         const match = {...rmatch}
         const taglist = match.tags ? match.deftag+","+match.tags : match.deftag 
         delete match['tags']
         delete match['deftag']
-        let mode = {}
         /**
+        let mode = {}
         let modep = ['team','view','map']
         modep.forEach((x)=>{
             mode[x] = match[x]

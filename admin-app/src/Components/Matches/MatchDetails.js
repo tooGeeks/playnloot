@@ -52,7 +52,7 @@ const MatchDetails = (props)=>{
     tableMetadata['pei']=tableMetadata['ppp']
     tableMetadata.pages = Users && (Users.length/tableMetadata.ppp)
     let mplayers = match && match.players
-    let uinm = match && Users && buildPlayerList(mplayers,Users,match.mode,cols)
+    let uinm = match && Users && buildPlayerList(mplayers,Users,match.team,cols)
     /**
     let uinm = Users && Users.map(user=>{
         var px = match && getPlayerfromMatch(pljson,user.pubgid,match.mode)

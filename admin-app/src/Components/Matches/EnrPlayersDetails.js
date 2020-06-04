@@ -1,12 +1,17 @@
 import React from 'react'
 import MaterialTable from 'material-table'
-import { TablePagination, Container, Typography } from '@material-ui/core';
+import { TablePagination, Container, Typography, Button, makeStyles } from '@material-ui/core';
 
-
+const useStyles = makeStyles(theme => ({
+    button:{
+        marginTop:theme.spacing(2),
+        marginBottom:theme.spacing(2)
+    }
+}))
 
 const EnrPlayersDetails = (props)=>{ 
-    const {columns,rstate,mode,bttnname,players,winner,isEditing,tableMetadata,handlePageChange,handleChangeRowsPerPage} = props;
-    const team = mode && mode.team
+    const {columns,team,rstate,bttnname,players,winner,isEditing,tableMetadata,handlePageChange,handleChangeRowsPerPage} = props;
+    const classes = useStyles();
     const [state,setState] = React.useState();
     const [stableMetadata,setStableMetadata] = React.useState();
     React.useEffect(()=>{
@@ -14,7 +19,7 @@ const EnrPlayersDetails = (props)=>{
         setStableMetadata({...tableMetadata})
     },[players,tableMetadata])
 
-const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 'never'},
+    const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 'never'},
               'pubgid':{title:'PUBG ID',field:'pubgid',editable: 'never'},
               'mno':{title:'WhatsApp No.',field:'mno',type:'numeric',editable: 'never'},
               'kills':{title:'Kills',field:'kills',type:'numeric',editable: 'onUpdate'},
@@ -142,15 +147,17 @@ const colDetails = {srno:{title:'Sr. No.',field:'srno',type:'numeric',editable: 
                             />
                         )
 
-                    }}  
-                /> : <Typography style={{alignSelf:"center"}} variant="h5">No Players Avaialable</Typography>}
+                    }}
+                /> : <Typography style={{alignSelf:"center"}} variant="h5">No Players Available</Typography>}
                 <div hidden={!bttnname}>
-                    <button onClick={()=>{
+                    <Button className={classes.button} variant="contained" color="primary"
+                        onClick={()=>{
                         rstate(state.data)
                         handlePageChange(stableMetadata['page']+1).then((pageUpdate)=>{
                             setStableMetadata(pageUpdate.tableMetadata)
                             setState({data:pageUpdate.players})
-                        })}}  className='waves-effect waves-light btn hoverable'>{bttnname}</button>
+                        })}}
+                    >{bttnname ? bttnname : ''}</Button>
                 </div>
             </Container>
         </React.Fragment>

@@ -8,6 +8,8 @@
 
 # testing
 /coverage
+/build-client.bat
+/build-admin.bat
 
 # production
 /client-app/build
