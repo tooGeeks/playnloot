@@ -40,7 +40,7 @@ import Loader from './components/BackDrop/Loader';
 import { ReactComponent as Loading } from './imgs/loading.svg';
 import { dark } from '@material-ui/core/styles/createPalette';
 import { Button } from '@material-ui/core';
-import { setInstallApp } from './store/actions/uiActions';
+import { setInstallApp, setAppInstalled } from './store/actions/uiActions';
 
 
 const AuthIsLoaded = ({children})=>{
@@ -87,6 +87,10 @@ const App = () => {
       console.log("Setting Open BUTTON")
       e.preventDefault();
       dispatch(setInstallApp(e));
+      dispatch(setAppInstalled(false));
+    })
+    window.addEventListener('appinstalled',(e)=>{
+      dispatch(setAppInstalled(true))
     })
     //let Navbottom = matchStr(window.location.pathname, "/") ? null : <Nav modeControl={toggleDarkMode} />;
     let Navbottom = <Nav modeControl={toggleDarkMode}/>

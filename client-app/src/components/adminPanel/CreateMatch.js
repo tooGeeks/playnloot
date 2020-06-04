@@ -8,7 +8,6 @@ import { Select, MenuItem, TextField, Divider, Button, Container, Grid, makeStyl
 
 import {useForm, useFieldArray, Controller} from "react-hook-form";
 import { AddCircle, CloseSharp, RemoveCircle, DeleteForeverRounded } from "@material-ui/icons";
-import { red } from "@material-ui/core/colors";
 /*
   This Component is used to Create a New Match
 */
@@ -29,7 +28,9 @@ const useStyles = makeStyles(theme=>({
 
 const CreateMatch = (props)=>{
     const classes = useStyles();
-    const { register, handleSubmit, errors, control } = useForm();
+    const { register, handleSubmit, errors, control } = useForm({
+        rules:[]
+    });
     const { fields, append, remove } = useFieldArray({
         control,
         name:'rules'

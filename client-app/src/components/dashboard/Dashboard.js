@@ -126,8 +126,19 @@ function Dashboard(props) {
         setsort({...sort,chip,orderBy:['prizePool','desc'],where:null})
         break;
       case 'free':
-        setsort({...sort,chip,orderBy:null,where:['fee','==',0]})
+        setsort({...sort,chip,orderBy:['date'],where:['fee','==',0]})
         break;
+      case 'Solo':
+        setsort({...sort,chip,orderBy:['date'],where:['team','==',chip]})
+        break
+      case 'Duo':
+        setsort({...sort,chip,orderBy:['date'],where:['team','==',chip]})
+        break
+      case 'Squad':
+        setsort({...sort,chip,orderBy:['date'],where:['team','==',chip]})
+        break
+      case 'Arcade':
+        setsort({...sort,chip,orderBy:['date'],where:['tags','array-contains',chip]})
       default:
         break;
     }
@@ -345,7 +356,10 @@ function Dashboard(props) {
                 <Grid item xs={12}>
                   <Typography component="span" variant="body2" style={{paddingRight: 5}}>Sort by: </Typography>
                   <Chip label="High Loot" variant={sort.chip === 'loot' ? 'default' : 'outlined'} color="primary" size="small" clickable deleteIcon={sort.chip === 'loot' ? <Done /> : <Add />} onClick={() => handleChipClick('loot')} onDelete={() => handleChipClick('loot')}/> &nbsp; 
-                  <Chip label="Free" variant={sort.chip === 'free' ? 'default' : 'outlined'} color="primary" size="small" clickable deleteIcon={sort.chip === 'free' ? <Done /> : <Add />} onClick={() => handleChipClick('free')} onDelete={() => handleChipClick('free')}/>
+                  <Chip label="Free" variant={sort.chip === 'free' ? 'default' : 'outlined'} color="primary" size="small" clickable deleteIcon={sort.chip === 'free' ? <Done /> : <Add />} onClick={() => handleChipClick('free')} onDelete={() => handleChipClick('free')}/> &nbsp;
+                  <Chip label="Solo" variant={sort.chip === 'Solo' ? 'default' : 'outlined'} color="primary" size="small" clickable deleteIcon={sort.chip === 'Solo' ? <Done /> : <Add />} onClick={() => handleChipClick('Solo')} onDelete={() => handleChipClick('Solo')}/> &nbsp;
+                  <Chip label="Duo" variant={sort.chip === 'Duo' ? 'default' : 'outlined'} color="primary" size="small" clickable deleteIcon={sort.chip === 'Duo' ? <Done /> : <Add />} onClick={() => handleChipClick('Duo')} onDelete={() => handleChipClick('Duo')}/> &nbsp;
+                  <Chip label="Squad" variant={sort.chip === 'Squad' ? 'default' : 'outlined'} color="primary" size="small" clickable deleteIcon={sort.chip === 'Squad' ? <Done /> : <Add />} onClick={() => handleChipClick('Squad')} onDelete={() => handleChipClick('Squad')}/>
                 </Grid>
                 <Grid container item xs={12} spacing={2} justify="center">
                   {

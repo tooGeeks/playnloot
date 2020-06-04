@@ -44,3 +44,9 @@ export const setInstallApp = (defferedIP)=>{
         dispatch({type:'INSTALLAPP_SETATHS',ATHSOpen:defferedIP})
     }
 }
+
+export const setAppInstalled = (val) => {
+    return dispatch=>{
+        dispatch({type:'APP_INSTALLED',val})
+    }
+}
