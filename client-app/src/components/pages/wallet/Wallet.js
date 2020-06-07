@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { useDispatch, useSelector, connect } from 'react-redux';
-import { creditWallet, } from '../../../store/actions/PaymentActions';
+import { creditWallet, creditWithRazor, } from '../../../store/actions/PaymentActions';
 import {useForm} from "react-hook-form";
 import { makeStyles, Container, Grid, IconButton, TextField, CardHeader, Typography, Card, CardContent, CardActions, Button, Box, Paper } from '@material-ui/core';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
@@ -11,6 +11,8 @@ import { CheckCircleOutlined, HighlightOff } from '@material-ui/icons';
 import moment from 'moment'
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
+import Helmet from 'react-helmet'
+import axios from 'axios'
 
 
 const useStyles = makeStyles(theme => ({
@@ -66,13 +68,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function Wallet(props) {
+    let rpayData = {}
     const classes = useStyles();
     const dispatch = useDispatch();
     const { use, mny } = props.match.params;
 
     const { register, handleSubmit, errors, reset } = useForm();
 
-    const { profile } = useSelector(
+    const { profile, auth } = useSelector(
         state => state.firebase
     )
     const {userOrders} = props
@@ -101,9 +104,55 @@ function Wallet(props) {
     const handleChange = (e) => {
         setCoins({coins: e.target.value})
     }
+
+    const verifySign = (res) => {
+        console.log(res);
+        console.log(rpayData);
+        axios.post("https://playnloot-vercel-functions.now.sh/api/?action=conSign&rpay_orderid="+res.razorpay_order_id+"&rpay_sign="+res.razorpay_signature+"&rpay_paymentid="+res.razorpay_payment_id)
+            .then((resx) => {
+                console.log("Payment Response",resx);
+                let cdate = new Date()
+                cdate.setTime(rpayData.created_at)
+                dispatch(creditWithRazor({orderid:res.razorpay_order_id,amount:(rpayData.amount/100),receipt:rpayData.receipt,createdAt:cdate,mode:'RPAY'}))
+            })
+    }
+
     const onSubmitAddCoin = (data, e) => {
         e.preventDefault();
-        dispatch(creditWallet({noofcns:coins.coins, mode:"PayTM"}));
+        const ran = Math.floor(Math.random() * 100000 + 100000).toString();
+        const amount = parseInt(coins.coins)*unit
+        var options = {
+            key: "rzp_test_TNrd2Wjvj69WTW",
+            amount, /// The amount is shown in currency subunits. Actual amount is ₹599.
+            name: "PNLooT",
+            currency: "INR", // Optional. Same as the Order currency
+            description: "Yarrr! Mat Pucho!",
+            image: "/imgs/icon-512x512.png",
+            handler:  (response) =>{
+              verifySign(response);
+            },
+            prefill: {
+                name: profile.fname,
+                email: auth.email
+            },
+            notes: {
+                address: "Hello World"
+            },
+            theme: {
+                color: "#00ffff"
+            }
+        };
+        axios.post("https://playnloot-vercel-functions.now.sh/api/?action=createOrder&amt="+parseInt(amount)+"&receipt=receipt_"+ran).then(res => {
+            console.log(res);
+            rpayData = {...res.data}
+            console.log(rpayData)
+            // eslint-disable-next-line no-undef
+            var rzp = new Razorpay({...options,order_id:res.data.id});
+            rzp.open();
+        }).catch((err) => {
+            console.log("ERR",err);
+        })
+        //dispatch(creditWallet({noofcns:coins.coins, mode:"PayTM"}));
         reset();
         //props.backDrop();
     };
@@ -128,6 +177,9 @@ function Wallet(props) {
 
     return (
         <div className={classes.root}>
+            <Helmet>
+                <script src='https://checkout.razorpay.com/v1/checkout.js'></script>
+            </Helmet>
             <Container maxWidth="sm" className={classes.container}>
                 <Grid item xs={12} id="buyCoins">
                     <form key={1} noValidate onSubmit={handleSubmit(onSubmitAddCoin)}>

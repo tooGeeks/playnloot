@@ -53,6 +53,18 @@ export const creditWallet = (data)=>{
     }
 }
 
+export const creditWithRazor = (data)=>{
+    return(dispatch, getState, {getFirebase, getFirestore}) => {
+        const { profile, auth } = getState().firebase;
+        const db = getFirestore();
+        const nwamt = (data.amt/unit) + profile.wallet;
+        console.log(data);
+        db.collection("Orders").doc(auth.uid).get().then(snap=>{
+
+        })
+    }
+}
+
 export const requestWithdrawal = (data)=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
         const st = getState();
