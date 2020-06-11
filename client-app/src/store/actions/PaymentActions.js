@@ -1,5 +1,6 @@
 import {getOS, reportError} from '../../Functions'
 import { unit } from '../../constants'
+import { showSnackbar } from './uiActions';
 
 /*
   This File Contains All Payment Actions such as Credit Wallet, Manual Payment, etc. 
@@ -53,15 +54,25 @@ export const creditWallet = (data)=>{
     }
 }
 
-export const creditWithRazor = (data)=>{
+export const creditWithRazor = (id,data)=>{
     return(dispatch, getState, {getFirebase, getFirestore}) => {
         const { profile, auth } = getState().firebase;
         const db = getFirestore();
-        const nwamt = (data.amt/unit) + profile.wallet;
-        console.log(data);
-        db.collection("Orders").doc(auth.uid).get().then(snap=>{
-
-        })
+        const nwamt = data.success ? (data.amount/unit) + profile.wallet : profile.wallet ;
+        db.collection("Users").doc(auth.uid).collection("Orders").doc(id).set({...data}).then(()=>{
+            if(data.success){
+                db.collection("Users").doc(auth.uid).set({wallet:nwamt},{merge:true}).then(()=>{
+                    dispatch(showSnackbar({variant: 'success', message: `You credited Rs. ${data.amount}. You now have ${profile.wallet} coins in your wallet`}));
+                }).catch((err)=>{
+                    console.log("An Error Occured",err);
+                })
+            }else{
+                dispatch(showSnackbar({variant: 'error', message: `An Error Occured.\n Couldn't process your payment.\n Try Again in some time!`}))
+            }
+        }).catch((err)=>{
+            console.log(err)
+            //resolve(false);
+        });
     }
 }
 

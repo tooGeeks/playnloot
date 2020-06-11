@@ -5,71 +5,71 @@ admin.initializeApp(functions.config().firebase);
 const unit = 5;
 
 const storeOrder = (email,orderid,order)=>{
-  return new Promise((resolve,reject)=>{
-      switch(order.mode){
-          case "PayTM":
-              admin.auth().getUserByEmail(email).then((userRecord)=>{
+    return new Promise((resolve,reject)=>{
+        switch(order.mode){
+            case "PayTM":
+                admin.auth().getUserByEmail(email).then((userRecord)=>{
                     var uid = userRecord.uid;
                     let db = admin.firestore();
                     db.collection("Orders").doc(uid).get().then((doc)=>{
-                      if(doc.empty){
+                        if(doc.empty){
+                          db.collection("Orders").doc(uid).set({
+                              orders:{[orderid]:{...order}}
+                          }, { merge: true });
+                          resolve(true);
+                        }
+                        var orders = doc.data().orders;
+                        orders[orderid] = order
                         db.collection("Orders").doc(uid).set({
-                            orders:{[orderid]:{...order}}
+                            orders
                         }, { merge: true });
                         resolve(true);
-                      }
-                      var orders = doc.data().orders;
-                      orders[orderid] = order
-                      db.collection("Orders").doc(uid).set({
-                          orders
-                      }, { merge: true });
-                      resolve(true);
-                      return true;
+                        return true;
                     }).catch((err)=>{
                         console.log(err)
                         resolve(false);
                     });
-                return true;
-              }).catch((err)=>{
-                  console.log(err);
-              })
-              break;
-          case "Cash":
-                let db = admin.firestore();
-                db.collection("Users").where('pubgid','==',email).get().then((snapshot)=>{
-                    if(snapshot.empty){
-                        resolve(false);
-                    }
-                    let usr = snapshot.docs[0];
-                    let nwamt = (usr.data().wallet)+parseInt(order.amt)/unit;
-                    db.collection("Users").doc(usr.id).set({
-                        wallet:nwamt
-                    }, { merge: true }).then(()=>{
-                            db.collection("Orders").doc(usr.id).get((snap)=>{
-                                if(!snap.exists){
-                                    db.collection("Orders").doc(usr.id).set({
-                                        orders:{[orderid]:{...order}}
-                                    },{merge:true})
-                                }else{
-                                    let orders = snap.data().orders
-                                    orders[orderid] = order
-                                    db.collection("Orders").doc(usr.id).set({
-                                        orders
-                                    },{merge:true})
-                                }
-                            })
-                        return true;
-                    }).catch(err=>{
-                        console.log(err);
-                    })
-                    resolve(true);
-                    return true;
-                }).catch(err=>{
-                    console.log(err)
-                    resolve(false);
-                });
-      }
-  });
+                  return true;
+                }).catch((err)=>{
+                    console.log(err);
+                })
+                break;
+            case "Cash":
+                  let db = admin.firestore();
+                  db.collection("Users").where('pubgid','==',email).get().then((snapshot)=>{
+                      if(snapshot.empty){
+                          resolve(false);
+                      }
+                      let usr = snapshot.docs[0];
+                      let nwamt = (usr.data().wallet)+parseInt(order.amt)/unit;
+                      db.collection("Users").doc(usr.id).set({
+                          wallet:nwamt
+                      }, { merge: true }).then(()=>{
+                              db.collection("Orders").doc(usr.id).get((snap)=>{
+                                  if(!snap.exists){
+                                      db.collection("Orders").doc(usr.id).set({
+                                          orders:{[orderid]:{...order}}
+                                      },{merge:true})
+                                  }else{
+                                      let orders = snap.data().orders
+                                      orders[orderid] = order
+                                      db.collection("Orders").doc(usr.id).set({
+                                          orders
+                                      },{merge:true})
+                                  }
+                              })
+                          return true;
+                      }).catch(err=>{
+                          console.log(err);
+                      })
+                      resolve(true);
+                      return true;
+                  }).catch(err=>{
+                      console.log(err)
+                      resolve(false);
+                  });
+        }
+    });
 }
 
 exports.paytmpay = functions.https.onRequest((req,res) => {

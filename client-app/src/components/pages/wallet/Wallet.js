@@ -113,7 +113,7 @@ function Wallet(props) {
                 console.log("Payment Response",resx);
                 let cdate = new Date()
                 cdate.setTime(rpayData.created_at)
-                dispatch(creditWithRazor({orderid:res.razorpay_order_id,amount:(rpayData.amount/100),receipt:rpayData.receipt,createdAt:cdate,mode:'RPAY'}))
+                dispatch(creditWithRazor(res.razorpay_order_id,{...resx.data,amount:(rpayData.amount/100),receipt:rpayData.receipt,createdAt:cdate,mode:'RPAY'}))
             })
     }
 
@@ -132,8 +132,9 @@ function Wallet(props) {
               verifySign(response);
             },
             prefill: {
-                name: profile.fname,
-                email: auth.email
+                name: auth.displayName,
+                email: auth.email,
+                number:profile && profile.mno
             },
             notes: {
                 address: "Hello World"
