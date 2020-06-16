@@ -83,13 +83,15 @@ export const requestWithdrawal = (data)=>{
         const {auth, profile} = st.firebase
         console.log(new Date().getTime());
         const uid = auth.uid
-        const id = new Date().getTime().toString()
-        db.collection('Users').doc(st.firebase.auth.uid).collection('Requests').doc(id).set({
-            isComplete:false,
+        db.collection('WithdrawalRequests').add({
+            isComplete : false,
+            uid,
+            mno : profile.mno,
+            pubgid : profile.pubgid,
             reqdate : db.Timestamp.fromMillis(new Date().getTime()),
             ...data
         }).then(()=>{
-            db.collection('Users').doc(auth.uid).set({wallet:profile.wallet-data.coins},{merge:true}).then(()=>{
+            db.collection('Users').doc(uid).set({wallet:profile.wallet-data.coins},{merge:true}).then(()=>{
                 dispatch({type:"RW_SUCCESS"})
                 dispatch({ type: 'SNACKBAR', variant: 'success', message: `Success! You've requested for ₹${data.coins*unit}, Method: ${data.pmode}. We\`ll pop the admin! [Repeat]`});
             })
@@ -130,13 +132,14 @@ export const confirmWithdrawal = (reqid)=>{
         })
     }
 }
+ 
 
 export const cancelWithdrawal = ({uid,reqid})=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
         const st = getState();
         const { auth, profile } = st.firebase;
         const db = getFirestore();
-        db.collection('Users').doc(uid).collection('Requests').doc(reqid).get().then(snap=>{
+        db.collection('WithdrawalRequests').doc(reqid).get().then(snap=>{
             if(snap.empty) return;
             let req = snap.data();
             console.log(req)
@@ -145,7 +148,7 @@ export const cancelWithdrawal = ({uid,reqid})=>{
                 dispatch({type:'SNACKBAR',variant:'error',message:'Your Request is already Confirmed'})
             }
             db.collection('Users').doc(uid).set({wallet:profile.wallet+req.coins},{merge:true}).then(()=>{
-                db.collection('Users').doc(uid).collection('Requests').doc(reqid).delete().then(()=>{
+                db.collection('WithdrawalRequests').doc(reqid).delete().then(()=>{
                     dispatch({type:'RW_CAN'})
                 }).catch((err)=>{
                     reportError(db,uid,{date:db.Timestamp.fromMillis(new Date().getTime()),err:err.message}).then(()=>{

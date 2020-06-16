@@ -11,9 +11,9 @@ const useStyles = makeStyles({
 
 const WithdrawalDetails = (props)=>{
     const classes = useStyles();
-    const {details,bttnname,hClick,ukey,columns} = props
-    const {fname,pmode,coins,isComplete,mno,reqdate} = details;
-    console.log(details,columns)
+    const {details,bttnname,hClick,columns} = props;
+    const {fname,pmode,coins,isComplete,mno,reqdate,id} = details;
+    console.log(details,columns);
     const reqdiv = details ? <div>
             <Typography variant="h6">By {fname}</Typography>
             <Typography>Made on : {moment(reqdate.toDate()).calendar()}</Typography>
@@ -31,7 +31,7 @@ const WithdrawalDetails = (props)=>{
                     {status}
                 </CardContent>
                 <CardActions>
-                    <Button color="primary" variant="contained" onClick={()=>{hClick(ukey)}}>{bttnname}</Button>
+                    <Button color="primary" variant="contained" onClick={()=>{hClick(id)}}>{bttnname}</Button>
                 </CardActions>
             </Card>
         </React.Fragment>

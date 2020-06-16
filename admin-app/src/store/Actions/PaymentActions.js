@@ -54,26 +54,11 @@ export const confirmWithdrawal = (reqid)=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
         console.log(reqid);
         const db = getFirestore();
-        const uid = reqid.split('-')[0];
-        const ind = reqid.split('-')[1];
-        db.collection('WithdrawalRequests').doc(uid).get().then(snap=>{
-            let arr = snap.data().requests;
-            let req = arr[ind];
-            req.isComplete = true;
-            arr.splice(ind,1);
-            arr.push(req)
-            db.collection('Users').doc(uid).get().then(snap=>{
-                db.collection('Users').doc(uid).set({wallet:snap.data().wallet-req.coins},{merge:true}).then(()=>{
-                    db.collection('WithdrawalRequests').doc(uid).set({
-                        requests:arr
-                    },{merge:true})
-                }).then(()=>{
-                    dispatch({type:'RW_CNF'})
-                }).catch((err)=>{
-                    reportError(db,uid,{date:db.Timestamp.fromMillis(new Date().getTime()),...err}).then(()=>{
-                        dispatch({type:'RW_CNF_ERR'})
-                    })
-                })
+        db.collection('WithdrawalRequests').doc(reqid).set({isComplete:true},{merge:true}).then(()=>{
+            dispatch({type:'RW_CNF'})
+        }).catch((err)=>{
+            reportError(db,"Admin",{date:db.Timestamp.fromMillis(new Date().getTime()),...err}).then(()=>{
+                dispatch({type:'RW_CNF_ERR'})
             })
         })
     }

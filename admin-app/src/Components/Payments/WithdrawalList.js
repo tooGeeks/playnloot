@@ -11,13 +11,10 @@ const WithdrawalList = (props)=>{
         props.confirmWithdrawal(reqid);
     }
     const {wreq} = props;
-    const reqs = wreq && wreq.map(usr=>{
+    console.log(wreq)
+    const reqs = wreq && wreq.map(req=>{
         return(
-            usr.requests.map(req=>{
-                return(
-                    <WithdrawalDetails hClick={handleClick} bttnname=" Confirm Payment" ukey={usr.id+"-"+usr.requests.indexOf(req)} key={usr.id+"-"+usr.requests.indexOf(req)}  details={{mno:usr.mno,fname:usr.fname,...req}}/>
-                )
-            })
+            <WithdrawalDetails hClick={handleClick} bttnname=" Confirm Payment" details={{mno:req.mno,fname:req.pubgid,...req}}/>
         )
     })
     return(

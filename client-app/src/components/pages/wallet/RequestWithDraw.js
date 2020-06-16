@@ -54,10 +54,9 @@ const useStyles = makeStyles(theme => ({
 const RequestWithDraw = () => {
     const [fetchData,setFetchData] = React.useState({start:0,count:3,data:[],length:0,deleted:false})
     const { auth, profile } = useSelector(state => state.firebase)
-    useFirestoreConnect([{collection:'Users',doc:auth.uid,
-        subcollections:[{collection:'Requests',orderBy:['reqdate','desc'],startAfter:fetchData.start,limit:fetchData.count}],storeAs:'Requests'}])
+    useFirestoreConnect([{collection:'WithdrawalRequests',where:['uid','==',auth.uid],orderBy:['reqdate','desc'],startAfter:fetchData.start,limit:fetchData.count}])
     const classes = useStyles();
-    const fetchReq = useSelector(state => state.firestore.ordered.Requests)
+    const fetchReq = useSelector(state => state.firestore.ordered.WithdrawalRequests)
     useEffect(()=>{
         fetchReq && setFetchData(prevFData=>{console.log(fetchReq)
             let xdata = prevFData.data;
