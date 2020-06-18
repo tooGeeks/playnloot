@@ -13,6 +13,7 @@ import { ProtectedRoutes } from './components/auth/ProtectedRoutes'
 import EnterMatch from './components/matches/EnterMatch'
 import EnrolledMatches from './components/matches/EnrolledMatches'
 import Match from './components/matches/Match'
+import HostMatch from './components/matches/HostMatch'
 
 //Admin
 import CreateMatch from './components/adminPanel/CreateMatch'
@@ -114,6 +115,7 @@ const App = () => {
                 <ProtectedRoutes path="/entermatch/:mid" component={EnterMatch}/>
                 <ProtectedRoutes path="/enrolledmatches/" component={EnrolledMatches}/>
                 <ProtectedRoutes path="/match/:mid" component={Match}/>
+                <ProtectedRoutes path="/hostmatch/" component={HostMatch}/>
 
                 {/* Admin  Paths */}
                 <ProtectedRoutes path="/admin/creatematch" component={CreateMatch}/>

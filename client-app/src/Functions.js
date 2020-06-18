@@ -126,12 +126,28 @@ export const compdate = (d1,d2)=>{//Used to Compare Dates d1 is before d2
     return false;
 }
 
-export const getCurrentDate = ()=>{//Used to retrieve today's date in required format
-    var cdate=new Date();
-    var day=cdate.getDate().toString().length<2?"0"+cdate.getDate().toString():cdate.getDate().toString();
-    var month=(cdate.getMonth().valueOf()+1).toString().length<2?"0"+(cdate.getMonth().valueOf()+1).toString():(cdate.getMonth().valueOf()+1).toString();
-    var cds=cdate.getFullYear()+"-"+month+"-"+day;
+export const getCurrentDate = (offset=0)=>{//Used to retrieve today's date in required format
+    let cdate=new Date();
+    let day=(cdate.getDate()+offset).toString().length<2?"0"+(cdate.getDate()+offset).toString():(cdate.getDate()+offset).toString();
+    let month=(cdate.getMonth().valueOf()+1).toString().length<2?"0"+(cdate.getMonth().valueOf()+1).toString():(cdate.getMonth().valueOf()+1).toString();
+    let cds=cdate.getFullYear()+"-"+month+"-"+day;
     return cds;
+}
+
+export const getInputDateTime = (opt=0,cdate) => {
+    switch(opt){
+        case 0:
+            let day=(cdate.getDate()).toString().length<2?"0"+(cdate.getDate()).toString():(cdate.getDate()).toString();
+            let month=(cdate.getMonth().valueOf()+1).toString().length<2?"0"+(cdate.getMonth().valueOf()+1).toString():(cdate.getMonth().valueOf()+1).toString();
+            return cdate.getFullYear()+"-"+month+"-"+day;
+        case 1:
+            let hrs = cdate.getHours()<10 ? "0"+cdate.getHours().toString() : cdate.getHours().toString()
+            let mins = cdate.getMinutes()<10 ? "0"+cdate.getMinutes().toString() : cdate.getMinutes().toString()
+            let tm = hrs+":"+mins;
+            console.log(tm)
+            return tm
+    }
+    
 }
 
 export const getCDT = ()=>{
