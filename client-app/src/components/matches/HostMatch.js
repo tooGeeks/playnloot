@@ -1,8 +1,9 @@
 import React from 'react'
-import {Select, MenuItem, TextField, Divider, Button, Container, Grid, makeStyles, Typography, Icon, MobileStepper, Switch, FormControlLabel, Paper} from '@material-ui/core'
+import {Select, MenuItem, TextField, Divider, Button, Container, Grid, makeStyles, Typography, Icon, MobileStepper, Switch } from '@material-ui/core'
 import {useForm, useFieldArray, Controller} from "react-hook-form";
 import {compdate,getCurrentDate, convt, getInputDateTime} from '../../Functions';
-import { connect, useSelector } from 'react-redux';
+import {hostMatch} from '../../store/actions/MatchActions'
+import { connect, useSelector, useDispatch } from 'react-redux';
 import {firestoreConnect, useFirestoreConnect} from 'react-redux-firebase';
 import {createMatch} from '../../store/actions/MatchActions'
 import { AddCircle, DeleteForeverRounded } from "@material-ui/icons";
@@ -29,11 +30,12 @@ const useStyles= makeStyles(theme=>({
 const HostMatch = (props) => {
     const matches = props.matches
     console.log(matches)
+    const dispatch = useDispatch();
     const classes = useStyles();
     const [activeStep,setActiveStep] = React.useState(0);
     const [fullData,setFullData] = React.useState({
         name:'',mdate:getCurrentDate(2),mtime:'17:00',lrdate:getCurrentDate(1),view:'cao',team:'cao',deftag:'cao',
-        map:'cao',fee:1,bKills:0,survival:['','',''],rules:[],isPaid:false,hasCPK:false,isSurvival:true,matchOnSameDay:false
+        map:'cao',fee:1,bKills:0,survival:['0','0','0'],rules:[],isPaid:false,hasCPK:false,isSurvival:true,matchOnSameDay:false
     })
     const { register, handleSubmit, errors, control } = useForm({
         defaultValues:{rules:fullData.rules,survival:fullData.survival}
@@ -60,7 +62,7 @@ const HostMatch = (props) => {
                 return num+"rd"
         }
     }
-    const steps = ['Enter Match Name and Time','Select Match Modes','Select Fees and Prizes','Finalize']
+    const steps = ['Enter Match Name and Time','Select Match Modes','Add Custom Rules','Select Fees and Prizes','Finalize']
     const getStepContent = (step) => {
         switch(step){
             case 0:
@@ -279,6 +281,41 @@ const HostMatch = (props) => {
             case 2:
                 return (
                     <React.Fragment>
+                        {fields.map((item,inx)=>(
+                            <React.Fragment key={item.id}>
+                                <Grid item xs={10}>
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    id={`rules[${inx}]`}
+                                    name={`rules[${inx}]`}
+                                    type='text'
+                                    label={"Rule "+(inx)}
+                                    fullWidth
+                                    defaultValue={fullData.rules[inx]}
+                                    inputRef={register({
+                                        required: true,
+                                    })}
+                                />
+                                </Grid>
+                                <Grid item xs={2}>
+                                    <Button variant='text' color='default' size='small' style={{marginTop:'3vh',borderSpacing:'-1'}}
+                                    onClick={()=>remove(inx)}>
+                                        <Icon><DeleteForeverRounded/></Icon>
+                                    </Button>
+                                </Grid>
+                            </React.Fragment>
+                        ))}
+                        <Grid item xs={7}>
+                            <Button variant='text' color='primary' onClick={()=>{append()}}>
+                                <Icon style={{marginRight:'1vh'}}><AddCircle/></Icon> Add Rule
+                            </Button>
+                        </Grid>
+                    </React.Fragment>
+                )
+            case 3:
+                return (
+                    <React.Fragment>
                         <Grid item xs={3}>
                             <Typography variant='h6' style = {{marginTop:'3vh'}}>{fullData.isPaid ? "Paid" : "Free"}</Typography>
                         </Grid>
@@ -328,6 +365,13 @@ const HostMatch = (props) => {
                             />
                         </Grid>
                         <Divider/>
+                        <Grid item xs={3}>
+                            <Typography variant='h6' style = {{marginTop:'3vh'}}>{fullData.isSurvival ? "Has Prizes" : "No Prizes"}</Typography>
+                        </Grid>
+                        <Grid item xs={3} style = {{marginTop:'3vh'}}>
+                            <Switch name="isSurvival"  id="isSurvival" checked={fullData.isSurvival} onChange={handleSwitch}/>
+                        </Grid>
+                        <Divider/>
                         {fieldsPrize.map((item,ind)=>(
                             <React.Fragment key={ind}>
                                 <Grid item xs={4}>
@@ -340,6 +384,7 @@ const HostMatch = (props) => {
                                         id={"survival["+(ind)+"]"}
                                         type="number"
                                         defaultValue={fullData.survival[ind]}
+                                        disabled={!fullData.isSurvival}
                                         label={getPrizeNames(ind+1)+" Prize"}
                                         name={"survival["+(ind)+"]"}
                                         error={errors.survival && !!errors.survival[ind]}
@@ -380,7 +425,7 @@ const HostMatch = (props) => {
                         */ }
                     </React.Fragment>
                 )
-            case 3:
+            case 4:
                 const prizeList = fullData.isSurvival ? fullData.survival.map((item,inx) => {
                     return getPrizeNames(inx+1)+":"+item
                 }) : null
@@ -395,36 +440,6 @@ const HostMatch = (props) => {
                         <Grid item xs={12}><Typography>Entry Fee : {fullData.isPaid ? fullData.fee : "Free"}</Typography></Grid>
                         <Grid item xs={12}><Typography>Prizes : {fullData.isSurvival ? prizeList.toString() : "Disabled" }</Typography></Grid>
                         <Grid item xs={12}><Typography> Coin Per Kill : {fullData.hasCPK ? fullData.bKills : "Disabled" }</Typography></Grid>
-                        {fields.map((item,inx)=>(
-                            <React.Fragment key={item.id}>
-                                <Grid item xs={10}>
-                                <TextField
-                                    variant="outlined"
-                                    margin="normal"
-                                    id={`rules[${inx}]`}
-                                    name={`rules[${inx}]`}
-                                    type='text'
-                                    label={"Rule "+(inx)}
-                                    fullWidth
-                                    defaultValue={fullData.rules[inx]}
-                                    inputRef={register({
-                                        required: true,
-                                    })}
-                                />
-                                </Grid>
-                                <Grid item xs={2}>
-                                    <Button variant='text' color='default' size='small' style={{marginTop:'3vh',borderSpacing:'-1'}}
-                                    onClick={()=>remove(inx)}>
-                                        <Icon><DeleteForeverRounded/></Icon>
-                                    </Button>
-                                </Grid>
-                            </React.Fragment>
-                        ))}
-                        <Grid item xs={6}>
-                            <Button variant='text' color='primary' onClick={()=>{append()}}>
-                                <Icon style={{marginRight:'1vh'}}><AddCircle/></Icon> Add Rule
-                            </Button>
-                        </Grid>
                         <Grid item xs={12}>
                             <Button
                                 type="submit"
@@ -446,8 +461,9 @@ const HostMatch = (props) => {
         e.preventDefault();
         setFullData(prevfullData => {return {...prevfullData,...data}})
         console.log(data,fullData);
-        if(activeStep >= steps.length-1){
+        if( activeStep >= steps.length-1 ){
             //final Submission
+            dispatch(hostMatch(fullData))
             return;
         }
         setActiveStep(prevStep=>prevStep+1)

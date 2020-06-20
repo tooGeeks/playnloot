@@ -77,6 +77,74 @@ export const createMatch = (rmatch)=>{
     }
 }
 
+export const hostMatch = (rmatch)=>{
+    return (dispatch,getState,{getFirebase,getFirestore})=>{
+        //Async Code
+        const {auth , profile } = getState().firebase;
+        const match = {...rmatch}
+        const taglist = match.tags ? match.deftag+","+match.tags : match.deftag 
+        delete match['tags']
+        delete match['deftag']
+        let mode = {}
+        /**
+        let modep = ['team','view','map']
+        modep.forEach((x)=>{
+            mode[x] = match[x]
+            delete match[x]
+        }) 
+        match['mode'] = mode*/
+        match['tags'] = taglist.split(',')
+        match.isPaid ? match['fee'] = parseInt(match['fee']) : match['fee'] = 0; 
+        match.hasCPK ? match['bKills'] = parseInt(match['bKills']) : delete match['bKills'];
+        match['host'] = profile.pubgid;
+        match['isTrusted'] = profile.isTrusted;
+        match['hRating'] = profile.hRating; 
+        let md = new Date(match.mdate)
+        let ld = new Date(match.lrdate);
+        md.setHours(match.mtime.split(':')[0])
+        md.setMinutes(match.mtime.split(':')[1])
+        delete match['mdate']
+        delete match['mtime']
+        delete match['lrdate']
+        let prz = {}
+        let pP = 0
+        match.survival.forEach((rx,inx) => {
+            pP+=parseInt(rx)
+            prz[inx+1] = parseInt(rx)
+        })
+        if(Object.keys(prz).length!==0) match['survival'] = prz
+        match['prizePool'] = pP;
+        let rls = match['rules']
+        delete match['rules']
+        if(rls.length>0) match['customRules'] = rls;
+        if(!match.isSurvival) delete match['survival']
+        ['isPaid','isSurvival','hasCPK','matchOnSameDay'].forEach(ix => {
+            delete match[ix]
+        })
+        console.log(match);
+        const db = getFirestore();
+        db.collection('Matches').get().then((snap)=>{
+            const size = snap.size;
+            let mname ="MTH" +(2000 + parseInt(size)+1)
+            db.collection("Matches").doc(mname).set({
+                ...match,
+                date:db.Timestamp.fromMillis(md.getTime()),
+                lrdate:db.Timestamp.fromMillis(ld.getTime()),
+                players:{},
+                game:'PUBGM',
+                plno:1,
+                isActive : true,
+                createdAt : db.Timestamp.fromMillis(new Date().getTime())
+            }).then(()=>{
+                dispatch({type:"CR_MATCH",match});
+            }).catch((err)=>{
+                //console.error("AN Error Occured : ",err);
+                dispatch({type:"CR_MATCH_ERR",err});
+            })
+        })
+    }
+}
+
 export const updateMatch = (mid,rmatch)=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
         let match = {...rmatch}
