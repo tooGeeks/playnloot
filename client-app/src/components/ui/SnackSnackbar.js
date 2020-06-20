@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
-import { clearSnackbar } from "../store/actions/uiActions";
+import { clearSnackbar } from "../../store/actions/uiActions";
 //After
 import clsx from 'clsx';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';

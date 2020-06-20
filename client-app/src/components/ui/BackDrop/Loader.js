@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './Loader.module.css'
-import { loadTxt } from '../../constants'
+import { loadTxt } from '../../../constants'
 
 const Loader = () => {
     return (

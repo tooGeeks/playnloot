@@ -16,7 +16,7 @@ const useStyles= makeStyles(theme=>({
     },
     container: {
         marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(8)
+        marginBottom: theme.spacing(16)
     },
     stepper: {
         marginBottom: theme.spacing(7)
@@ -429,6 +429,7 @@ const HostMatch = (props) => {
                 const prizeList = fullData.isSurvival ? fullData.survival.map((item,inx) => {
                     return getPrizeNames(inx+1)+":"+item
                 }) : null
+                const totalExpense = calculateTotalExpense();
                 return (
                     <React.Fragment>
                         <Grid item xs={12}><Typography variant="body2">Match Name : {fullData.name}</Typography></Grid>
@@ -440,6 +441,16 @@ const HostMatch = (props) => {
                         <Grid item xs={12}><Typography>Entry Fee : {fullData.isPaid ? fullData.fee : "Free"}</Typography></Grid>
                         <Grid item xs={12}><Typography>Prizes : {fullData.isSurvival ? prizeList.toString() : "Disabled" }</Typography></Grid>
                         <Grid item xs={12}><Typography> Coin Per Kill : {fullData.hasCPK ? fullData.bKills : "Disabled" }</Typography></Grid>
+                        {fullData.isPaid ? 
+                            <React.Fragment>
+                                <Grid item xs={12}><Typography> Now, we need a favour!</Typography></Grid>
+                                <Grid item xs={12}><Typography> Your Match's Total Collection: {`${fullData.fee} x ${totalExpense.plno} = ${totalExpense.totalCollection}`}</Typography></Grid>
+                                <Grid item xs={12}><Typography> Your Match`s Total PrizePool: {totalExpense.prizePool}</Typography></Grid>
+                                <Grid item xs={12}><Typography> Your Profit: {totalExpense.profit}</Typography></Grid>
+                                <Grid item xs={12}><Typography> So, for our expenses we need 10% of your profit i.e. 10% of {totalExpense.profit} = ₹{totalExpense.tenpc} only!</Typography></Grid>
+                            </React.Fragment>
+                            : null
+                        }
                         <Grid item xs={12}>
                             <Button
                                 type="submit"
@@ -463,7 +474,7 @@ const HostMatch = (props) => {
         console.log(data,fullData);
         if( activeStep >= steps.length-1 ){
             //final Submission
-            dispatch(hostMatch(fullData))
+            //dispatch(hostMatch(fullData))
             return;
         }
         setActiveStep(prevStep=>prevStep+1)
@@ -471,7 +482,40 @@ const HostMatch = (props) => {
     const handleSwitch = (e) => {
         setFullData({...fullData,[e.target.id]:e.target.checked})
     }
-    const handleBack = ()=>setActiveStep(prevStep=>prevStep-1)
+    const handleBack = ()=> setActiveStep(prevStep=>prevStep-1)
+    const calculateTotalExpense = () => {
+        let total = 0;
+        let data = {totalCollection:0,prizePool:0,plno:0,profit:0,tenpc:0};
+        if(fullData.isPaid){
+            if(fullData.isSurvival){
+                console.log("isSurvival")
+                switch(fullData.team){
+                    case "Solo":
+                        data['plno'] = 100
+                        data['totalCollection'] = fullData.fee * 100;
+                        break;
+                    case "Duo":
+                        data['plno'] = 50
+                        data['totalCollection'] = fullData.fee * 50;
+                        break;
+                    case "Squad":
+                        data['plno'] = 25
+                        data['totalCollection'] = fullData.fee * 25;
+                        break;
+                    default:
+                        break;
+                }
+                fullData.survival.forEach(pr => data['prizePool'] += parseInt(pr))
+            }
+            if(fullData.hasCPK){
+                console.log("CPK")
+                data['prizePool'] += 99 * parseInt(fullData.bKills);
+            }
+            data['profit'] = data['totalCollection'] - data['prizePool'];
+            data['tenpc'] = 10/100 * data['profit'];
+        }
+        return data;
+    }
 
     return (
         <div className={classes.root}>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { clearBackDrop } from "../store/actions/uiActions";
+import { clearBackDrop } from "../../store/actions/uiActions";
 import Loader from './BackDrop/Loader'
 
 //UI

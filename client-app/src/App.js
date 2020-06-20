@@ -34,10 +34,10 @@ import themeObject from './themeObject.json'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Landing from './components/pages/Landing';
 import Nav from "./components/layout/Nav";
-import SnackSnackbar from './components/SnackSnackbar'
-import AlertDialog from './components/AlertDialog'
-import BackDrop from './components/BackDrop';
-import Loader from './components/BackDrop/Loader';
+import SnackSnackbar from './components/ui/SnackSnackbar'
+import AlertDialog from './components/ui/AlertDialog'
+import BackDrop from './components/ui/BackDrop';
+import Loader from './components/ui/BackDrop/Loader';
 import { ReactComponent as Loading } from './imgs/loading.svg';
 import { dark } from '@material-ui/core/styles/createPalette';
 import { Button } from '@material-ui/core';

@@ -8,7 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Grow from '@material-ui/core/Grow';
 
 import { useDispatch, useSelector } from "react-redux";
-import { clearDialog } from "../store/actions/uiActions";
+import { clearDialog } from "../../store/actions/uiActions";
 import { Divider } from '@material-ui/core';
 
 
