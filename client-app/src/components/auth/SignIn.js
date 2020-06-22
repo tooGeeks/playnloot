@@ -4,7 +4,7 @@ import { connect, useDispatch } from 'react-redux'
 import { signIn, resetPassword } from '../../store/actions/authActions'
 //eslint-disable-next-line
 import { backDrop, showDialog } from '../../store/actions/uiActions'
-import { Redirect, Link } from 'react-router-dom'
+import { Redirect, Link, useLocation } from 'react-router-dom'
 import {signInWithPhone} from '../../store/actions/authActions'
 
 import {useForm} from "react-hook-form";
@@ -16,6 +16,7 @@ import { Container, Typography, CssBaseline, Avatar, TextField, Button, Grid, Bo
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Copyright from '../layout/Copyright';
 import { ArrowBack, ArrowForward } from '@material-ui/icons'
+import { useQuery } from '../../Functions'
 
 const SignUpwithPhone = (props)=>{
   const dispatch = useDispatch();
@@ -211,6 +212,9 @@ const PassReset = () => {
 }
 
 const SignIn = (props) => {
+  const query = useQuery(useLocation);
+  const urlSrc = query.get('from');
+  console.log(urlSrc);
   const { register, handleSubmit, errors } = useForm();
   const dispatch = useDispatch();
   const onSubmit = (data, e) => {
@@ -223,7 +227,10 @@ const SignIn = (props) => {
   }
 
   const { auth, classes } = props;
-  if (auth.uid) return <Redirect to='/dashboard' />
+  if (auth.uid) {
+    if(urlSrc === null) return <Redirect to='/dashboard' />
+    else return <Redirect to={`/${urlSrc}`} />
+  }
 
   return (
     <div className={classes.root}>

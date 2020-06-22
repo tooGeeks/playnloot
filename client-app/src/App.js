@@ -106,7 +106,7 @@ const App = () => {
             <CssBaseline />
               <Switch>
                 <ProtectedRoutes exact path='/dashboard'component={Dashboard} />
-                <Route path='/signin' component={SignIn} />
+                <Route path='/signin/' component={SignIn} />
                 <Route path='/signup' component={SignUp} />
                 <Route exact path='/' component={Landing}/>
                 {/* <Route exact path='/:gti' component={Landing}/> This is intended for Getting-Started Tour*/}

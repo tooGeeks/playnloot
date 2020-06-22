@@ -27,6 +27,8 @@ const useStyles= makeStyles(theme=>({
     }
 }))
 
+
+
 const HostMatch = (props) => {
     const matches = props.matches
     console.log(matches)
@@ -49,9 +51,9 @@ const HostMatch = (props) => {
         name:"survival"
     })
     const getPrizeNames = (num) => {
+        if(num>3 && num<21) return num+"th";
         let nstr = num.toString()
         let ld = parseInt(nstr[nstr.length-1]);
-        if(num>3 && num<21) return num+"th";
         if(ld>3) return num+"th";
         switch(ld){
             case 1:

@@ -230,3 +230,7 @@ export const askPermission = async (messaging)=>{
         console.error(error);
     }
 }
+
+export const useQuery = (usLoc) => {
+    return new URLSearchParams(usLoc().search);
+}
