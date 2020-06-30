@@ -1,4 +1,6 @@
 import firebase from './config/fbConfig'
+import axios from 'axios'
+import { Dvr } from '@material-ui/icons';
 
 export const convt = (opt=0,time)=>{//Used to Convert Time from/to 12hr and 24 hr format
     var cd="";
@@ -233,4 +235,69 @@ export const askPermission = async (messaging)=>{
 
 export const useQuery = (usLoc) => {
     return new URLSearchParams(usLoc().search);
+}
+  
+export const createRazorPayDialog = (amount,description="Yarrr! Mat Pucho!",prefill,notes={},callback=(res)=>{console.log(res)}) => {
+    const ran = Math.floor(Math.random() * 100000 + 100000).toString();
+    var options = {
+        key: "rzp_test_TNrd2Wjvj69WTW",
+        amount, /// The amount is shown in currency subunits. Actual amount is ₹599.
+        name: "PNLooT",
+        currency: "INR", // Optional. Same as the Order currency
+        description,
+        image: "/imgs/icon-512x512.png",
+        handler:  (response) =>{
+          verifySign(response,callback);
+        },
+        prefill,
+        notes,
+        theme: {
+            color: "#000000"
+        }
+    };
+    return axios.post("https://playnloot-vercel-functions.now.sh/api/?action=createOrder&amt="+parseInt(amount)+"&receipt=receipt_"+ran).then(res => {
+            console.log(res);
+            // eslint-disable-next-line no-undef
+            var rzp = new Razorpay({...options,order_id:res.data.id});
+            return {rzp,resData:res.data};
+        }).catch((err) => {
+            console.log("ERR",err);
+        })
+}
+
+export const verifySign = (res,callback
+    ) => {
+        axios.post("https://playnloot-vercel-functions.now.sh/api/?action=conSign&rpay_orderid="+res.razorpay_order_id+"&rpay_sign="+res.razorpay_signature+"&rpay_paymentid="+res.razorpay_payment_id)
+            .then((resx) => {
+                callback(resx);
+                //cdate.setTime(rpayData.created_at)
+                //dispatch(creditWithRazor(res.razorpay_order_id,{...resx.data,amount:(rpayData.amount/100),receipt:rpayData.receipt,createdAt:cdate,mode:'RPAY'}))
+        })
+}
+
+export const deductCoins = (db,coins,uid) => {
+    new Promise((resolve,reject) => {
+        db.collection('Users').doc(uid).get().then((snap) => {
+            if(snap.empty) return;
+            let wallet = snap.data().wallet;
+            wallet -= coins;
+            db.collection('Users').doc(uid).set({wallet},{merge:true}).then(() => {
+                resolve(wallet);
+            }).catch(err => {
+                reject(err);
+            })
+        }).catch(err => {
+            reject(err);
+        });
+    })
+}
+
+export const createOrder = (db,uid,id,data) => {
+    return new Promise((resolve,reject) => {
+        db.collection("Users").doc(uid).collection("Orders").doc(id).set({...data}).then(() => {
+            resolve(true);
+        }).catch((err) => {
+            reject(false);
+        })
+    })
 }

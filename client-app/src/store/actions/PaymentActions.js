@@ -1,4 +1,4 @@
-import {getOS, reportError} from '../../Functions'
+import {getOS, reportError, createOrder} from '../../Functions'
 import { unit } from '../../constants'
 import { showSnackbar } from './uiActions';
 
@@ -59,7 +59,7 @@ export const creditWithRazor = (id,data)=>{
         const { profile, auth } = getState().firebase;
         const db = getFirestore();
         const nwamt = data.success ? (data.amount/unit) + profile.wallet : profile.wallet ;
-        db.collection("Users").doc(auth.uid).collection("Orders").doc(id).set({...data}).then(()=>{
+        createOrder(db,auth.uid,id,data).then(()=>{
             if(data.success){
                 db.collection("Users").doc(auth.uid).set({wallet:nwamt},{merge:true}).then(()=>{
                     dispatch(showSnackbar({variant: 'success', message: `You credited Rs. ${data.amount}. You now have ${profile.wallet} coins in your wallet`}));
@@ -73,6 +73,15 @@ export const creditWithRazor = (id,data)=>{
             console.log(err)
             //resolve(false);
         });
+    }
+}
+
+export const dispatchCreateOrder = (id,data) => {
+    return(dispatch,getState,{getFirebase,getFirestore}) => {
+        const {auth} = getState().firebase;
+        createOrder(getFirestore(),auth.uid,id,data).then(() => {
+            dispatch({type:'ORDER_CR'});
+        })
     }
 }
 

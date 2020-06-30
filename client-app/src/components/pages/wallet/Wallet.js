@@ -13,7 +13,7 @@ import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import Helmet from 'react-helmet'
 import axios from 'axios'
-
+import { createRazorPayDialog } from '../../../Functions';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -121,6 +121,20 @@ function Wallet(props) {
         e.preventDefault();
         const ran = Math.floor(Math.random() * 100000 + 100000).toString();
         const amount = parseInt(coins.coins)*unit
+        const finalAction = (resx) => {
+            console.log("Payment Response",resx);
+                let cdate = new Date()
+                cdate.setTime(rpayData.created_at)
+                dispatch(creditWithRazor(rpayData.id,{...resx.data,amount:(rpayData.amount/100),receipt:rpayData.receipt,createdAt:cdate,mode:'RPAY'}))
+            }
+        const dataRP = createRazorPayDialog(amount,"Coins Purchase",{name: auth.displayName,email: auth.email,number:profile && profile.mno},{},finalAction/*Callback Function*/)
+        dataRP.then((res)=> {
+            console.log(res)
+            rpayData = {...res.resData};
+            res.rzp.open();
+        })
+        
+        /**
         var options = {
             key: "rzp_test_TNrd2Wjvj69WTW",
             amount, /// The amount is shown in currency subunits. Actual amount is ₹599.
@@ -153,6 +167,8 @@ function Wallet(props) {
         }).catch((err) => {
             console.log("ERR",err);
         })
+         */
+        return;
         //dispatch(creditWallet({noofcns:coins.coins, mode:"PayTM"}));
         reset();
         //props.backDrop();

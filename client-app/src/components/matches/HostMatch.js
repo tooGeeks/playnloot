@@ -8,6 +8,11 @@ import {firestoreConnect, useFirestoreConnect} from 'react-redux-firebase';
 import {createMatch} from '../../store/actions/MatchActions'
 import { AddCircle, DeleteForeverRounded } from "@material-ui/icons";
 import { compose } from 'redux';
+import { showDialog } from '../../store/actions/uiActions';
+import { Helmet } from 'react-helmet';
+import Axios from 'axios';
+import { BuyCoinsBox } from '../Small Components/BuyCoinsBox/BuyCoinsBox';
+import { creditWithRazor, dispatchCreateOrder } from '../../store/actions/PaymentActions';
 
 const useStyles= makeStyles(theme=>({
     root: {
@@ -28,10 +33,26 @@ const useStyles= makeStyles(theme=>({
 }))
 
 
+const PaymentOptionsContent = ({money, hClick}) => {
+    return(
+        <Container>
+            <Grid container>
+                <Grid item xs={12}>
+                    <Typography>You need to Pay ₹{money}</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                    <Button color='primary' variant='text' onClick={()=>hClick('Coins')} ><Icon></Icon> Pay with Coins</Button>
+                </Grid>
+                <Grid item xs={12}>
+                    <Button color='primary' variant='text' onClick={()=>hClick('RPay')} ><Icon></Icon> Pay with Money</Button>
+                </Grid>
+            </Grid>
+        </Container>
+    )
+}
 
-const HostMatch = (props) => {
-    const matches = props.matches
-    console.log(matches)
+const HostMatch = ({ matches }) => {
+    const {profile, auth} = useSelector(st => st.firebase);
     const dispatch = useDispatch();
     const classes = useStyles();
     const [activeStep,setActiveStep] = React.useState(0);
@@ -473,10 +494,43 @@ const HostMatch = (props) => {
     const handleNext = (data,e)=>{
         e.preventDefault();
         setFullData(prevfullData => {return {...prevfullData,...data}})
-        console.log(data,fullData);
+        //console.log(data,fullData);
         if( activeStep >= steps.length-1 ){
             //final Submission
-            //dispatch(hostMatch(fullData))
+            let totalExp = calculateTotalExpense();
+            /**
+            const hClick = (popt) => {
+                switch(popt){
+                    case 'Coins':
+
+                    break;
+                    case 'RPay':
+                        rpayfunc.pay(totalExp)
+
+                }
+                //dispatch(hostMatch(fullData))
+            }
+             */
+            //dispatch(showDialog({title:'Payument Mode',content:<PaymentOptionsContent money={totalExp.tenpc} hClick={hClick} />}))
+            const fAction = ({data},rpayData) => {
+                console.log(rpayData);
+                if(data.success){
+                    let amtPaid = rpayData.amount / 100;
+                    let cdate = new Date()
+                    cdate.setTime(rpayData.created_at)
+                    if(amtPaid > totalExp.tenpc){
+                        dispatch(creditWithRazor(rpayData.id,{...data,amount:(rpayData.amount/100),receipt:rpayData.receipt,createdAt:cdate,mode:'RPAY'}))
+                        dispatch(hostMatch(fullData,false));
+                    }else if(amtPaid === totalExp.tenpc) {
+                        //Less Transaction Work Done
+                        dispatch(dispatchCreateOrder(rpayData.id,{...data,amount:(rpayData.amount/100),receipt:rpayData.receipt,createdAt:cdate,mode:'RPAY'}))
+                        dispatch(hostMatch(fullData,totalExp,true));
+                    }
+                }else{
+                    //Payment Failed
+                }
+            }
+            dispatch(showDialog({title:'Payment for Hosting Match',content:<BuyCoinsBox prefill={{name: auth.displayName,email: auth.email,number:profile && profile.mno}} finalAction={fAction} amount={totalExp.tenpc}/>}))
             return;
         }
         setActiveStep(prevStep=>prevStep+1)
@@ -490,7 +544,7 @@ const HostMatch = (props) => {
         let data = {totalCollection:0,prizePool:0,plno:0,profit:0,tenpc:0};
         if(fullData.isPaid){
             if(fullData.isSurvival){
-                console.log("isSurvival")
+                //console.log("isSurvival")
                 switch(fullData.team){
                     case "Solo":
                         data['plno'] = 100
@@ -510,17 +564,25 @@ const HostMatch = (props) => {
                 fullData.survival.forEach(pr => data['prizePool'] += parseInt(pr))
             }
             if(fullData.hasCPK){
-                console.log("CPK")
+                //console.log("CPK")
                 data['prizePool'] += 99 * parseInt(fullData.bKills);
             }
             data['profit'] = data['totalCollection'] - data['prizePool'];
-            data['tenpc'] = 10/100 * data['profit'];
+            data['tenpc'] = parseInt(10/100 * data['profit']);
+            let prst = data['tenpc'].toString();
+            let unitpos = parseInt(prst[prst.length-1])
+            let diff = unitpos === 0 ? 0 : (unitpos < 5 ? 0 - unitpos : 10 - unitpos)
+            data['tenpc'] += diff;
+            data['profit'] = 10 * data['tenpc']
         }
         return data;
     }
 
     return (
         <div className={classes.root}>
+            <Helmet>
+                <script src='https://checkout.razorpay.com/v1/checkout.js'></script>
+            </Helmet>
             <form noValidate onSubmit={handleSubmit(handleNext)}>
                 <Container className={classes.container}>
                     <Typography variant='h5' className={classes.hText}>Create a New Match</Typography>

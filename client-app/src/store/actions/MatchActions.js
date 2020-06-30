@@ -1,4 +1,4 @@
-import {isinDocs,findinMatches,isPlayerinMatch, arePlayersinMatch} from '../../Functions'
+import {isinDocs,findinMatches,isPlayerinMatch, arePlayersinMatch, deductCoins} from '../../Functions'
 import 'firebase/functions'
 import { isEmpty } from 'react-redux-firebase';
 
@@ -6,12 +6,15 @@ import { isEmpty } from 'react-redux-firebase';
   This File Contains All Match Actions such as Create Match, Update Match, Enter Match, etc. 
 */
 
-export const createMatch = (rmatch)=>{
+export const createMatch = (rmatch,totalExp,paid)=>{
     return (dispatch,getState,{getFirebase,getFirestore})=>{
         //Async Code
         const {auth , profile } = getState().firebase;
+        if(!paid){
+            deductCoins(getFirestore(),totalExp.tenpc,auth.uid);
+        }
         const match = {...rmatch}
-        const taglist = match.tags ? match.deftag+","+match.tags : match.deftag 
+        const taglist = match.tags ? match.deftag+","+match.tags : match.deftag;
         delete match['tags']
         delete match['deftag']
         let mode = {}
@@ -77,7 +80,7 @@ export const createMatch = (rmatch)=>{
     }
 }
 
-export const hostMatch = (rmatch)=>{
+export const hostMatch = (rmatch,paid)=>{
     return (dispatch,getState,{getFirebase,getFirestore})=>{
         //Async Code
         const {auth , profile } = getState().firebase;
