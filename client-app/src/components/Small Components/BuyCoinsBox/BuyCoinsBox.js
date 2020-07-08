@@ -6,6 +6,7 @@ import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import { useForm } from 'react-hook-form';
 import { createRazorPayDialog } from '../../../Functions';
 import { creditWithRazor } from '../../../store/actions/PaymentActions';
+import { clearDialog } from '../../../store/actions/uiActions';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -74,6 +75,7 @@ export const BuyCoinsBox = ({amount,finalAction,prefill}) => {
         }
         createRazorPayDialog(parseInt(coins.coins)*unit,"Buy Coins",prefill,{},fAction).then(({resData,rzp}) => {
             rpayData = {...resData};
+            dispatch(clearDialog());
             rzp.open();
         })
     }

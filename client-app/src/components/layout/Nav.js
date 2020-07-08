@@ -78,6 +78,10 @@ const Nav = (props) => {
           <ListItemIcon><AccountBox/></ListItemIcon>
           <ListItemText primary={profile.pubgid + "`s DashBoard"}></ListItemText>
         </ListItem>
+        <ListItem id="hostmatch" button component={Link} to={'/hostmatch'} selected={(window.location.pathname).includes('/hostmatch')} onClick={toggleDrawer('bottom', false)}>
+          <ListItemIcon><AccountBalanceWallet /></ListItemIcon>
+          <ListItemText primary={"Host Match"}></ListItemText>
+        </ListItem>
         <ListItem id="wallet" button onClick={() => expandList(1)}>
           <ListItemIcon><AccountBalanceWallet /></ListItemIcon>
           <ListItemText primary={"Wallet"}></ListItemText>

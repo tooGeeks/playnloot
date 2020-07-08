@@ -60,7 +60,7 @@ const HostMatch = ({ matches }) => {
         name:'',mdate:getCurrentDate(2),mtime:'17:00',lrdate:getCurrentDate(1),view:'cao',team:'cao',deftag:'cao',
         map:'cao',fee:1,bKills:0,survival:['0','0','0'],rules:[],isPaid:false,hasCPK:false,isSurvival:true,matchOnSameDay:false
     })
-    const { register, handleSubmit, errors, control } = useForm({
+    const { register, handleSubmit, errors, control, reset } = useForm({
         defaultValues:{rules:fullData.rules,survival:fullData.survival}
     });
     const { fields, append, remove } = useFieldArray({
@@ -313,7 +313,7 @@ const HostMatch = ({ matches }) => {
                                     id={`rules[${inx}]`}
                                     name={`rules[${inx}]`}
                                     type='text'
-                                    label={"Rule "+(inx)}
+                                    label={"Rule "+(inx+1)}
                                     fullWidth
                                     defaultValue={fullData.rules[inx]}
                                     inputRef={register({
@@ -408,8 +408,8 @@ const HostMatch = ({ matches }) => {
                                         type="number"
                                         defaultValue={fullData.survival[ind]}
                                         disabled={!fullData.isSurvival}
-                                        label={getPrizeNames(ind+1)+" Prize"}
-                                        name={"survival["+(ind)+"]"}
+                                        label={getPrizeNames(ind)+" Prize"}
+                                        name={"survival["+(ind+1)+"]"}
                                         error={errors.survival && !!errors.survival[ind]}
                                         helperText={(errors.survival && errors.survival[ind] ? (errors.survival[ind].type === 'required' ? "Enter "+getPrizeNames(ind+1)+" Prize!" : "Invalid Date Format") : null)}
                                     />
@@ -497,6 +497,8 @@ const HostMatch = ({ matches }) => {
         //console.log(data,fullData);
         if( activeStep >= steps.length-1 ){
             //final Submission
+            let yn = window.confirm();
+            if(!yn) return;
             let totalExp = calculateTotalExpense();
             /**
             const hClick = (popt) => {
@@ -520,20 +522,25 @@ const HostMatch = ({ matches }) => {
                     cdate.setTime(rpayData.created_at)
                     if(amtPaid > totalExp.tenpc){
                         dispatch(creditWithRazor(rpayData.id,{...data,amount:(rpayData.amount/100),receipt:rpayData.receipt,createdAt:cdate,mode:'RPAY'}))
-                        dispatch(hostMatch(fullData,false));
+                        dispatch(hostMatch(fullData,totalExp,false));
                     }else if(amtPaid === totalExp.tenpc) {
                         //Less Transaction Work Done
                         dispatch(dispatchCreateOrder(rpayData.id,{...data,amount:(rpayData.amount/100),receipt:rpayData.receipt,createdAt:cdate,mode:'RPAY'}))
                         dispatch(hostMatch(fullData,totalExp,true));
                     }
+                    reset();
                 }else{
                     //Payment Failed
                 }
             }
-            dispatch(showDialog({title:'Payment for Hosting Match',content:<BuyCoinsBox prefill={{name: auth.displayName,email: auth.email,number:profile && profile.mno}} finalAction={fAction} amount={totalExp.tenpc}/>}))
+            if(profile.wallet < totalExp.tenpc){
+                let diff = totalExp.tenpc - profile.wallet;
+                dispatch(showDialog({title:'Payment for Hosting Match',content:<BuyCoinsBox prefill={{name: auth.displayName,email: auth.email,number:profile && profile.mno}} finalAction={fAction} amount={diff}/>}))
+            }else dispatch(hostMatch(fullData,totalExp,false));
+            
             return;
         }
-        setActiveStep(prevStep=>prevStep+1)
+        setActiveStep(prevStep=>prevStep+1);
     }
     const handleSwitch = (e) => {
         setFullData({...fullData,[e.target.id]:e.target.checked})
