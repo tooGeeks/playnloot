@@ -9,6 +9,7 @@ import RequestWithDraw from './components/pages/wallet/RequestWithDraw'
 import { isLoaded } from 'react-redux-firebase'
 import {useSelector, useDispatch} from "react-redux"
 import { ProtectedRoutes } from './components/auth/ProtectedRoutes'
+import Layout from './components/layout'
 // Other
 import EnterMatch from './components/matches/EnterMatch'
 import EnrolledMatches from './components/matches/EnrolledMatches'
@@ -103,6 +104,7 @@ const App = () => {
           <SnackSnackbar />
           <AlertDialog/>
             <div className="App">
+              <Layout>
             <CssBaseline />
               <Switch>
                 <ProtectedRoutes exact path='/dashboard'component={Dashboard} />
@@ -129,9 +131,10 @@ const App = () => {
                 <ProtectedRoutes path="/admin/withdrawalreqlist/" component={WithdrawalList}/>
                 <ProtectedRoutes path="/admin/sendnotifications/" component={SendNotifications}/>
                 <ProtectedRoutes exact path="/admin" component={AdminHome}/>
-
+        
                 <Route path="*" component={() => "404: Not Found! Wrong URL"}/>
               </Switch>
+              </Layout>
               {Navbottom}
             </div>
           </AuthIsLoaded>

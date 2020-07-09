@@ -19,12 +19,6 @@ import moment from 'moment';
 
 
 const useStyles = makeStyles(theme=>({
-    root: {
-        display: 'flex',
-        flexGrow: 1,
-        flexDirection: 'column',
-        minHeight: '100vh',
-    },
     container: {
         marginTop: theme.spacing(2)
     },
@@ -61,10 +55,6 @@ const useStyles = makeStyles(theme=>({
     enrollPaperRuleLine: {
         marginTop: 10
     },
-    footer: {
-        marginTop: 'auto',
-        marginBottom: theme.spacing(10)
-    }
 }))
 
 const Match = (props) => {
@@ -141,7 +131,7 @@ const Match = (props) => {
             })
     }
     return (
-        <div className={classes.root}>
+        <React.Fragment>
             <Container className={classes.container} maxWidth="sm">
                 <form noValidate onSubmit={handleSubmit(enroll)}>
                 <Grid container spacing={0} style={{paddingBottom: 0}}>
@@ -268,10 +258,7 @@ const Match = (props) => {
                 </Paper>
                 </form>
             </Container>
-            <footer className={classes.footer}>
-                <Copyright />
-            </footer>
-        </div>
+        </React.Fragment>
     )
 }
 

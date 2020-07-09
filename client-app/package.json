@@ -15,6 +15,7 @@
     "firebase": "^7.14.6",
     "firebase-admin": "^8.12.1",
     "firebase-functions": "^3.6.2",
+    "framer-motion": "^1.11.1",
     "material-table": "^1.58.2",
     "moment": "^2.26.0",
     "react": "^16.13.1",

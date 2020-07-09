@@ -9,12 +9,6 @@ import Copyright from '../layout/Copyright';
 import { unit, rules } from '../../constants'
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-    display: 'flex',
-    minHeight: '100vh',
-    marginBottom: theme.spacing(8),
-  },
   bgImg: {
     //width: '80vw',
     height: '50vh'
@@ -100,7 +94,7 @@ const Landing = () => {
 
   return (
 
-    <div className={classes.root} id="welcome">
+    <div id="welcome">
       <Grid container direction="column">
         <Grid container direction="row">
         <Grid item xs={12}>
@@ -171,7 +165,6 @@ const Landing = () => {
           </Box>
         </Grid>
         </Grid>
-        <Copyright />
         </Container>
       </Grid>
     </div>

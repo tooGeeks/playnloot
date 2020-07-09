@@ -10,12 +10,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Copyright from '../layout/Copyright';
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-    flexGrow: 1,
-    flexDirection: 'column',
-    minHeight: '100vh'
-  },
   paper: {
     marginTop: theme.spacing(2),
     display: 'flex',
@@ -40,10 +34,6 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-  },
-  footer: {
-    marginTop: 'auto',
-    marginBottom: theme.spacing(10)
   },
 }));
 
@@ -79,7 +69,7 @@ const SignUp = (props) => {
   };
 
   return (
-    <div className={classes.root} >
+    <React.Fragment>
     <Container pb={45} component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
@@ -262,10 +252,7 @@ const SignUp = (props) => {
         { authError ? <p>{authError}</p> : null }
         </div>
         </Container>
-      <footer className={classes.footer}>
-        <Copyright />
-      </footer>
-    </div>
+    </React.Fragment>
   );
 }
 

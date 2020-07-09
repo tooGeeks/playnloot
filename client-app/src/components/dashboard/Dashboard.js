@@ -20,12 +20,6 @@ import Copyright from '../layout/Copyright'
 import { getPlayerfromMatch } from "../../Functions";
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-    flexGrow: 1,
-    flexDirection: 'column',
-    minHeight: '100vh'
-  },
   paper: {
     padding: theme.spacing(2),
     textAlign: 'center',
@@ -111,10 +105,6 @@ const useStyles = makeStyles(theme => ({
   box1: { backgroundColor: theme.palette.custom.greenPaper, color: theme.palette.primary.contrastText },
   box2: { backgroundColor: theme.palette.custom.OrangeYellow },
   box3: { backgroundColor: theme.palette.custom.BlueSapphire },
-  footer: {
-    marginTop: 'auto',
-    marginBottom: theme.spacing(10)
-  },
 }));
 
 function Dashboard(props) {
@@ -267,7 +257,7 @@ function Dashboard(props) {
       </div>
 
   return (
-    <div className={classes.root}>
+    <React.Fragment>
     <Container>
       <Grid container
         direction="row"
@@ -379,10 +369,7 @@ function Dashboard(props) {
         </Grid>
       </Grid>
     </Container>
-    <footer className={classes.footer}>
-      <Copyright />
-    </footer>
-    </div>
+    </React.Fragment>
   );
 }
 
