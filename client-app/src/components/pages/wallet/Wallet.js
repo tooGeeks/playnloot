@@ -16,12 +16,6 @@ import axios from 'axios'
 import { createRazorPayDialog } from '../../../Functions';
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        display: 'flex',
-        flexGrow: 1,
-        flexDirection: 'column',
-        minHeight: '100vh',
-    },
     container: {
         marginTop: theme.spacing(2)
     },
@@ -61,10 +55,6 @@ const useStyles = makeStyles(theme => ({
         color: '#81c784'
     },
     successBox: { borderLeft: '4px solid #81c784' },
-    footer: {
-        marginTop: 'auto',
-        marginBottom: theme.spacing(10)
-    }
 }));
 
 function Wallet(props) {
@@ -193,7 +183,7 @@ function Wallet(props) {
     })
 
     return (
-        <div className={classes.root}>
+        <React.Fragment>
             <Helmet>
                 <script src='https://checkout.razorpay.com/v1/checkout.js'></script>
             </Helmet>
@@ -267,10 +257,7 @@ function Wallet(props) {
                     {prevOrders}
                 </Grid>
             </Container>
-            <footer className={classes.footer}>
-                <Copyright />
-            </footer>
-        </div>
+        </React.Fragment>
     );
 }
 

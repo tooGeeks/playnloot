@@ -13,12 +13,6 @@ import Copyright from '../../layout/Copyright';
 import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        display: 'flex',
-        flexDirection: 'column',
-        flexGrow: 1,
-        minHeight: '100vh',
-    },
     container: {
         marginTop: theme.spacing(2)
     },
@@ -45,10 +39,6 @@ const useStyles = makeStyles(theme => ({
         color: '#81c784'
     },
     successBox: { borderLeft: `4px solid ${theme.palette.custom.greenPaper}` },
-    footer: {
-        marginTop: 'auto',
-        marginBottom: theme.spacing(10)
-    }
 }))
 
 const RequestWithDraw = () => {
@@ -118,7 +108,7 @@ const RequestWithDraw = () => {
         )
     })
     return (
-        <div className={classes.root}>
+        <div>
             <Container maxWidth="sm" className={classes.container}>
                 <Grid item xs={12} id="Request">
                     <form key={1} noValidate onSubmit={handleSubmit(onSubmitRequest)}>
@@ -205,9 +195,6 @@ const RequestWithDraw = () => {
                 </Grid>
                 { ((fetchData && fetchData.length!==0)) ? <Button variant='text' color='primary' onClick={hMoreReq}>Show More...</Button> : <Typography color='primary'>No Requests Available</Typography> }
             </Container>
-            <footer className={classes.footer}>
-                <Copyright />
-            </footer>
         </div>
     )
 }
