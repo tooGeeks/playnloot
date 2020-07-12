@@ -42,6 +42,7 @@ import { ReactComponent as Loading } from './imgs/loading.svg';
 import { dark } from '@material-ui/core/styles/createPalette';
 import { Button } from '@material-ui/core';
 import { setInstallApp, setAppInstalled } from './store/actions/uiActions';
+import HostedMatches from './components/matches/HostedMatches';
 
 
 const AuthIsLoaded = ({children})=>{
@@ -116,6 +117,7 @@ const App = () => {
                 <ProtectedRoutes path="/enrolledmatches/" component={EnrolledMatches}/>
                 <ProtectedRoutes path="/match/:mid" component={Match}/>
                 <ProtectedRoutes path="/hostmatch/" component={HostMatch}/>
+                <ProtectedRoutes path="/hostedmatches/" component={HostedMatches}/>
 
                 {/* Admin  Paths */}
                 <ProtectedRoutes path="/admin/creatematch" component={CreateMatch}/>

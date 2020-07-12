@@ -5,7 +5,7 @@ import { Link, useHistory } from 'react-router-dom'
 import AppBar from '@material-ui/core/AppBar';
 import { makeStyles, Typography, LinearProgress, Toolbar, ListItem, ListItemIcon, ListItemText, Collapse, List, Divider, ListSubheader, SwipeableDrawer, IconButton, Button } from '@material-ui/core';
 // import { Menu, MenuItem } from '@material-ui/core'
-import { Menu as MenuIco, ArrowBack, AccountBox, AccountBalanceWallet, ExpandLess, ExpandMore, Add, AttachMoney, ExitToApp, LockOpen, SentimentVerySatisfied, More } from '@material-ui/icons';
+import { Menu as MenuIco, ArrowBack, AccountBox, AccountBalanceWallet, ExpandLess, ExpandMore, Add, AttachMoney, ExitToApp, LockOpen, SentimentVerySatisfied, More, AddBox } from '@material-ui/icons';
 import { signOut } from '../../store/actions/authActions'
 
 const useStyles = makeStyles(theme => ({
@@ -79,7 +79,7 @@ const Nav = (props) => {
           <ListItemText primary={profile.pubgid + "`s DashBoard"}></ListItemText>
         </ListItem>
         <ListItem id="hostmatch" button component={Link} to={'/hostmatch'} selected={(window.location.pathname).includes('/hostmatch')} onClick={toggleDrawer('bottom', false)}>
-          <ListItemIcon><AccountBalanceWallet /></ListItemIcon>
+          <ListItemIcon><AddBox/></ListItemIcon>
           <ListItemText primary={"Host Match"}></ListItemText>
         </ListItem>
         <ListItem id="wallet" button onClick={() => expandList(1)}>
