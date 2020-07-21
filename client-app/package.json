@@ -12,6 +12,7 @@
     "axios": "^0.19.2",
     "clsx": "^1.1.1",
     "compose": "^0.1.2",
+    "env-cmd": "^10.1.0",
     "firebase": "^7.14.6",
     "firebase-admin": "^8.12.1",
     "firebase-functions": "^3.6.2",
