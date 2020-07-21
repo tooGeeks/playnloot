@@ -3,15 +3,17 @@ import { connect, useSelector, useDispatch } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
 //UI
 import AppBar from '@material-ui/core/AppBar';
-import { makeStyles, Typography, LinearProgress, Toolbar, ListItem, ListItemIcon, ListItemText, Collapse, List, Divider, ListSubheader, SwipeableDrawer, IconButton, Button } from '@material-ui/core';
+import { makeStyles, Typography, LinearProgress, Toolbar, ListItem, ListItemIcon, ListItemText, Collapse, List, Divider, ListSubheader, SwipeableDrawer, IconButton, Button, Fab } from '@material-ui/core';
 // import { Menu, MenuItem } from '@material-ui/core'
-import { Menu as MenuIco, ArrowBack, AccountBox, AccountBalanceWallet, ExpandLess, ExpandMore, Add, AttachMoney, ExitToApp, LockOpen, SentimentVerySatisfied, More, AddBox } from '@material-ui/icons';
+import { Menu as MenuIco, ArrowBack, AccountBox, AccountBalanceWallet, ExpandLess, ExpandMore, Add, AttachMoney, ExitToApp, LockOpen, SentimentVerySatisfied, More, AddBox, AddCircleOutline, Share, GetApp } from '@material-ui/icons';
 import { signOut } from '../../store/actions/authActions'
 
 const useStyles = makeStyles(theme => ({
   appBar: {
       top: 'auto',
       bottom: 0,
+      backgroundColor: theme.palette.background.paper,
+       color: '#fff'
   },
   loadAppBar: {
     zIndex: 1501
@@ -23,9 +25,9 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     zIndex: 1,
     top: -30,
-    left: 0,
-    right: 0,
-    margin: '0 auto',
+    // left: 0,
+    right: 15,
+    // margin: '0 auto',
   },
   fullList: {
       width: 'auto',
@@ -167,23 +169,28 @@ const Nav = (props) => {
     return(
       <div>
           
-          <AppBar position="fixed" color="primary" className={backDropOpen ? `${classes.appBar} ${classes.loadAppBar}` : classes.appBar}>
+          <AppBar position="fixed" className={backDropOpen ? `${classes.appBar} ${classes.loadAppBar}` : classes.appBar}>
               <LinearProgress variant="query" hidden={!backDropOpen}/>
               <Toolbar>
                   <IconButton edge="start" color="inherit" aria-label="back" onClick={mhandleBack}>
                     <ArrowBack />   
                   </IconButton>
+                  <IconButton color="inherit" aria-label="install">< GetApp /></IconButton>
+                  <IconButton color="inherit" aria-label="share"><Share /></IconButton>
+                  {auth.uid ? <Coincount /> : null}
                   {/* <Fab color="secondary" aria-label="add" className={classes.fabButton}>
-                      { profile.pubgid ? profile.pubgid : <AddCircleOutline />}
+                    <MenuIco/>
                   </Fab> */}
                   <div className={classes.grow} />
-                  {auth.uid ? <Coincount/> : null}
+                  {/* {auth.uid ? <Coincount /> : null} */}
                   {/* <IconButton edge="end" color="inherit" onClick={mhandleClick}>
                       <More/>
                   </IconButton> */}
-                  <IconButton edge="end" color="inherit" aria-label="open drawer" onClick={toggleDrawer('bottom', true)}>
+                  <Fab color="secondary" aria-label="add" className={classes.fabButton}>
+                  <IconButton color="inherit" aria-label="open drawer" onClick={toggleDrawer('bottom', true)}>
                       <MenuIco/>
                   </IconButton>
+                  </Fab>
               </Toolbar>
               <SwipeableDrawer
                   anchor="bottom"
