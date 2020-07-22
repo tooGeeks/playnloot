@@ -174,11 +174,9 @@ const Nav = (props) => {
               <LinearProgress variant="query" hidden={!backDropOpen}/>
               <Toolbar>
                 {isAppInstalled && isAppInstalled 
-                ? <IconButton edge="start" color="inherit" aria-label="back" onClick={mhandleBack}><ArrowBack /></IconButton>
-                : <IconButton color="inherit" aria-label="install" onClick={() => dispatch(openInstallApp)}>< GetApp /></IconButton>
+                ? (window.location.pathname === '/' ? null : <IconButton edge="start" color="inherit" aria-label="back" onClick={mhandleBack}><ArrowBack /></IconButton>)
+                : <IconButton color="inherit" aria-label="install" onClick={() => dispatch(openInstallApp())}>< GetApp /></IconButton>
                 }
-                  
-                  <IconButton color="inherit" aria-label="install">< GetApp /></IconButton>
                   <IconButton color="inherit" aria-label="share"><Share /></IconButton>
                   {auth.uid ? <Coincount /> : null}
                   {/* <Fab color="secondary" aria-label="add" className={classes.fabButton}>
