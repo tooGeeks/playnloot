@@ -7,6 +7,7 @@ import { makeStyles, Typography, LinearProgress, Toolbar, ListItem, ListItemIcon
 // import { Menu, MenuItem } from '@material-ui/core'
 import { Menu as MenuIco, ArrowBack, AccountBox, AccountBalanceWallet, ExpandLess, ExpandMore, Add, AttachMoney, ExitToApp, LockOpen, SentimentVerySatisfied, More, AddBox, AddCircleOutline, Share, GetApp } from '@material-ui/icons';
 import { signOut } from '../../store/actions/authActions'
+import { openInstallApp } from '../../store/actions/uiActions'
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -42,7 +43,7 @@ const Nav = (props) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();
-    const { backDropOpen } = useSelector(state => state.ui)
+    const { backDropOpen, isAppInstalled } = useSelector(state => state.ui)
 
     const [state, setState] = React.useState({ bottom: false });
     const toggleDrawer = (side, open) => event => {
@@ -172,9 +173,11 @@ const Nav = (props) => {
           <AppBar position="fixed" className={backDropOpen ? `${classes.appBar} ${classes.loadAppBar}` : classes.appBar}>
               <LinearProgress variant="query" hidden={!backDropOpen}/>
               <Toolbar>
-                  <IconButton edge="start" color="inherit" aria-label="back" onClick={mhandleBack}>
-                    <ArrowBack />   
-                  </IconButton>
+                {isAppInstalled && isAppInstalled 
+                ? <IconButton edge="start" color="inherit" aria-label="back" onClick={mhandleBack}><ArrowBack /></IconButton>
+                : <IconButton color="inherit" aria-label="install" onClick={() => dispatch(openInstallApp)}>< GetApp /></IconButton>
+                }
+                  
                   <IconButton color="inherit" aria-label="install">< GetApp /></IconButton>
                   <IconButton color="inherit" aria-label="share"><Share /></IconButton>
                   {auth.uid ? <Coincount /> : null}

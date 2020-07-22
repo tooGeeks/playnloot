@@ -2,8 +2,6 @@ import React from 'react'
 import { Box, Typography, Link as MUILink, Container} from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import { Instagram, WhatsApp, Telegram, GetApp } from '@material-ui/icons'
-import { useDispatch, useSelector } from 'react-redux'
-import { openInstallApp } from '../../store/actions/uiActions'
 
 const styles = {
     a: {
@@ -17,8 +15,6 @@ const styles = {
 }
 
 const Copyright = () => {
-    const dispatch = useDispatch();
-    const {isAppInstalled} = useSelector(state=>state.ui)
     return (
         <Container maxWidth="sm">
             <Box mt={4}>
@@ -26,7 +22,6 @@ const Copyright = () => {
                     <a style={styles.a} href="https://api.whatsapp.com/send?phone=+91" target="_blank" rel="noopener noreferrer"><Box><WhatsApp style={styles.Icons}/></Box></a>
                     <a style={styles.a} href="https://#" target="_blank" rel="noopener noreferrer"><Box><Telegram style={styles.Icons}/></Box></a>
                     <a style={styles.a} href="https://#" target="_blank" rel="noopener noreferrer"><Box><Instagram style={styles.Icons}/></Box></a>
-                    <a style={styles.a} hidden={isAppInstalled} onClick={()=>{dispatch(openInstallApp())}} target="_blank" rel="noopener noreferrer"><Box><GetApp style={styles.Icons}/></Box></a>
                 </Box>
                 <Typography variant="body2" color="textSecondary" align="center">
                     {'Copyright © '}
