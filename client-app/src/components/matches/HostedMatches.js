@@ -25,8 +25,8 @@ const HostedMatches = (props) => {
     const classes = useStyles();
     const matches = props.matches;
     console.log(matches);
-    const updateMatch = (mid) => {
-        console.log(mid);
+    const updateMatch = (mid,updFields) => {
+        console.log(updFields);
         return <Redirect to={'/updatematch/'+mid} />
     }
     const deleteMatch = (mid) => {
@@ -35,7 +35,7 @@ const HostedMatches = (props) => {
         //X
     }
     const mdiv = matches && matches.map((match,inx) => {
-        return(<MatchSummary key={inx} match={match} handleClick={updateMatch} bttnname={'Update Match'} bttnname2='Delete Match' handleClick2={deleteMatch} />)
+        return(<MatchSummary key={inx} match={match} isEditable={true} updatefunc={updateMatch} handleClick={deleteMatch} bttnname='Delete Match' />)
     })
     return (
         <div className={classes.root}>

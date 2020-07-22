@@ -32,7 +32,22 @@ export const convt = (opt=0,time)=>{//Used to Convert Time from/to 12hr and 24 h
     return cd;
 }
 
-export const dateString = (date, arg)=>{//Returs 'date' in Readable Format Ex. 26 December 2019, Thursday
+export const getPrizeNames = (num) => {
+    if(num>3 && num<21) return num+"th";
+    let nstr = num.toString()
+    let ld = parseInt(nstr[nstr.length-1]);
+    if(ld>3) return num+"th";
+    switch(ld){
+        case 1:
+            return num+"st"
+        case 2:
+            return num+"nd"
+        case 3:
+            return num+"rd"
+    }
+}
+
+export const dateString = (date, arg) => {//Returs 'date' in Readable Format Ex. 26 December 2019, Thursday
     const cd = new Date(date);
     const months = ["January","February","March","April","May","June","July","August","September","Octocber","November","December"]
     const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
@@ -236,7 +251,7 @@ export const askPermission = async (messaging)=>{
 export const useQuery = (usLoc) => {
     return new URLSearchParams(usLoc().search);
 }
-  
+
 export const createRazorPayDialog = (amount,description="Yarrr! Mat Pucho!",prefill,notes={},callback=(res)=>{console.log(res)}) => {
     const ran = Math.floor(Math.random() * 100000 + 100000).toString();
     var options = {

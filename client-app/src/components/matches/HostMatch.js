@@ -1,7 +1,7 @@
 import React from 'react'
 import {Select, MenuItem, TextField, Divider, Button, Container, Grid, makeStyles, Typography, Icon, MobileStepper, Switch } from '@material-ui/core'
 import {useForm, useFieldArray, Controller} from "react-hook-form";
-import {compdate,getCurrentDate, convt, getInputDateTime} from '../../Functions';
+import {compdate,getCurrentDate, convt, getInputDateTime, getPrizeNames} from '../../Functions';
 import {hostMatch} from '../../store/actions/MatchActions'
 import { connect, useSelector, useDispatch } from 'react-redux';
 import {firestoreConnect, useFirestoreConnect} from 'react-redux-firebase';
@@ -71,20 +71,6 @@ const HostMatch = ({ matches }) => {
         control,
         name:"survival"
     })
-    const getPrizeNames = (num) => {
-        if(num>3 && num<21) return num+"th";
-        let nstr = num.toString()
-        let ld = parseInt(nstr[nstr.length-1]);
-        if(ld>3) return num+"th";
-        switch(ld){
-            case 1:
-                return num+"st"
-            case 2:
-                return num+"nd"
-            case 3:
-                return num+"rd"
-        }
-    }
     const steps = ['Enter Match Name and Time','Select Match Modes','Add Custom Rules','Select Fees and Prizes','Finalize']
     const getStepContent = (step) => {
         switch(step){
