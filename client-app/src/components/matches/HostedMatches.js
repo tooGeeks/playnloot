@@ -5,6 +5,7 @@ import { firestoreConnect } from 'react-redux-firebase'
 import MatchSummary from './adminMatchSummary'
 import { makeStyles, Container, Typography } from '@material-ui/core'
 import { Redirect } from 'react-router-dom'
+import { findinMatches, calculateTotalExpense, jsonTOArray } from '../../Functions'
 
 const useStyles= makeStyles(theme=>({
     root: {
@@ -27,7 +28,14 @@ const HostedMatches = (props) => {
     console.log(matches);
     const updateMatch = (mid,updFields) => {
         console.log(updFields);
-        return <Redirect to={'/updatematch/'+mid} />
+        let oldMatch = findinMatches(matches,mid);
+        let newMatch = {...oldMatch};
+        newMatch = {...newMatch,...updFields};
+        //Pass isPaid, isSurvival, team, hasCPK, fee
+        let oldCalc = calculateTotalExpense({isPaid:oldMatch.fee>0?true:false,isSurvival:oldMatch.survival?true:false,survival:jsonTOArray(oldMatch.survival),team:oldMatch.team,hasCPK:oldMatch.hasCPK,fee:oldMatch.fee});
+        let newCalc = calculateTotalExpense({isPaid:newMatch.fee>0?true:false,isSurvival:newMatch.survival?true:false,survival:jsonTOArray(newMatch.survival),team:newMatch.team,hasCPK:newMatch.hasCPK,fee:newMatch.fee});
+        console.log("oldCalc",oldCalc,"newCalc",newCalc);
+        //
     }
     const deleteMatch = (mid) => {
         console.log(mid);
