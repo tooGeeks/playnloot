@@ -155,7 +155,15 @@ export const signInWithPhone = (conOTP,otp,handleC)=>{
           dispatch({type: 'BACKDROP_CLEAR'});
           console.log("User doesn't Exist");
           handleC('continue');
-          db.collection('Users').doc(resp.user.uid).set({isProfileComplete:false});
+          db.collection('Users').doc(resp.user.uid).set({
+            isProfileComplete:false,
+            kills: 0,
+            looted:0,
+            isTrusted:false,
+            hRating:0,
+            matches: [],
+            wins:0
+          });
         }else{
           //
           console.log("User Exists");
