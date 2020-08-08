@@ -1,7 +1,7 @@
 import React from 'react'
 import firebase from '../../config/fbConfig'
 import { connect, useDispatch } from 'react-redux'
-import { signIn, resetPassword } from '../../store/actions/authActions'
+import { signIn, resetPassword, changeWaitAuth } from '../../store/actions/authActions'
 //eslint-disable-next-line
 import { backDrop, showDialog } from '../../store/actions/uiActions'
 import { Redirect, Link, useLocation } from 'react-router-dom'
@@ -17,6 +17,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Copyright from '../layout/Copyright';
 import { ArrowBack, ArrowForward } from '@material-ui/icons'
 import { useQuery } from '../../Functions'
+import SIgnInWithPhone from './SIgnInWithPhone'
 
 const SignUpwithPhone = (props)=>{
   const dispatch = useDispatch();
@@ -214,8 +215,8 @@ const PassReset = () => {
 const SignIn = (props) => {
   const query = useQuery(useLocation);
   const urlSrc = query.get('from');
-  console.log(urlSrc);
   const { register, handleSubmit, errors } = useForm();
+  const [isSignInDialogOpen,setisSignInDialogOpen] = React.useState(false);
   const dispatch = useDispatch();
   const onSubmit = (data, e) => {
     e.preventDefault();
@@ -225,13 +226,18 @@ const SignIn = (props) => {
   const resetHandle = () => {
     dispatch(showDialog({title: "Password Reset", content: <PassReset />}))
   }
-
-  const { auth, classes } = props;
-  if (auth.uid) {
-    if(urlSrc === null) return <Redirect to='/dashboard' />
+  const openSignInDia = (e) => {
+    e.preventDefault();
+    setisSignInDialogOpen(true);
+  }
+  const { auth, classes, authWait } = props;
+  console.log(authWait)
+  
+  if (!authWait && auth.uid) {
+    if(urlSrc === null) return <Redirect to='/dashboard'/>
     else return <Redirect to={`/${urlSrc}`} />
   }
-
+  dispatch(changeWaitAuth(true));
   return (
     <div className={classes.root}>
     <Container className={classes.hero} component="main" maxWidth="xs">
@@ -290,6 +296,16 @@ const SignIn = (props) => {
           >
             Sign In
           </Button>
+          <Button
+            onClick={openSignInDia}
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            Sign In With Phone
+          </Button>
+          <SIgnInWithPhone isOpen={isSignInDialogOpen} handleClose={(reason)=>{setisSignInDialogOpen(false)}} />
           <Grid container>
             <Grid item xs>
               <MUILink component="button" onClick={resetHandle} variant="body2">
@@ -302,7 +318,7 @@ const SignIn = (props) => {
                 Don't have an account? Sign Up
               </MUILink>
             </Grid>
-          </Grid>
+          </Grid> 
         </form>
       </div>
       </Container>
@@ -332,7 +348,8 @@ const mapStateToProps = (state) => {
     authError: state.auth.authError,
     authSuccess: state.auth.authSuccess,
     authErrorMsg: state.auth.authErrorMsg,
-    auth: state.firebase.auth
+    auth: state.firebase.auth,
+    authWait : state.auth.authWait
   }
 }
 
