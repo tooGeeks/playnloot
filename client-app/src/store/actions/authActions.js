@@ -99,17 +99,91 @@ export const signUp = (newUser) => {
   }
 }
 
-export const signInWithPhone = (conOTP,userDetails)=>{
+export const updateUserDetails = (details) => {
+  return (dispatch, getState, {getFirebase, getFirestore}) => {
+    const db = getFirestore();
+    const {auth} = getState().firebase;
+    const fb = getFirebase();
+    const user = fb.auth().currentUser;
+    db.collection('Users').where('pubgid','==', details.pubgid).get().then(snaps => {
+      if(!snaps.empty){
+        dispatch({type: 'BACKDROP_CLEAR'});
+        dispatch({ type: 'SNACKBAR', variant: 'error', message: "This PUBG ID is already registered! Please check again or contact Admin!"});
+        return;
+      }
+      user.updateProfile({displayName:details.pubgid}).then(() => {
+        db.collection('Users').doc(auth.uid).set({
+          pubgid: details.pubgid,
+          fname: details.fullName,
+          wallet: 1,
+          kills: 0,
+          looted:0,
+          isProfileComplete:true,
+          isTrusted:false,
+          hRating:0,
+          matches: [],
+          wins:0,
+        },{merge:true});
+      }).then(() => {
+        dispatch({type:'WAIT_AUTH',newState:false});
+        dispatch({type: 'BACKDROP_CLEAR'});
+        dispatch({ type: 'SIGNUP_SUCCESS' });
+        dispatch({ type: 'SNACKBAR', variant: 'success', message: "SignUp Successful! Happy Looting"});
+      })
+    })
+    
+  }
+}
+
+export const changeWaitAuth = (newState) => {
+  return dispatch => {
+    dispatch({type:'WAIT_AUTH',newState});
+  }
+}
+
+export const signInWithPhone = (conOTP,otp,handleC)=>{
   return (dispatch, getState, {getFirebase,getFirestore}) => {
     const db = getFirestore();
     dispatch({type: 'BACKDROP'});
-    db.collection('Users').where('pubgid', '==', userDetails.pubgid).get().then((snap)=>{
+    conOTP.confirm(otp).then(resp => {
+      console.log(resp.user);
+      db.collection('Users').doc(resp.user.uid).get().then(doc => {
+        console.log(doc);
+        if(!doc.exists){
+          //User Doesn't Exist
+          dispatch({type:'WAIT_AUTH',newState:true});
+          dispatch({type: 'BACKDROP_CLEAR'});
+          console.log("User doesn't Exist");
+          handleC('continue');
+          db.collection('Users').doc(resp.user.uid).set({
+            isProfileComplete:false,
+            kills: 0,
+            looted:0,
+            isTrusted:false,
+            hRating:0,
+            matches: [],
+            wins:0
+          });
+        }else{
+          //
+          console.log("User Exists");
+          dispatch({type:'WAIT_AUTH',newState:false});
+          dispatch({type: 'BACKDROP_CLEAR'});
+          dispatch({ type: 'LOGIN_SUCCESS' });
+          dispatch({ type: 'SNACKBAR', variant: 'info', message: "Welcome!"});
+          handleC('exit');
+        }
+      })
+    })
+    /**
+    db.collection('Users').where('pubgid', '==',).get().then((snap)=>{
       if(!snap.empty){
         dispatch({type: 'BACKDROP_CLEAR'});
         dispatch({ type: 'SNACKBAR', variant: 'error', message: "This PUBG ID is already registered! Please check again or contact Admin!"});
       }else{
         conOTP.confirm(userDetails.otp).then((resp)=>{
           console.log(resp.user)
+          
           return db.collection('Users').doc(resp.user.uid).get().then((snap)=>{
             if(!snap.empty){
               dispatch({type: 'BACKDROP_CLEAR'});
@@ -140,9 +214,11 @@ export const signInWithPhone = (conOTP,userDetails)=>{
               dispatch(clearDialog())
             }
           })
+         
         })
       }
     })
+    */
   }
 }
 

@@ -564,7 +564,7 @@ const HostMatch = ({ matches }) => {
             data['tenpc'] = parseInt(10/100 * data['profit']);
             let prst = data['tenpc'].toString();
             let unitpos = parseInt(prst[prst.length-1])
-            let diff = unitpos === 0 ? 0 : (unitpos < 5 ? 0 - unitpos : 10 - unitpos)
+            let diff = unitpos === 0 ? 0 : (unitpos < 5 ? 0 - unitpos : 10 - unitpos);
             data['tenpc'] += diff;
             data['profit'] = 10 * data['tenpc']
         }

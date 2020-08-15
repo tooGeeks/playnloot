@@ -155,7 +155,7 @@ function Dashboard(props) {
     var newSolo = [];
     var newDuo = [];
     var newSquad = [];
-    Matches.forEach((x) => { 
+    Matches && Matches.forEach((x) => { 
       if(moment(x.lrdate.toDate()) < getCurrentDate()) return null;
       let isEnr = profile && isinDocs(profile.matches, x.id);
       if(!isEnr){
@@ -220,7 +220,7 @@ function Dashboard(props) {
           </Grid>
       )
     }
-    const enrolledMatches = profile.isLoaded && Array.isArray(profile.matches) && Array.isArray(Matches) && (profile.matches.length !== 0) ? profile.matches && profile.matches.map((match, index) =>{
+    const enrolledMatches = profile.isLoaded && profile.isProfileComplete && Array.isArray(profile.matches) && Array.isArray(Matches) && (profile.matches.length !== 0) ? profile.matches && profile.matches.map((match, index) =>{
       for (const i of Matches) if(match === i.id) match = i;
       let pdx =match && getPlayerfromMatch(match.players,profile.pubgid,match.mode.team)// Fetch 
       let rank = pdx.split('-')[1]

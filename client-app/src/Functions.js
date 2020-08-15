@@ -32,6 +32,53 @@ export const convt = (opt=0,time)=>{//Used to Convert Time from/to 12hr and 24 h
     return cd;
 }
 
+export const calculateTotalExpense = (fullData) => {//Req = isPaid, isSurvival, team, hasCPK, fee
+    let total = 0;
+    let data = {totalCollection:0,prizePool:0,plno:0,profit:0,tenpc:0};
+    if(fullData.isPaid){
+        if(fullData.isSurvival){
+            //console.log("isSurvival")
+            switch(fullData.team){
+                case "Solo":
+                    data['plno'] = 100
+                    data['totalCollection'] = fullData.fee * 100;
+                    break;
+                case "Duo":
+                    data['plno'] = 50
+                    data['totalCollection'] = fullData.fee * 50;
+                    break;
+                case "Squad":
+                    data['plno'] = 25
+                    data['totalCollection'] = fullData.fee * 25;
+                    break;
+                default:
+                    break;
+            }
+            fullData.survival.forEach(pr => data['prizePool'] += parseInt(pr))
+        }
+        if(fullData.hasCPK){
+            //console.log("CPK")
+            data['prizePool'] += 99 * parseInt(fullData.bKills);
+        }
+        data['profit'] = data['totalCollection'] - data['prizePool'];
+        data['tenpc'] = parseInt(10/100 * data['profit']);
+        let prst = data['tenpc'].toString();
+        let unitpos = parseInt(prst[prst.length-1])
+        let diff = unitpos === 0 ? 0 : (unitpos < 5 ? 0 - unitpos : 10 - unitpos)
+        data['tenpc'] += diff;
+        data['profit'] = 10 * data['tenpc']
+    }
+    return data;
+}
+
+export const jsonTOArray = (json) => {
+    let arr = [];
+    for( let x in json){
+        arr.push(json[x]);
+    }
+    return arr;
+}
+
 export const getPrizeNames = (num) => {
     if(num>3 && num<21) return num+"th";
     let nstr = num.toString()

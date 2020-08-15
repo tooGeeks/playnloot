@@ -1,5 +1,6 @@
 const initState = {
-  authError: null
+  authError: null,
+  authWait: false
 }
 
 const authReducer = (state = initState, action) => {
@@ -41,6 +42,12 @@ const authReducer = (state = initState, action) => {
     case 'PWD_RST_ERR':
       console.log("Error Send Password Reset Password Email",action.err);
       return state;
+    case 'WAIT_AUTH':
+      console.log("Waiting for Auth",action.newState);
+      return {
+        ...state,
+        authWait:action.newState
+      }
     default:
       return state
   }
