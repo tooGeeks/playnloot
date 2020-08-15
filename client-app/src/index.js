@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import firebase from './config/fbConfig';
+import { composeWithDevTools } from 'redux-devtools-extension';
 //import 'firebase/auth'
 //import 'firebase/firestore' // <- needed if using firestore
 
@@ -42,12 +43,12 @@ const onSuccess = (reg)=>{
 // firebase.firestore() // <- needed if using firestore
 // firebase.functions() // <- needed if using httpsCallable
 
-const store = createStore(rootReducer,
+const store = createStore(rootReducer, composeWithDevTools(
     compose(
       applyMiddleware(thunk.withExtraArgument({ getFirebase, getFirestore })),
       reduxFirestore(firebase) // redux bindings for firestore
     )  
-);
+));
 
 const rrfProps = {
   firebase,

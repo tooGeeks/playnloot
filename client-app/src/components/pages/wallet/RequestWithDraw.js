@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { compose } from 'redux';
 import { firestoreConnect, useFirestoreConnect } from 'react-redux-firebase';
 import { useSelector, useDispatch } from 'react-redux';
+import { Helmet } from 'react-helmet'
 import { findinMatches } from '../../../Functions'
 import { cancelWithdrawal, requestWithdrawal } from '../../../store/actions/PaymentActions';
 import {useForm} from "react-hook-form";
 import { unit } from '../../../constants';
 
-import { makeStyles, Grid, Container, Card, CardHeader, IconButton, CardContent, Typography, TextField, CardActions, Button, Box } from '@material-ui/core'
+import { makeStyles, Grid, Container, Card, CardHeader, IconButton, CardContent, Typography, TextField, CardActions, Button, Box, Grow } from '@material-ui/core'
 import { AttachMoney, CheckCircleOutlined, HourglassEmptyOutlined } from '@material-ui/icons'
-import Copyright from '../../layout/Copyright';
 import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
@@ -42,21 +41,22 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const RequestWithDraw = () => {
-    const [fetchData,setFetchData] = React.useState({start:0,count:3,data:[],length:0,deleted:false})
-    const { auth, profile } = useSelector(state => state.firebase)
-    useFirestoreConnect([{collection:'WithdrawalRequests',where:['uid','==',auth.uid],orderBy:['reqdate','desc'],startAfter:fetchData.start,limit:fetchData.count}])
     const classes = useStyles();
+    const [fetchData, setFetchData] = useState({ start: 0, count: 3, data: [], length: 0, deleted: false })
+    console.log(fetchData)
+    const { auth, profile } = useSelector(state => state.firebase)
+    useFirestoreConnect([{collection: 'WithdrawalRequests', where: ['uid', '==', auth.uid], orderBy: ['reqdate','desc'], startAfter: fetchData.start, limit: fetchData.count}])
     const fetchReq = useSelector(state => state.firestore.ordered.WithdrawalRequests)
     useEffect(()=>{
-        fetchReq && setFetchData(prevFData=>{console.log(fetchReq)
+        fetchReq && setFetchData(prevFData=>{console.log(fetchReq) 
+            console.info(fetchData)
             let xdata = prevFData.data;
             console.log(fetchData.data.length)
             console.log(prevFData)
             if(fetchData.newElem) {
-                console.log("WW")
                 return {...prevFData,length:fetchReq.length,data:fetchReq}
             }
-            if(fetchData.data.length==0){
+            if(fetchData.data.length===0){
                 fetchReq.push(...xdata)
                 return {...prevFData,length:fetchReq.length,data:fetchReq}
             }
@@ -65,21 +65,21 @@ const RequestWithDraw = () => {
                 return {...prevFData,length:fetchReq.length,update:false,data:xdata}
             }
         })
-    },[fetchReq])
+    },[fetchReq, fetchData, setFetchData])
     const dispatch = useDispatch();
     const { register, handleSubmit, errors, reset } = useForm();
     const [ data, setData ] = useState({coins: 0, mno: 0, pmode: ''});
     const handleChange = (e) => {
         setData({...data,[e.target.id]:e.target.value})
     }
-
-    const hMoreReq = ()=>{
+    let ind = 1;
+    const hMoreReq = () => {
         ind++;
         let lastDoc = fetchData.data[fetchData.data.length-1]
         //console.log(lastDoc.id)
-        setFetchData(prevFData=>{return {...prevFData,start:lastDoc.reqdate,update:true,newElem:false}})
+        setFetchData(prevFData=>{return {...prevFData, start: lastDoc.reqdate, update: true, newElem: false}})
     }
-    let ind = 1;
+    
     const onSubmitRequest = (data, e) => {
         e.preventDefault();
         dispatch(requestWithdrawal({coins: parseInt(data.coins), pmode: data.pmode}));
@@ -96,7 +96,11 @@ const RequestWithDraw = () => {
     //console.log(fetchData.length)
     const requests = fetchData && fetchData.data && fetchData.data.map((req, index) => {
         return (
-            <Grid item xs={12} sm={6} key={index}><Box boxShadow={2} justifyContent="center" alignItems="center" className={req.isComplete ? `${classes.prevBox} ${classes.successBox}` : `${classes.prevBox} ${classes.pendingBox}`}>
+            <Grow
+                key={index} in
+                style={{ transformOrigin: '0 0 0' }}
+                {...(true ? { timeout: 1000 } : {})}>
+            <Grid item xs={12} sm={6}><Box boxShadow={2} justifyContent="center" alignItems="center" className={req.isComplete ? `${classes.prevBox} ${classes.successBox}` : `${classes.prevBox} ${classes.pendingBox}`}>
                 <Box display="flex" flexDirection="column" justifyContent="center" style={{width: '20%', textAlign: "center",}}><Box style={{ fontSize: 25, fontWeight: 'fontWeightBold'}}>₹{req.coins*unit}</Box>{req.isComplete ? <Box fontSize={12} className={classes.sucTxt}>Paid</Box> : <Box fontSize={12} className={classes.penTxt}>Pending</Box>}</Box>
                 <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '60%'}}>
                     <Box>{req.pmode}</Box>
@@ -105,10 +109,15 @@ const RequestWithDraw = () => {
                 </Box>
                 <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{width: '20%'}}>{req.isComplete ? <CheckCircleOutlined style={{ fontSize: 35, color: "#81c784" }} /> : <HourglassEmptyOutlined style={{ fontSize: 35, color: "#fff176" }} />}</Box>
             </Box></Grid>
+            </Grow>
         )
     })
     return (
         <div>
+            <Helmet>
+                <title>Withdraw Money | playnloot</title>
+                
+            </Helmet>
             <Container maxWidth="sm" className={classes.container}>
                 <Grid item xs={12} id="Request">
                     <form key={1} noValidate onSubmit={handleSubmit(onSubmitRequest)}>

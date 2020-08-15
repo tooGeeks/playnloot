@@ -50,3 +50,9 @@ export const setAppInstalled = (val) => {
         dispatch({type:'APP_INSTALLED',val})
     }
 }
+
+export const setWebShare = (param) => {
+    return dispatch => {
+        dispatch({type: 'WEB_SHARE', shareTitle: param.shareTitle, shareText: param.shareText, shareUrl: param.shareUrl})
+    }
+}

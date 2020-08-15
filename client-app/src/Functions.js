@@ -316,3 +316,16 @@ export const createOrder = (db,uid,id,data) => {
         })
     })
 }
+
+export const webShare = (props) => {
+    if(navigator.share) {
+        navigator.share({
+            ...props
+        }).then(() => console.log('Thanks for sharing!'))
+        .catch((error) => console.log('Error sharing ', error))
+    }
+    else {
+        console.log('No WebShare Support :( ')
+        console.log({...props})
+    }
+}

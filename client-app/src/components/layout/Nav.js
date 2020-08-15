@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect, useSelector, useDispatch } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
 //UI
 import AppBar from '@material-ui/core/AppBar';
 import { makeStyles, Typography, LinearProgress, Toolbar, ListItem, ListItemIcon, ListItemText, Collapse, List, Divider, ListSubheader, SwipeableDrawer, IconButton, Button, Fab } from '@material-ui/core';
 // import { Menu, MenuItem } from '@material-ui/core'
-import { Menu as MenuIco, ArrowBack, AccountBox, AccountBalanceWallet, ExpandLess, ExpandMore, Add, AttachMoney, ExitToApp, LockOpen, SentimentVerySatisfied, More, AddBox, AddCircleOutline, Share, GetApp } from '@material-ui/icons';
+import { Menu as MenuIco, ArrowBack, AccountBox, AccountBalanceWallet, ExpandLess, ExpandMore, Add, AttachMoney, ExitToApp, LockOpen, SentimentVerySatisfied, AddBox, Share, GetApp } from '@material-ui/icons';
+import Alert from '@material-ui/lab/Alert'
 import { signOut } from '../../store/actions/authActions'
 import { openInstallApp } from '../../store/actions/uiActions'
+import { webShare } from '../../Functions'
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -43,7 +45,13 @@ const Nav = (props) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();
-    const { backDropOpen, isAppInstalled } = useSelector(state => state.ui)
+    const { backDropOpen, isAppInstalled, shareTitle, shareText, shareUrl } = useSelector(state => state.ui)
+
+    const [alertOpen, setAlertOpen] = React.useState(localStorage.getItem('isCookieAccepted') === null ? true : false);
+    const cookieAccepted = () => {
+      localStorage.setItem('isCookieAccepted', true)
+      setAlertOpen(false)
+    }
 
     const [state, setState] = React.useState({ bottom: false });
     const toggleDrawer = (side, open) => event => {
@@ -169,7 +177,6 @@ const Nav = (props) => {
     }
     return(
       <div>
-          
           <AppBar position="fixed" className={backDropOpen ? `${classes.appBar} ${classes.loadAppBar}` : classes.appBar}>
               <LinearProgress variant="query" hidden={!backDropOpen}/>
               <Toolbar>
@@ -177,20 +184,17 @@ const Nav = (props) => {
                 ? (window.location.pathname === '/' ? null : <IconButton edge="start" color="inherit" aria-label="back" onClick={mhandleBack}><ArrowBack /></IconButton>)
                 : <IconButton color="inherit" aria-label="install" onClick={() => dispatch(openInstallApp())}>< GetApp /></IconButton>
                 }
-                  <IconButton color="inherit" aria-label="share"><Share /></IconButton>
+                  <IconButton color="inherit" aria-label="share" onClick={() => webShare({title: shareTitle, text: shareText, url: shareUrl})}><Share /></IconButton>
                   {auth.uid ? <Coincount /> : null}
                   {/* <Fab color="secondary" aria-label="add" className={classes.fabButton}>
                     <MenuIco/>
                   </Fab> */}
                   <div className={classes.grow} />
-                  {/* {auth.uid ? <Coincount /> : null} */}
                   {/* <IconButton edge="end" color="inherit" onClick={mhandleClick}>
                       <More/>
                   </IconButton> */}
-                  <Fab color="secondary" aria-label="add" className={classes.fabButton}>
-                  <IconButton color="inherit" aria-label="open drawer" onClick={toggleDrawer('bottom', true)}>
+                  <Fab color="secondary" aria-label="open drawer" onClick={toggleDrawer('bottom', true)} className={classes.fabButton}>
                       <MenuIco/>
-                  </IconButton>
                   </Fab>
               </Toolbar>
               <SwipeableDrawer
@@ -202,6 +206,15 @@ const Nav = (props) => {
               >
                   {fullList('bottom')}
               </SwipeableDrawer>
+              <Collapse in={alertOpen}>
+                <Alert variant="filled" color="info" severity="info"
+                  action={
+                      <Button aria-label="close" variant="outlined" size="small" color="inherit" onClick={cookieAccepted}>Accept</Button>
+                  }
+                >
+                  We use cookies to get stuff work!
+                </Alert>
+              </Collapse>
           </AppBar>
           {/* <Menu
             id="simple-menu"
