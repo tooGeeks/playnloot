@@ -19,7 +19,7 @@ export const SingleOTPInput = (props) => {
     },[autoFocus, focus, prevFocus]); 
     return (
         <TextField
-            //inputProps={{maxLength:'1'}}
+            inputProps={{style:{textAlign:'center'}}}
             ref={inputRef}
             fullWidth
             {...rest}

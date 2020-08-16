@@ -81,7 +81,7 @@ export const OTPInputComponent = (props) => {
     },[activeInput, changeCodeAtFocus, focusNextInput, focusPrevInput, otpValues]);
 
     return(
-        <div>
+        <React.Fragment>
             {Array(length)
                 .fill('')
                 .map((ix,inx) => (
@@ -102,7 +102,7 @@ export const OTPInputComponent = (props) => {
                         />
                     </Grid>
                 ))}
-        </div>
+        </React.Fragment>
     )
 }
 

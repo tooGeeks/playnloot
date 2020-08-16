@@ -1,8 +1,8 @@
 import React from 'react'
-import { Dialog, Grow, DialogTitle, Typography, Button, makeStyles, Grid, DialogContent, TextField, Divider, Container, CircularProgress } from '@material-ui/core'
+import { Dialog, Grow, DialogTitle, Typography, Button, makeStyles, Grid, DialogContent, TextField, Divider, Container, CircularProgress, DialogActions } from '@material-ui/core'
 import OTPInput from './OTPInput';
 import firebase from '../../config/fbConfig'
-import { showSnackbar } from '../../store/actions/uiActions';
+import { showSnackbar, backDrop, clearBackDrop } from '../../store/actions/uiActions';
 import { useDispatch } from 'react-redux';
 import { signInWithPhone, updateUserDetails } from '../../store/actions/authActions';
 import { useForm } from 'react-hook-form';
@@ -12,8 +12,11 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 const useStyles = makeStyles(theme => ({
-    dialog:{
-        
+    dialogActions:{
+        marginRight:theme.spacing(1)
+    },
+    container:{
+      display:'flex'
     },
     paper: {
         marginTop: theme.spacing(2),
@@ -47,10 +50,10 @@ const SIgnInWithPhone = ({isOpen,handleClose}) => {
     const dispatch = useDispatch();
     const otpLength = 6;
     const [verifyOTP,setVerifyOTP] = React.useState(null);
-    const [mobileNoOTP,setMobileNoOTP] = React.useState({mobileNo:'',otp:''});
+    const [mobileNoOTP,setMobileNoOTP] = React.useState({mobileNo:'',otp:'',showProgress:false});
     const [step,setStep] = React.useState(0);
     const hanClose = (e, reason) => handleClose(reason);
-    const handleClick = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         console.log(e.target);
         switch(step){
@@ -59,12 +62,14 @@ const SIgnInWithPhone = ({isOpen,handleClose}) => {
                     dispatch(showSnackbar({ type: 'SNACKBAR', variant: 'error', message: "Please input valid Mobile No."}));
                     return;
                 }
+                setMobileNoOTP({...mobileNoOTP,showProgress:true});
                 const recaptchaVerifier = new firebase.auth.RecaptchaVerifier('cdiv',{size:'invisible'});
                 firebase.auth().settings.appVerificationDisabledForTesting = true;
                 firebase.auth().signInWithPhoneNumber("+91"+mobileNoOTP.mobileNo,recaptchaVerifier).then((resp)=>{
                     setStep(prvStp => prvStp +1);
                     setVerifyOTP(resp);
                     console.log(resp);
+                    setMobileNoOTP({...mobileNoOTP,showProgress:false});
                 }).catch(err => {
                     console.log(err);
                     dispatch(showSnackbar({ type: 'SNACKBAR', variant: 'error', message: e.message}));
@@ -103,6 +108,33 @@ const SIgnInWithPhone = ({isOpen,handleClose}) => {
         }
     }
 
+    const handleClick = e => {
+      switch(e.currentTarget.name){
+        case 'ResendOTP':
+        dispatch(backDrop());
+        const recaptchaVerifier = new firebase.auth.RecaptchaVerifier('cdiv',{size:'invisible'});
+        firebase.auth().settings.appVerificationDisabledForTesting = true;
+        firebase.auth().signInWithPhoneNumber("+91"+mobileNoOTP.mobileNo,recaptchaVerifier).then((resp)=>{
+            //setStep(prvStp => prvStp +1);
+            setVerifyOTP(resp);
+            console.log(resp);
+            dispatch(clearBackDrop());
+            dispatch(showSnackbar({ type: 'SNACKBAR', variant: 'info', message: 'OTP Resent successfully'}));
+            //setMobileNoOTP({...mobileNoOTP,showProgress:false});
+        }).catch(err => {
+            console.log(err);
+            dispatch(showSnackbar({ type: 'SNACKBAR', variant: 'error', message: e.message}));
+        })
+          break;
+        case 'ResetMNo':
+          setStep(0);
+          break;
+        default:
+          break;
+      }
+    }
+
+
     const getStepContent = (step) => {
       switch(step){
         case 0:
@@ -123,17 +155,23 @@ const SIgnInWithPhone = ({isOpen,handleClose}) => {
                     label='Mobile No.'
                 />
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={2} hidden={!mobileNoOTP.showProgress}>
               <CircularProgress />
-            </Grid>
-            <Grid item xs={12}>
-                <Button color='primary' id='GetOTP' name='GetOTP' type='submit' variant='contained'>Get OTP</Button>
             </Grid>
             </React.Fragment>
           )
         case 1:
           return(
             <React.Fragment>
+            <Grid item xs={12}>
+                <Typography>Mobile No. : +91 {mobileNoOTP.mobileNo}</Typography>
+            <Grid item xs={12}>
+              <Button variant='text' onClick={handleClick} size='small' color='primary' id='ResetMNo' name='ResetMNo'>Reset Mobile No.</Button>
+            </Grid>
+            </Grid>
+              <Grid item xs={12}>
+                <Typography>Please Enter the received OTP</Typography>
+              </Grid>
               <OTPInput
                 autoFocus
                 length={otpLength}
@@ -141,15 +179,30 @@ const SIgnInWithPhone = ({isOpen,handleClose}) => {
                 inputclassName='OTPInput'
                 onChangeOTP={handleOTPChange}
             />
-            <Grid item xs={12}>
-                <Button color='primary' id='SignIn' name='SignIn' type='submit' variant='contained'>Sign In</Button>
-            </Grid>
             </React.Fragment>
           )
         case 2:
           return(
             <EnterUserDetails />
           )
+      }
+    }
+
+    const getStepAction = step => {
+      switch(step){
+        case 0:
+          return(
+            <Button color='primary' id='GetOTP' name='GetOTP' type='submit' variant='contained'>Get OTP</Button>
+          )
+        case 1:
+          return(
+            <React.Fragment>
+              <Button color='primary' onClick={handleClick} id='ResendOTP' name='ResendOTP' variant='text'>Resend OTP</Button>
+              <Button color='primary' id='SignIn' name='SignIn' type='submit' variant='contained'>Sign In</Button>
+            </React.Fragment>
+          )
+        default:
+          return(<></>)
       }
     }
 
@@ -169,16 +222,20 @@ const SIgnInWithPhone = ({isOpen,handleClose}) => {
                     </Grid>
                 </DialogTitle>
                 <Divider variant='middle' />
+                <form onSubmit={handleSubmit}>
                 <DialogContent>
                     <div>
-                      <form onSubmit={handleClick}>
                         <Grid container spacing={2}>
                             <div id='cdiv' hidden></div>
                             {getStepContent(step)}
                         </Grid>
-                        </form>
                     </div>
                 </DialogContent>
+                <Divider variant='middle' />
+                <DialogActions className={classes.dialogActions}>
+                    {getStepAction(step)}
+                </DialogActions>
+                </form>
             </Dialog>
         </>
     )
@@ -274,6 +331,7 @@ export const EnterUserDetails = (props) => {
                         helperText={(errors.email ? (errors.email.type === 'required' ? "Enter your email!" : "Invalid email address") : "eg. abc@xyz.com")}
                       />
                     </Grid>
+        case
             </Grid>
               <Button
                 type="submit"
