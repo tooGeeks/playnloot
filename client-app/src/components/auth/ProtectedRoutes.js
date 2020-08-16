@@ -13,9 +13,11 @@ export const ProtectedRoutes = ({ component: Component, ...rest }) => {
         <Route 
             {...rest} render={
             (props) => {
+                /**
                 if(auth.uid && profile && profile.isLoaded && !profile.isProfileComplete){
                     dispatch(showDialog({title:"Enter Details to Continue",content:<EnterUserDetails/>}));
                 }
+                 */
                 if(auth.uid) return <Component {...props}/>
                 else {
                     dispatch(showSnackbar({variant: 'info', message: "Login to continue!"}))

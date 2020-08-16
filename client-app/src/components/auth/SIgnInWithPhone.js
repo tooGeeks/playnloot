@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dialog, Grow, DialogTitle, Typography, Button, makeStyles, Grid, DialogContent, TextField, Divider, Container } from '@material-ui/core'
+import { Dialog, Grow, DialogTitle, Typography, Button, makeStyles, Grid, DialogContent, TextField, Divider, Container, CircularProgress } from '@material-ui/core'
 import OTPInput from './OTPInput';
 import firebase from '../../config/fbConfig'
 import { showSnackbar } from '../../store/actions/uiActions';
@@ -46,15 +46,15 @@ const SIgnInWithPhone = ({isOpen,handleClose}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const otpLength = 6;
-    const [showOTP,setShowOTP] = React.useState(false);
     const [verifyOTP,setVerifyOTP] = React.useState(null);
     const [mobileNoOTP,setMobileNoOTP] = React.useState({mobileNo:'',otp:''});
-    const [enterDetailsView,setEnterDetailsView] = React.useState(false);
+    const [step,setStep] = React.useState(0);
     const hanClose = (e, reason) => handleClose(reason);
     const handleClick = (e) => {
         e.preventDefault();
-        switch(e.target.name){
-            case 'GetOTP':
+        console.log(e.target);
+        switch(step){
+            case 0:
                 if(!mobileNoOTP.mobileNo || isNaN(mobileNoOTP.mobileNo) || mobileNoOTP.mobileNo.length !== 10){
                     dispatch(showSnackbar({ type: 'SNACKBAR', variant: 'error', message: "Please input valid Mobile No."}));
                     return;
@@ -62,7 +62,7 @@ const SIgnInWithPhone = ({isOpen,handleClose}) => {
                 const recaptchaVerifier = new firebase.auth.RecaptchaVerifier('cdiv',{size:'invisible'});
                 firebase.auth().settings.appVerificationDisabledForTesting = true;
                 firebase.auth().signInWithPhoneNumber("+91"+mobileNoOTP.mobileNo,recaptchaVerifier).then((resp)=>{
-                    setShowOTP(true);
+                    setStep(prvStp => prvStp +1);
                     setVerifyOTP(resp);
                     console.log(resp);
                 }).catch(err => {
@@ -70,10 +70,16 @@ const SIgnInWithPhone = ({isOpen,handleClose}) => {
                     dispatch(showSnackbar({ type: 'SNACKBAR', variant: 'error', message: e.message}));
                 })
                 break;
-            case 'SignIn':
+            case 1:
+                if(!mobileNoOTP.otp || mobileNoOTP.otp.length !== otpLength){
+                  dispatch(showSnackbar({ type: 'SNACKBAR', variant: 'error', message: "Please input valid OTP"}));
+                  return;
+                }
                 dispatch(signInWithPhone(verifyOTP,mobileNoOTP.otp,handleContinuation));
                 break;
+            case 2:
             default:
+
                 break;
 
         }
@@ -84,7 +90,7 @@ const SIgnInWithPhone = ({isOpen,handleClose}) => {
             case 'exit':
                 hanClose(null,'done');
             case 'continue':
-                setEnterDetailsView(true);
+                setStep(prvStp => prvStp + 1);
                 
         }
     }
@@ -95,6 +101,56 @@ const SIgnInWithPhone = ({isOpen,handleClose}) => {
         if(otp.length === otpLength){
             setMobileNoOTP({...mobileNoOTP,otp});
         }
+    }
+
+    const getStepContent = (step) => {
+      switch(step){
+        case 0:
+          return(
+            <React.Fragment>
+              <Grid item xs={2}>
+                <TextField
+                    disabled    
+                    defaultValue='+91'
+                    label=' '
+                />
+            </Grid>
+            <Grid item xs={8}>
+                <TextField
+                    onChange={handleChange}
+                    name='mno'
+                    type='tel'
+                    label='Mobile No.'
+                />
+            </Grid>
+            <Grid item xs={2}>
+              <CircularProgress />
+            </Grid>
+            <Grid item xs={12}>
+                <Button color='primary' id='GetOTP' name='GetOTP' type='submit' variant='contained'>Get OTP</Button>
+            </Grid>
+            </React.Fragment>
+          )
+        case 1:
+          return(
+            <React.Fragment>
+              <OTPInput
+                autoFocus
+                length={otpLength}
+                className='OTPContainer'
+                inputclassName='OTPInput'
+                onChangeOTP={handleOTPChange}
+            />
+            <Grid item xs={12}>
+                <Button color='primary' id='SignIn' name='SignIn' type='submit' variant='contained'>Sign In</Button>
+            </Grid>
+            </React.Fragment>
+          )
+        case 2:
+          return(
+            <EnterUserDetails />
+          )
+      }
     }
 
     return (
@@ -114,48 +170,14 @@ const SIgnInWithPhone = ({isOpen,handleClose}) => {
                 </DialogTitle>
                 <Divider variant='middle' />
                 <DialogContent>
-                    <div hidden={enterDetailsView}>
+                    <div>
+                      <form onSubmit={handleClick}>
                         <Grid container spacing={2}>
-                            <Grid item xs={2}>
-                                <TextField
-                                    disabled    
-                                    defaultValue='+91'
-                                    label=' '
-                                />
-                            </Grid>
-                            <Grid item xs={10}>
-                                <TextField
-                                    onChange={handleChange}
-                                    name='mno'
-                                    type='tel'
-                                    label='Mobile No.'
-                                />
-                            </Grid>
-                            {/**[1,2,3,4,5,6].map((it,inx) => (
-                                <Grid item xs={2} key={inx}>
-                                    <TextField
-                                        inputProps={{maxLength:'1'}}
-                                        onChange={handleChange}
-                                    />
-                                </Grid>
-                            ))*/}
-                            <Grid item xs={12} hidden={showOTP}>
-                                <Button color='primary' id='GetOTP' name='GetOTP' onClick={handleClick} variant='contained'>Get OTP</Button>
-                            </Grid>
                             <div id='cdiv' hidden></div>
-                            <OTPInput
-                                hidden={!showOTP}
-                                length={otpLength}
-                                className='OTPContainer'
-                                inputclassName='OTPInput'
-                                onChangeOTP={handleOTPChange}
-                            />
-                            <Grid item xs={12} hidden={!showOTP}>
-                                <Button color='primary' id='SignIn' name='SignIn' onClick={handleClick} variant='contained'>Sign In</Button>
-                            </Grid>
+                            {getStepContent(step)}
                         </Grid>
+                        </form>
                     </div>
-                    <EnterUserDetails hidden={!enterDetailsView} />
                 </DialogContent>
             </Dialog>
         </>

@@ -16,7 +16,8 @@ export const OTPInputComponent = (props) => {
 
     const changeCodeAtFocus = useCallback((str) => {
         const updatedOTPVal = [...otpValues];
-        updatedOTPVal[activeInput] = parseInt(str[str.length-1]) || '';
+        let intVal = parseInt(str[str.length-1]);
+        updatedOTPVal[activeInput] = isNaN(intVal) ? '' : intVal
         setOTPValues(updatedOTPVal);
         handleOTPChange(updatedOTPVal);
     },[activeInput, handleOTPChange, otpValues]);
